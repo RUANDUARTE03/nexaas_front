@@ -1,0 +1,30 @@
+@import "../../styles/";
+
+.container {
+  background-color: $white;
+  width: 60%;
+
+  .header, .body, .footer {
+    padding: 20px;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+
+    & > :first-child {
+      border: 1px solid black;
+      color: grey;
+      min-width: $widthBtnAction;
+      margin-right: 8px;
+      font-weight: 700;
+    }
+
+    & > :last-child {
+      background-color: $secondary;
+      color: $white;
+      min-width: $widthBtnAction;
+      font-weight: 700;
+    }
+  }
+}

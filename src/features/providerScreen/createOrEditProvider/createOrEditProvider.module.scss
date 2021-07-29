@@ -1,0 +1,52 @@
+@import "../../../styles/";
+
+.containerForm {
+  padding-left: $paddingLeftScreen;
+  padding-right: $paddingRightScreen;
+
+  .inputIdentifier {
+    width: 48%;
+    margin-top: 20px;
+  }
+
+  @media (max-width: $minTablet) {
+    .inputIdentifier {
+      width: 100%;
+    }
+  }
+
+  .wrapperInput {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+
+    .inputCompanyName, .inputFantasyName, .inputTypeProvider {
+      width: 48%;
+    }
+
+  }
+  @media (max-width: $minTablet) {
+    .wrapperInput {
+      flex-direction: column;
+
+      .inputCompanyName, .inputFantasyName, .inputTypeProvider {
+        width: 100%;
+      }
+
+      & > :last-child {
+        margin-top: 20px;
+      }
+    }
+  }
+
+  .inputID {
+    width: 48%;
+  }
+
+  @media (max-width: $minTablet) {
+    .inputID {
+      width: 100%;
+    }
+  }
+}

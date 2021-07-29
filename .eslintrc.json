@@ -32,6 +32,8 @@
         "react/prop-types": "off",
         "react/react-in-jsx-scope": "off",
         "react/jsx-props-no-spreading": "off",
+        "react/require-default-props": "off",
+        "no-nested-ternary": "off",
         "prettier/prettier": [
             "error",
             {
@@ -52,7 +54,8 @@
                 "ts": "never",
                 "tsx": "never"
             }
-        ]
+        ],
+        "react/no-array-index-key": "off"
     },
     "settings": {
         "import/resolver": {

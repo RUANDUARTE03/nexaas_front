@@ -1,1 +1,1 @@
-export { default } from "./providerScreen";
+export { default } from './providerScreen';
