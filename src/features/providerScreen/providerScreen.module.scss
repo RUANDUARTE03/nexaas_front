@@ -1,48 +1,8 @@
 @import "../../styles/";
 
-.container {
-  padding-left: $paddingLeftScreen;
-  padding-right: $paddingRightScreen;
-  
-  .icon {
-    background-color: $primary;
-    color: white;
-    font-weight: 700;
-  }
-  
-  .containerHeaderTable {
-    background-color: $backgroundColorHeaderTable;
-    
-    th {
-      font-weight: 500;
-    }
-  }
-  
-  .btnEdit {
-    border: 1px solid $btnPrimary;
-    color: $btnPrimary;
-    font-weight: 700;
-    font-size: 12px;
-    width: $widthBtnAction;
-    margin-bottom: 8px;
-    
-    @media (min-width: $minTablet) {
-      margin-right: 8px;
-      margin-bottom: 0px;
-    }
-  }
-  
-  .btnDelete {
-    border: 1px solid $btnSecondary;
-    color: $btnSecondary;
-    font-weight: 700;
-    font-size: 12px;
-    width: $widthBtnAction;
-  }
-}
-
 .containerModal { 
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: rgba(0, 0, 0, 0.4);
 }

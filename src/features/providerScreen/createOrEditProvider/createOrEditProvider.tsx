@@ -1,30 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery } from '@apollo/client';
+import { useDispatch } from 'react-redux';
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 import { routes } from '../../../utils/routes';
-import Header from '../../../components/header';
-
 import Styles from './createOrEditProvider.module.scss';
-import BtnActionsCrud from '../../../components/btnActionsCrud/btnActionsCrud';
 import {
   CREATE_PROVIDER,
   GET_PROVIDER,
   UPDATE_PROVIDER,
 } from '../../../graphql/queries/providers';
+import { submitProvider } from '../../../store/actions/submitProviders';
+import InputChameleon from '../../../components/Chameleon/InputChameleon';
+import ButtonChameleon from '../../../components/Chameleon/ButtonChameleon';
+
+/* eslint-disable jsx-a11y/label-has-associated-control */
 
 export default function CreateProvider() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { id } = router.query;
   const [errors, setErrors] = useState([]);
   const [identifier, setIdentifier] = useState<string>('');
-  const [errorIdentifier, setErroIdentifier] =
-    useState<boolean>(false);
   const [companyName, setCompanyName] =
     useState<string>('');
   const [fantasyName, setFantasyName] =
@@ -43,6 +42,7 @@ export default function CreateProvider() {
         response.createProvider;
 
       if (!errorsCreate.length) {
+        dispatch(submitProvider({ type: 'create' }));
         router.push(routes.providers.index);
       } else {
         setErrors(errorsCreate);
@@ -57,7 +57,9 @@ export default function CreateProvider() {
           document: identifier.replace(/[^\d]+/g, ''),
           name: companyName,
           tradingName: fantasyName,
+          // providerType: typeProvider, (error, settings in backend)
           stateInscriptionType: indicatorSign || null,
+          // externalId: identifierExternal, (error, settings in backend)
         },
       },
     });
@@ -73,7 +75,11 @@ export default function CreateProvider() {
 
   useEffect(() => {
     if (dataGet && dataGet.provider) {
-      setIdentifier(dataGet.provider.document);
+      setIdentifier(
+        dataGet.provider.document.length === 11
+          ? cpf.format(dataGet.provider.document)
+          : cnpj.format(dataGet.provider.document)
+      );
       setCompanyName(dataGet.provider.name);
       setFantasyName(dataGet.provider.tradingName);
       setIndicatorSign(
@@ -96,6 +102,7 @@ export default function CreateProvider() {
         response.updateProvider;
 
       if (!errorsEdit.length) {
+        dispatch(submitProvider({ type: 'edit' }));
         router.push(routes.providers.index);
       } else {
         setErrors(errorsEdit);
@@ -111,7 +118,9 @@ export default function CreateProvider() {
           document: identifier.replace(/[^\d]+/g, ''),
           name: companyName,
           tradingName: fantasyName,
+          // providerType: typeProvider, (error, settings in backend)
           stateInscriptionType: indicatorSign || null,
+          // externalId: identifierExternal, (error, settings in backend)
         },
       },
     });
@@ -121,7 +130,7 @@ export default function CreateProvider() {
 
   const resetForm = () => {
     setIdentifier('');
-    setErroIdentifier(false);
+    // setErroIdentifier(false);
     setCompanyName('');
     setFantasyName('');
     setTypeProvider(undefined);
@@ -130,38 +139,21 @@ export default function CreateProvider() {
   };
 
   const onChangeIdentifier = (e: any) => {
-    const event = e.target.value;
+    const ev = e.target.value;
+    const event = ev.replace(/\D/gim, '');
 
     if (event.length <= 11) {
-      setIdentifier(
-        event.replace(
-          /(\d{3})(\d{3})(\d{3})(\d{2})/g,
-          '$1.$2.$3-$4'
-        )
-      );
-    } else if (event.length === 14) {
-      setIdentifier(
-        event.replace(
-          /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
-          '$1.$2.$3/$4-$5'
-        )
-      );
-    } else {
-      // eslint-disable-next-line no-useless-escape
-      setIdentifier(event.replace(/(\.|\/|\-)/g, ''));
-    }
-
-    if (cpf.isValid(event) || cnpj.isValid(event)) {
-      setErroIdentifier(false);
-    } else {
-      setErroIdentifier(true);
+      const valueReplace = cpf.format(event);
+      setIdentifier(valueReplace);
+    } else if (event.length <= 14) {
+      const valueReplace = cnpj.format(event);
+      setIdentifier(valueReplace);
     }
   };
 
   if (errorsGetProvider && id) {
-    return <h1>Screen errors</h1>;
+    return <h1>Screen error</h1>;
   }
-
   // only get provider
   if (loadingGetProvider) {
     return <h1>Screen loading</h1>;
@@ -169,147 +161,243 @@ export default function CreateProvider() {
 
   return (
     <div className={Styles.containerForm}>
-      <Header
-        navigation={[
-          {
-            title: 'Fornecedores',
-            link: routes.providers.index,
-          },
-          {
-            title: `${
-              id ? 'Editar Fornecedor' : 'Novo Fornecedor'
-            }`,
-          },
-        ]}
-      />
-      <Typography variant="h4">
-        {`${id ? 'Editar Fornecedor' : 'Novo Fornecedor'}`}
-      </Typography>
-      <TextField
-        label="CPF/CNPJ"
-        id="outlined-margin-none"
-        variant="outlined"
-        className={Styles.inputIdentifier}
-        value={identifier}
-        onChange={(e) => {
-          onChangeIdentifier(e);
-        }}
-        error={errorIdentifier || errors.length > 0}
-        helperText={errors
-          .filter((x) => x.includes('CNPJ/CPF'))
-          .map((x) => (
-            <>
-              {x}
-              <br />
-            </>
-          ))}
-        onBlur={() => {
-          identifier.length === 0
-            ? setErroIdentifier(false)
-            : null;
-        }}
-      />
-      <div className={Styles.wrapperInput}>
-        <TextField
-          label="Razão Social/Nome"
-          id="outlined-margin-none"
-          variant="outlined"
-          className={Styles.inputCompanyName}
-          value={companyName}
-          onChange={(e) => {
-            setCompanyName(e.target.value);
-          }}
-          error={errors.length > 0}
-          helperText={errors
-            .filter((x) => x.includes('Social/Nome'))
-            .map((x) => (
-              <>
-                {x}
-                <br />
-              </>
-            ))}
-        />
-        <TextField
-          label="Nome Fantasia"
-          id="outlined-margin-none"
-          variant="outlined"
-          className={Styles.inputFantasyName}
-          value={fantasyName}
-          onChange={(e) => {
-            setFantasyName(e.target.value);
-          }}
+      <h1 className="ch-spaceStack">
+        {id ? 'Editar Fornecedor' : 'Novo Fornecedor'}
+      </h1>
+      {errors.length > 0 && (
+        <Alert severity="error">
+          <AlertTitle>
+            {`Erro ao ${
+              id ? 'editar' : 'criar'
+            } fornecedor.`}
+          </AlertTitle>
+          {errors.map((x) => {
+            return (
+              <ul>
+                <li>{x}</li>
+              </ul>
+            );
+          })}
+        </Alert>
+      )}
+      <div
+        className={`${Styles.wrapperIpt} ${Styles.wrapperIptFirst}`}
+      >
+        <InputChameleon
+          label="CPF/CNPJ"
+          required
+          value={identifier}
+          onChange={(e) => onChangeIdentifier(e)}
+          mode="text"
         />
       </div>
-      <div className={Styles.wrapperInput}>
-        <FormControl
-          variant="outlined"
-          className={Styles.inputTypeProvider}
-        >
-          <InputLabel htmlFor="outlined-age-native-simple">
-            Tipo de Fonecedor
-          </InputLabel>
-          <Select
-            native
-            label="Tipo de Fonecedor"
+      <div className={Styles.wrapperIptRow}>
+        <div className={Styles.wrapperIpt}>
+          <InputChameleon
+            label="Razão Social/Nome"
+            required
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            mode="text"
+          />
+        </div>
+        <div className={Styles.wrapperIpt}>
+          <InputChameleon
+            label="Nome Fantasia"
+            required={false}
+            value={fantasyName}
+            onChange={(e) => setFantasyName(e.target.value)}
+            mode="text"
+          />
+        </div>
+      </div>
+      <div className={Styles.wrapperIptRow}>
+        <div className={Styles.wrapperIpt}>
+          <InputChameleon
+            label="Tipo de Fornecedor"
+            required
             value={typeProvider}
             onChange={(e) => {
               setTypeProvider(e.target.value.toString());
             }}
-          >
-            <option aria-label="None" value="" />
-            <option value="Transportadora">
-              Transportadora
-            </option>
-            <option value="Distribuidora">
-              Distribuidora
-            </option>
-          </Select>
-        </FormControl>
-        <FormControl
-          variant="outlined"
-          className={Styles.inputTypeProvider}
-        >
-          <InputLabel htmlFor="outlined-age-native-simple">
-            Indicador Inscrição Estadual
-          </InputLabel>
-          <Select
-            native
+            mode="select"
+            options={[
+              {
+                value: 'Transportadora',
+                label: 'Transportadora',
+              },
+              {
+                value: 'Distribuidora',
+                label: 'Distribuidora',
+              },
+            ]}
+          />
+        </div>
+        <div className={Styles.wrapperIpt}>
+          <InputChameleon
             label="Indicador Inscrição Estadual"
+            required={false}
             value={indicatorSign}
             onChange={(e) => {
               setIndicatorSign(Number(e.target.value));
             }}
-          >
-            <option aria-label="None" value="" />
-            <option value={1}>1: Contribuinte ICMS</option>
-            <option value={2}>
-              2: Contribuinte Isento
-            </option>
-            <option value={9}>9: Não Contribuinte</option>
-          </Select>
-        </FormControl>
+            mode="select"
+            options={[
+              {
+                value: 1,
+                label: '1: Contribuinte ICMS',
+              },
+              {
+                value: 2,
+                label: '2: Contribuinte Isento',
+              },
+              {
+                value: 9,
+                label: '9: Não Contribuinte',
+              },
+            ]}
+          />
+        </div>
       </div>
-      <TextField
-        label="ID Externo"
-        id="outlined-margin-none"
-        variant="outlined"
-        className={Styles.inputID}
-        value={identifierExternal}
-        onChange={(e) => {
-          setIdentifierExternal(e.target.value);
-        }}
-      />
-      <BtnActionsCrud
-        mode={`${id ? 'edit' : 'create'}`}
-        title="Fornecedor"
-        routerCancel={routes.providers.index}
-        cancel={resetForm}
-        action={
-          id
-            ? handleSubmitEditProvider
-            : handleSubmitCreateProvider
-        }
-      />
+      <div className={Styles.wrapperIpt}>
+        <InputChameleon
+          label="ID Externo"
+          required={false}
+          value={identifierExternal}
+          onChange={(e) => {
+            setIdentifierExternal(e.target.value);
+          }}
+          mode="text"
+        />
+      </div>
+
+      {/* <div
+        className="ch-spaceStackGroup--s"
+        style={{ marginTop: '2rem' }}
+      >
+        <h2 className="ch-title ch-title--5">Endereço</h2>
+      </div>
+      <div
+        className={`${Styles.wrapperIptSM} ${Styles.wrapperIptFirst}`}
+      >
+        <InputChameleon
+          label="CEP"
+          required={false}
+          value={identifierExternal}
+          onChange={(e) => {
+            setIdentifierExternal(e.target.value);
+          }}
+          mode="text"
+        />
+      </div>
+      <div className={Styles.wrapperIptRow}>
+        <div className={Styles.wrapperIpt}>
+          <InputChameleon
+            label="Rua"
+            required={false}
+            value={identifierExternal}
+            onChange={(e) => {
+              setIdentifierExternal(e.target.value);
+            }}
+            mode="text"
+          />
+        </div>
+        <div className={Styles.wrapperIptSM}>
+          <InputChameleon
+            label="Número"
+            required={false}
+            value={identifierExternal}
+            onChange={(e) => {
+              setIdentifierExternal(e.target.value);
+            }}
+            mode="text"
+          />
+        </div>
+        <div className={Styles.wrapperIptSM}>
+          <InputChameleon
+            label="Complemento"
+            required={false}
+            value={identifierExternal}
+            onChange={(e) => {
+              setIdentifierExternal(e.target.value);
+            }}
+            mode="text"
+          />
+        </div>
+      </div>
+      <div className={Styles.wrapperIptRow}>
+        <div className={Styles.wrapperIptSM}>
+          <InputChameleon
+            label="Estado"
+            required={false}
+            value={identifierExternal}
+            onChange={(e) => {
+              setIdentifierExternal(e.target.value);
+            }}
+            mode="text"
+          />
+        </div>
+        <div className={Styles.wrapperIptSM}>
+          <InputChameleon
+            label="Cidade"
+            required={false}
+            value={identifierExternal}
+            onChange={(e) => {
+              setIdentifierExternal(e.target.value);
+            }}
+            mode="text"
+          />
+        </div>
+        <div className={Styles.wrapperIptSM}>
+          <InputChameleon
+            label="Cod. do município no IBGE"
+            required={false}
+            value={identifierExternal}
+            onChange={(e) => {
+              setIdentifierExternal(e.target.value);
+            }}
+            mode="text"
+          />
+        </div>
+        <div className={Styles.wrapperIptSM}>
+          <InputChameleon
+            label="Bairro"
+            required={false}
+            value={identifierExternal}
+            onChange={(e) => {
+              setIdentifierExternal(e.target.value);
+            }}
+            mode="text"
+          />
+        </div>
+      </div> */}
+
+      <div
+        className="ch-spaceInlineGroup--s"
+        style={{ marginTop: '2rem' }}
+      >
+        <ButtonChameleon
+          label={
+            id ? 'Editar Fornecedor' : 'Criar Fornecedor'
+          }
+          primary
+          icon={false}
+          onClick={
+            id
+              ? handleSubmitEditProvider
+              : handleSubmitCreateProvider
+          }
+        />
+        <ButtonChameleon
+          label="Cancelar"
+          outline
+          icon={false}
+          onClick={() => {
+            router.push(routes.providers.index);
+            resetForm();
+          }}
+        />
+      </div>
     </div>
   );
 }

@@ -1,52 +1,47 @@
 @import "../../../styles/";
 
 .containerForm {
-  padding-left: $paddingLeftScreen;
-  padding-right: $paddingRightScreen;
+  padding: 32px 20px;
 
-  .inputIdentifier {
-    width: 48%;
+  .wrapperIpt {
+    width: 28%;
+  }
+
+  .wrapperIptSM {
+    width: calc(28%/2 - 10px);
+  }
+  
+  .wrapperIptFirst {
     margin-top: 20px;
   }
 
   @media (max-width: $minTablet) {
-    .inputIdentifier {
+    .wrapperIpt, .wrapperIptSM {
       width: 100%;
     }
   }
 
-  .wrapperInput {
+  .wrapperIptRow {
     width: 100%;
     display: flex;
-    justify-content: space-between;
     margin: 20px 0;
 
-    .inputCompanyName, .inputFantasyName, .inputTypeProvider {
-      width: 48%;
+    & > :not(:first-child) {
+      margin-left: 20px;
     }
-
   }
   @media (max-width: $minTablet) {
-    .wrapperInput {
+    .wrapperIptRow {
       flex-direction: column;
 
       .inputCompanyName, .inputFantasyName, .inputTypeProvider {
         width: 100%;
       }
 
-      & > :last-child {
+      & > :not(:first-child) {
         margin-top: 20px;
+        margin-left: 0;
       }
-    }
-  }
-
-  .inputID {
-    width: 48%;
-  }
-
-  @media (max-width: $minTablet) {
-    .inputID {
-      width: 100%;
     }
   }
 }

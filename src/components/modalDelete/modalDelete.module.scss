@@ -2,29 +2,40 @@
 
 .container {
   background-color: $white;
-  width: 60%;
+  max-width: 950px;
+  min-height: 200px;
+  border-radius: 8px;
 
-  .header, .body, .footer {
-    padding: 20px;
+  @media (min-width: $medium) {
+    width: 88%;
   }
 
-  .footer {
+  .header {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(34,36,38,0.15);
+
+    p {
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 1.4rem;
+      line-height: 1.2em;
+      font-weight: bold;
+    }
+  }
+
+  .body {
+    padding: 16px;
+    border-bottom: 1px solid rgba(34,36,38,0.15);
+    height: 70px;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
 
-    & > :first-child {
-      border: 1px solid black;
-      color: grey;
-      min-width: $widthBtnAction;
-      margin-right: 8px;
-      font-weight: 700;
+    p {
+      font-size: 1em;
+      line-height: 1.4;
     }
-
-    & > :last-child {
-      background-color: $secondary;
-      color: $white;
-      min-width: $widthBtnAction;
-      font-weight: 700;
-    }
+  }
+  
+  .footer {
+    padding: 16px;
   }
 }

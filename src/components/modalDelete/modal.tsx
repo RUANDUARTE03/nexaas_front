@@ -1,9 +1,8 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import ButtonChameleon from '../Chameleon/ButtonChameleon';
 import Styles from './modalDelete.module.scss';
 
+/* eslint-disable react/jsx-one-expression-per-line */
 type ModalDeleteProps = {
   companyName: string;
   onClose: () => void;
@@ -18,23 +17,29 @@ export default function ModalDelete({
   return (
     <div className={Styles.container}>
       <div className={Styles.header}>
-        <Typography variant="h6">
-          Excluir Fornecedor
-        </Typography>
+        <p>Excluir Fornecedor</p>
       </div>
-      <Divider />
       <div className={Styles.body}>
-        <Typography variant="subtitle1">
-          Tem certeza que deseja excluir o fornecedor
+        <p>
+          Tem certeza que deseja excluir o fornecedor{' '}
           <b>{companyName}</b>
-        </Typography>
+        </p>
       </div>
-      <Divider />
-      <div className={Styles.footer}>
-        <Button onClick={onClose}>Não Excluir</Button>
-        <Button onClick={onSubmit}>
-          Excluir Fornecedor
-        </Button>
+      <div
+        className={`actions ch-spaceInlineGroup--sRight ${Styles.footer}`}
+      >
+        <ButtonChameleon
+          label="Não excluir"
+          icon={false}
+          outline
+          onClick={onClose}
+        />
+        <ButtonChameleon
+          label="Excluir fornecedor"
+          icon={false}
+          negative
+          onClick={onSubmit}
+        />
       </div>
     </div>
   );

@@ -1,7 +1,9 @@
 import React from 'react';
+import '@nexaas/chameleon/dist/chameleon.css';
 import '../styles/styleGlobal.css';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../graphql/apolloClient';
+import { storeWrapper } from '../store';
 
 function MyApp({ Component, pageProps }) {
   const apolloClient = useApollo(
@@ -15,4 +17,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default MyApp;
+export default storeWrapper.withRedux(MyApp);
