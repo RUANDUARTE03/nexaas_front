@@ -11,4 +11,13 @@ export const routes = {
       index: '',
     }),
   }),
+  organizations: include('/organizations/', {
+    index: '',
+    create: include('create/', {
+      index: '',
+    }),
+    edit: include('edit/:id/', {
+      index: '',
+    }),
+  }),
 };

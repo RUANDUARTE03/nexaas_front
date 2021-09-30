@@ -1,0 +1,37 @@
+.storeMenuContainer {
+  .menuTitle {
+    padding: 12px 16px 12px 16px;
+    cursor: pointer;
+  }
+
+  .menuItem {
+    display: flex;
+    width: 438px;
+    align-items: center;
+    cursor: pointer;
+    padding: 12px 16px 12px 16px;
+    color: #454646;
+
+    &:hover {
+      background: #f0f2f4;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:active {
+      color: #454646;
+    }
+
+    .leftMenuItem {
+      width: 50px;
+    }
+
+    .storeName {
+      margin-left: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}

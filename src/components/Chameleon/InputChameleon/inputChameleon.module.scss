@@ -1,4 +1,4 @@
-$colorInputChameleon: rgba(0, 0, 0, .87);
+$colorInputChameleon: rgba(0, 0, 0, 0.87);
 
 .containerIptChameleon {
   width: 100%;
@@ -21,8 +21,8 @@ $colorInputChameleon: rgba(0, 0, 0, .87);
     margin-top: 22px;
     padding: 4px 8px;
   }
-  
-  #wrapperIptChameleon:focus{
+
+  #wrapperIptChameleon:focus {
     border-color: rgb(108, 108, 253);
     background-color: white;
   }

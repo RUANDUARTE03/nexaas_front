@@ -1,0 +1,48 @@
+@import '../../styles/';
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.4);
+
+  .content {
+    background-color: $white;
+    max-width: 950px;
+    min-height: 200px;
+    border-radius: 8px;
+
+    @media (min-width: $medium) {
+      width: 88%;
+    }
+
+    .header {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+
+      p {
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 1.4rem;
+        line-height: 1.2em;
+        font-weight: bold;
+      }
+    }
+
+    .body {
+      padding: 16px;
+      border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+      height: 70px;
+      display: flex;
+      align-items: center;
+
+      p {
+        font-size: 1em;
+        line-height: 1.4;
+      }
+    }
+
+    .footer {
+      padding: 16px;
+    }
+  }
+}

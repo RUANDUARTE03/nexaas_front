@@ -7,3 +7,11 @@
 html, body, #root {
   height: 100%;
 }
+
+.nex_container {
+  margin-left: 250px;
+}
+
+.nex_container_collapse {
+  margin-left: 70px;
+}

@@ -1,0 +1,17 @@
+@import '../../styles/';
+
+.listingTableContainer {
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    align-self: end;
+  }
+  table {
+    width: 100%;
+  }
+
+  thead {
+    background-color: $backgroundColorHeaderTable;
+  }
+}

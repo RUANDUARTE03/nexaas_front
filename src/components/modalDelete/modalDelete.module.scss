@@ -1,4 +1,4 @@
-@import "../../styles/";
+@import '../../styles/';
 
 .container {
   background-color: $white;
@@ -12,7 +12,7 @@
 
   .header {
     padding: 12px 16px;
-    border-bottom: 1px solid rgba(34,36,38,0.15);
+    border-bottom: 1px solid rgba(34, 36, 38, 0.15);
 
     p {
       color: rgba(0, 0, 0, 0.85);
@@ -24,7 +24,7 @@
 
   .body {
     padding: 16px;
-    border-bottom: 1px solid rgba(34,36,38,0.15);
+    border-bottom: 1px solid rgba(34, 36, 38, 0.15);
     height: 70px;
     display: flex;
     align-items: center;
@@ -34,7 +34,7 @@
       line-height: 1.4;
     }
   }
-  
+
   .footer {
     padding: 16px;
   }

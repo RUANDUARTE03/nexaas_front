@@ -19,9 +19,19 @@ const GET_PROVIDER = gql`
       document
       name
       tradingName
-      providerType
       stateInscriptionType
+      providerType
       externalId
+      street
+      number
+      detail
+      zipcode
+      neighborhood
+      cityCode
+      city
+      state
+      country
+      stateInscription
     }
   }
 `;
@@ -30,7 +40,22 @@ const CREATE_PROVIDER = gql`
   mutation CreateProvider($input: CreateProviderInput!) {
     createProvider(input: $input) {
       provider {
-        id
+        document
+        name
+        tradingName
+        stateInscriptionType
+        providerType
+        externalId
+        street
+        number
+        detail
+        zipcode
+        neighborhood
+        cityCode
+        city
+        state
+        country
+        stateInscription
       }
       errors
     }
@@ -42,7 +67,22 @@ const UPDATE_PROVIDER = gql`
     updateProvider(input: $input) {
       provider {
         id
+        document
         name
+        tradingName
+        stateInscriptionType
+        providerType
+        externalId
+        street
+        number
+        detail
+        zipcode
+        neighborhood
+        cityCode
+        city
+        state
+        country
+        stateInscription
       }
       errors
     }

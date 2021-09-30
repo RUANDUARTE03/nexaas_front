@@ -15,6 +15,12 @@ import {
 import { submitProvider } from '../../../store/actions/submitProviders';
 import InputChameleon from '../../../components/Chameleon/InputChameleon';
 import ButtonChameleon from '../../../components/Chameleon/ButtonChameleon';
+import { states } from '../../../utils/constants/states';
+import {
+  formatZipCode,
+  unformatZipCode,
+} from '../../../utils/formatters/zipcode';
+import { getAddressByCep } from '../../../services/providerService';
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
@@ -32,8 +38,24 @@ export default function CreateProvider() {
     useState<string>();
   const [indicatorSign, setIndicatorSign] =
     useState<number>();
+  const [stateInscription, setStateInscription] =
+    useState<string>();
+  const [stateName, setStateName] = useState<number>();
   const [identifierExternal, setIdentifierExternal] =
     useState<string>('');
+
+  const [zipCode, setZipCode] = useState<string>();
+  const [formattedZipCode, setFormattedZipCode] =
+    useState<string>();
+
+  const [street, setStreet] = useState<string>();
+  const [addressNumber, setAddressNumber] =
+    useState<string>();
+  const [addressDetail, setAddressDetail] =
+    useState<string>();
+  const [city, setCity] = useState<string>();
+  const [cityIbgeId, setCityIbgeId] = useState<string>();
+  const [district, setDistrict] = useState<string>();
 
   // Init Logic For Create Provider
   const [createProvider] = useMutation(CREATE_PROVIDER, {
@@ -57,9 +79,23 @@ export default function CreateProvider() {
           document: identifier.replace(/[^\d]+/g, ''),
           name: companyName,
           tradingName: fantasyName,
-          // providerType: typeProvider, (error, settings in backend)
           stateInscriptionType: indicatorSign || null,
-          // externalId: identifierExternal, (error, settings in backend)
+          providerType:
+            typeProvider === 'Distribuidora'
+              ? 'distributor'
+              : 'carrier',
+          externalId: identifierExternal,
+
+          street,
+          number: addressNumber,
+          detail: addressDetail,
+          zipcode: zipCode,
+          neighborhood: district,
+          cityCode: cityIbgeId,
+          city,
+          state: stateName || null,
+          country: 'Brazil',
+          stateInscription: stateInscription || null,
         },
       },
     });
@@ -93,6 +129,20 @@ export default function CreateProvider() {
           : 'Transportadora'
       );
       setIdentifierExternal(dataGet.provider.externalId);
+      setStateName(dataGet.provider.state);
+      setStateInscription(
+        dataGet.provider.stateInscription
+      );
+      setZipCode(dataGet.provider.zipcode);
+      setFormattedZipCode(
+        formatZipCode(dataGet.provider.zipcode)
+      );
+      setStreet(dataGet.provider.street);
+      setAddressNumber(dataGet.provider.number);
+      setAddressDetail(dataGet.provider.detail);
+      setCity(dataGet.provider.city);
+      setCityIbgeId(dataGet.provider.cityCode);
+      setDistrict(dataGet.provider.neighborhood);
     }
   }, [dataGet]);
 
@@ -118,9 +168,22 @@ export default function CreateProvider() {
           document: identifier.replace(/[^\d]+/g, ''),
           name: companyName,
           tradingName: fantasyName,
-          // providerType: typeProvider, (error, settings in backend)
           stateInscriptionType: indicatorSign || null,
-          // externalId: identifierExternal, (error, settings in backend)
+          providerType:
+            typeProvider === 'Distribuidora'
+              ? 'distributor'
+              : 'carrier',
+          externalId: identifierExternal,
+          street,
+          number: addressNumber,
+          detail: addressDetail,
+          zipcode: zipCode,
+          neighborhood: district,
+          cityCode: cityIbgeId,
+          city,
+          state: stateName || null,
+          country: 'Brazil',
+          stateInscription: stateInscription || null,
         },
       },
     });
@@ -135,6 +198,8 @@ export default function CreateProvider() {
     setFantasyName('');
     setTypeProvider(undefined);
     setIndicatorSign(undefined);
+    setStateName(undefined);
+    setStateInscription('');
     setIdentifierExternal('');
   };
 
@@ -148,6 +213,40 @@ export default function CreateProvider() {
     } else if (event.length <= 14) {
       const valueReplace = cnpj.format(event);
       setIdentifier(valueReplace);
+    }
+  };
+
+  const onZipCodeChange = (e: any) => {
+    const { value } = e.target;
+
+    if (value.length === 8) {
+      setFormattedZipCode(formatZipCode(value));
+    } else {
+      setFormattedZipCode(value);
+    }
+
+    setZipCode(unformatZipCode(value));
+  };
+
+  const zipCodeKeyUp = () => {
+    if (zipCode.length === 8) {
+      getAddressByCep(zipCode).then((response) => {
+        const {
+          bairro,
+          complemento,
+          ibge,
+          localidade,
+          logradouro,
+          uf,
+        } = response.data;
+
+        setStreet(logradouro);
+        setAddressDetail(complemento);
+        setCity(localidade);
+        setCityIbgeId(ibge);
+        setDistrict(bairro);
+        setStateName(uf);
+      });
     }
   };
 
@@ -259,19 +358,33 @@ export default function CreateProvider() {
           />
         </div>
       </div>
-      <div className={Styles.wrapperIpt}>
-        <InputChameleon
-          label="ID Externo"
-          required={false}
-          value={identifierExternal}
-          onChange={(e) => {
-            setIdentifierExternal(e.target.value);
-          }}
-          mode="text"
-        />
+      <div className={Styles.wrapperIptRow}>
+        <div className={Styles.wrapperIpt}>
+          <InputChameleon
+            label="Inscrição Estadual"
+            required={false}
+            value={stateInscription}
+            onChange={(e) => {
+              setStateInscription(e.target.value);
+            }}
+            mode="text"
+          />
+        </div>
+
+        <div className={Styles.wrapperIpt}>
+          <InputChameleon
+            label="ID Externo"
+            required={false}
+            value={identifierExternal}
+            onChange={(e) => {
+              setIdentifierExternal(e.target.value);
+            }}
+            mode="text"
+          />
+        </div>
       </div>
 
-      {/* <div
+      <div
         className="ch-spaceStackGroup--s"
         style={{ marginTop: '2rem' }}
       >
@@ -283,21 +396,20 @@ export default function CreateProvider() {
         <InputChameleon
           label="CEP"
           required={false}
-          value={identifierExternal}
-          onChange={(e) => {
-            setIdentifierExternal(e.target.value);
-          }}
+          value={formattedZipCode}
+          onChange={onZipCodeChange}
+          onKeyUp={zipCodeKeyUp}
           mode="text"
         />
       </div>
       <div className={Styles.wrapperIptRow}>
         <div className={Styles.wrapperIpt}>
           <InputChameleon
-            label="Rua"
+            label="Logradouro"
             required={false}
-            value={identifierExternal}
+            value={street}
             onChange={(e) => {
-              setIdentifierExternal(e.target.value);
+              setStreet(e.target.value);
             }}
             mode="text"
           />
@@ -306,9 +418,9 @@ export default function CreateProvider() {
           <InputChameleon
             label="Número"
             required={false}
-            value={identifierExternal}
+            value={addressNumber}
             onChange={(e) => {
-              setIdentifierExternal(e.target.value);
+              setAddressNumber(e.target.value);
             }}
             mode="text"
           />
@@ -317,9 +429,9 @@ export default function CreateProvider() {
           <InputChameleon
             label="Complemento"
             required={false}
-            value={identifierExternal}
+            value={addressDetail}
             onChange={(e) => {
-              setIdentifierExternal(e.target.value);
+              setAddressDetail(e.target.value);
             }}
             mode="text"
           />
@@ -328,49 +440,54 @@ export default function CreateProvider() {
       <div className={Styles.wrapperIptRow}>
         <div className={Styles.wrapperIptSM}>
           <InputChameleon
-            label="Estado"
+            label="Bairro"
             required={false}
-            value={identifierExternal}
+            value={district}
             onChange={(e) => {
-              setIdentifierExternal(e.target.value);
+              setDistrict(e.target.value);
             }}
             mode="text"
           />
         </div>
+
         <div className={Styles.wrapperIptSM}>
           <InputChameleon
-            label="Cidade"
+            label="Município"
             required={false}
-            value={identifierExternal}
+            value={city}
             onChange={(e) => {
-              setIdentifierExternal(e.target.value);
+              setCity(e.target.value);
             }}
             mode="text"
           />
         </div>
+
         <div className={Styles.wrapperIptSM}>
           <InputChameleon
             label="Cod. do município no IBGE"
             required={false}
-            value={identifierExternal}
+            value={cityIbgeId}
             onChange={(e) => {
-              setIdentifierExternal(e.target.value);
+              setCityIbgeId(e.target.value);
             }}
             mode="text"
           />
         </div>
+
         <div className={Styles.wrapperIptSM}>
           <InputChameleon
-            label="Bairro"
+            label="Estado"
             required={false}
-            value={identifierExternal}
-            onChange={(e) => {
-              setIdentifierExternal(e.target.value);
-            }}
-            mode="text"
+            value={stateName}
+            onChange={(e) => setStateName(e.target.value)}
+            mode="select"
+            options={states.map((state) => ({
+              label: state.code,
+              value: state.code,
+            }))}
           />
         </div>
-      </div> */}
+      </div>
 
       <div
         className="ch-spaceInlineGroup--s"

@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
-import Modal from '@material-ui/core/Modal';
 import { useQuery, useMutation } from '@apollo/client';
 import { reverse } from 'named-urls';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import router from 'next/router';
 import Link from 'next/link';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { useDispatch, useSelector } from 'react-redux';
 import Alert from '@material-ui/lab/Alert';
-import ModalDelete from '../../components/modalDelete';
 import { routes } from '../../utils/routes';
 import ButtonChameleon from '../../components/Chameleon/ButtonChameleon';
-
 import Styles from './providerScreen.module.scss';
 import {
   ALL_PROVIDERS,
   DELETE_PROVIDER,
 } from '../../graphql/queries/providers';
 import { clearSubmit } from '../../store/actions/submitProviders';
+import DeleteModal from '../../components/delete-modal';
 
 export default function ProviderScreen() {
   const dispatch = useDispatch();
@@ -61,17 +62,17 @@ export default function ProviderScreen() {
   };
 
   const modalView = () => (
-    <Modal
+    <DeleteModal
+      title="Remover fornecedor"
       open={modalDeleteOpen}
       onClose={discardModalDelete}
-      className={Styles.containerModal}
+      onSubmit={confirmDeleteProvider}
     >
-      <ModalDelete
-        companyName={providerSelected?.name}
-        onClose={discardModalDelete}
-        onSubmit={confirmDeleteProvider}
-      />
-    </Modal>
+      <>
+        Tem certeza que deseja excluir o fornecedor
+        <b>{providerSelected?.name}</b> ?
+      </>
+    </DeleteModal>
   );
 
   if (loading) return <CircularProgress />;
@@ -88,8 +89,18 @@ export default function ProviderScreen() {
           }}
         />
       </div>
+      <FormControl variant="outlined">
+        <InputLabel htmlFor="component-outlined">
+          Name
+        </InputLabel>
+        <OutlinedInput
+          id="component-outlined"
+          label="Name"
+        />
+      </FormControl>
       {type !== '' && (
         <Alert
+          className={Styles.alert}
           severity="success"
           onClose={() => {
             dispatch(clearSubmit());

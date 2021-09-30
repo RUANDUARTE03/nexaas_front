@@ -17,8 +17,10 @@ type InputChameleonProps = {
   required?: boolean;
   value: string | number;
   onChange: (e: any) => void;
+  onKeyUp?: (e: any) => void;
   mode: 'text' | 'select';
   options?: optionsProps[];
+  type?: 'text' | 'number';
 };
 
 export default function InputChameleon({
@@ -26,23 +28,28 @@ export default function InputChameleon({
   required,
   value,
   onChange,
+  onKeyUp,
   mode,
   options,
+  type,
 }: InputChameleonProps) {
   return (
     <FormControl className={Styles.containerIptChameleon}>
       <InputLabel shrink>
-        {label} 
-{' '}
-{required && <span>*</span>}
+        {label} {required && <span>*</span>}
       </InputLabel>
       {mode === 'text' ? (
         <InputBase
+          type={type}
+          style={{ width: '100%' }}
           id={Styles.wrapperIptChameleon}
           value={value}
           onChange={(e: any) => {
             onChange(e);
           }}
+          onKeyUp={(e: any) =>
+            onKeyUp ? onKeyUp(e) : null
+          }
         />
       ) : (
         <NativeSelect

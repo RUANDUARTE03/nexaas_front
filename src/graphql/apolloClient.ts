@@ -12,8 +12,7 @@ function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined', // set to true for SSR
     link: new HttpLink({
-      uri: 'http://localhost:3000/api/v1/graphql',
-      // uri: 'https://homologation.estoka.com.br/api/v1/graphql',
+      uri: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/graphql`,
       credentials: 'include',
     }),
     cache: new InMemoryCache(),

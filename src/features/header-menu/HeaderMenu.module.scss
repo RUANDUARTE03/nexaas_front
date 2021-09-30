@@ -1,0 +1,20 @@
+.headerMenu {
+  display: flex;
+  padding: 0 16px 0 20px;
+
+  .menuItem {
+    padding-right: 30px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+
+  .imageSize {
+    border-radius: 50%;
+    width: 36px;
+  }
+}
