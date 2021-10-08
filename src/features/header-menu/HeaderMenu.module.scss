@@ -1,7 +1,11 @@
 .headerMenu {
   display: flex;
-  padding: 0 16px 0 20px;
 
+  .organizationMenu {
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+  }
   .menuItem {
     padding-right: 30px;
     display: flex;

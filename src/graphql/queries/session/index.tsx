@@ -12,4 +12,16 @@ const GET_SESSION_PROFILE = gql`
   }
 `;
 
-export { GET_SESSION_PROFILE };
+const GET_CURRENT_ORGANIZATION = gql`
+  query getSessionProfile {
+    session {
+      organizations {
+        id
+        current
+        name
+      }
+    }
+  }
+`;
+
+export { GET_SESSION_PROFILE, GET_CURRENT_ORGANIZATION };

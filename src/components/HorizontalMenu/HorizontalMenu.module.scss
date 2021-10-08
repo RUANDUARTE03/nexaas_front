@@ -1,10 +1,24 @@
 .horizontalMenu {
+  transition-property: box-shadow, margin-left, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  transition-delay: unset;
   display: flex;
   flex-direction: row;
   align-items: center;
   place-content: space-between;
   height: 60px;
-  padding: 0 20px 0 20px;
+  background-color: #fff;
+
+  &.isSticky {
+    box-shadow: 0 2px 10px rgb(172 185 210 / 65%);
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 101;
+
+    opacity: 0.95;
+  }
 }
 
 .breadcumb {

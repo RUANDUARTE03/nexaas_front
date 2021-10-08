@@ -6,6 +6,8 @@ import Styles from './ProfileMenu.module.scss';
 
 import { GET_SESSION_PROFILE } from '../../../graphql/queries/session';
 import Spinner from '../../../components/spinner';
+import router from 'next/router';
+import { routes } from '../../../utils/routes';
 /* 
 import { routes } from '../../../utils/routes';
 import router from 'next/router';
@@ -69,9 +71,9 @@ export default function ProfileMenu() {
           tabIndex={-1}
           role="button"
           className={Styles.menuItem}
-          /* onClick={() => {
+          onClick={() => {
             router.push(routes.providers.create.index);
-          }} */
+          }}
         >
           <AiOutlineUser
             size={16}

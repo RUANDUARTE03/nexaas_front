@@ -16,7 +16,9 @@ import { routes } from '../../utils/routes';
 import DeleteModal from '../../components/delete-modal';
 import { Organization } from './models/Organization';
 import Styles from './OrganizationPage.module.scss';
-import { GET_SESSION_PROFILE } from '../../graphql/queries/session';
+import { GET_CURRENT_ORGANIZATION } from '../../graphql/queries/session';
+import HeaderMenu from '../header-menu';
+import Content from '../../components/content';
 
 interface FetchOrganizationData {
   organizations: Organization[];
@@ -27,14 +29,17 @@ export default function OrganizationPage() {
     useState(false);
   const [selectedOrganization, setSelectedOrganization] =
     useState<Organization>();
-  const [currentOrg, setCurrentOrg] = useState();
+  const [currentOrg, setCurrentOrg] = useState<number>();
 
-  const { data: dataGet } = useQuery(GET_SESSION_PROFILE);
+  const { data: dataGet } = useQuery(
+    GET_CURRENT_ORGANIZATION
+  );
 
   useEffect(() => {
-    console.log('asdasd', dataGet);
     if (dataGet && dataGet.session) {
-      console.log(dataGet.session);
+      dataGet.session.organizations.forEach((org) =>
+        org.current ? setCurrentOrg(org.id) : null
+      );
     }
   }, [dataGet]);
 
@@ -83,23 +88,24 @@ export default function OrganizationPage() {
                   />
                 </Link>
               </div>
-
-              <ButtonChameleon
-                label="Excluir"
-                negative
-                outline
-                icon={false}
-                onClick={() => {
-                  setDeleteModalOpen(true);
-                  setSelectedOrganization(organization);
-                }}
-              />
+              {Number(id) !== currentOrg && (
+                <ButtonChameleon
+                  label="Excluir"
+                  negative
+                  outline
+                  icon={false}
+                  onClick={() => {
+                    setDeleteModalOpen(true);
+                    setSelectedOrganization(organization);
+                  }}
+                />
+              )}
             </div>
           );
         },
       },
     ];
-  }, [data]);
+  }, [data, currentOrg]);
 
   function onCloseModalDelete(): void {
     setDeleteModalOpen(false);
@@ -151,24 +157,29 @@ export default function OrganizationPage() {
   }, [refetch]);
 
   return (
-    <div className={Styles.organizationPage}>
-      <div className={Styles.header}>
-        <ButtonChameleon
-          label="Organização"
-          primary
-          icon
-          onClick={() => {
-            router.push(routes.organizations.create.index);
-          }}
-        />
+    <>
+      <HeaderMenu breadcumb="Organizações" />
+      <div className={Styles.organizationPage}>
+        <div className={Styles.header}>
+          <ButtonChameleon
+            label="Nova Organização"
+            primary
+            icon
+            onClick={() => {
+              router.push(
+                routes.organizations.create.index
+              );
+            }}
+          />
+        </div>
+        <div>
+          <ListingTable
+            data={data?.organizations}
+            columns={columns}
+          />
+          {modalView()}
+        </div>
       </div>
-      <div>
-        <ListingTable
-          data={data?.organizations}
-          columns={columns}
-        />
-        {modalView()}
-      </div>
-    </div>
+    </>
   );
 }

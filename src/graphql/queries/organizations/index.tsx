@@ -36,6 +36,19 @@ const UPDATE_ORGANIZATION = gql`
   }
 `;
 
+const CHANGE_CURRENT_ORGANIZATION = gql`
+  mutation ChangeOrganization(
+    $input: ChangeOrganizationInput!
+  ) {
+    changeOrganization(input: $input) {
+      organization {
+        id
+      }
+      errors
+    }
+  }
+`;
+
 const DELETE_ORGANIZATION = gql`
   mutation deleteOrganization(
     $input: DeleteOrganizationInput!
@@ -85,4 +98,5 @@ export {
   DELETE_ORGANIZATION,
   CREATE_ORGANIZATION,
   UPDATE_ORGANIZATION,
+  CHANGE_CURRENT_ORGANIZATION,
 };

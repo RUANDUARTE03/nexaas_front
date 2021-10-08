@@ -4,12 +4,14 @@
   box-sizing: border-box;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
 .nex_container {
-  margin-left: 250px;
+  margin-left: 240px;
 }
 
 .nex_container_collapse {

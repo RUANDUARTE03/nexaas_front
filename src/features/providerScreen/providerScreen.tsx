@@ -78,7 +78,7 @@ export default function ProviderScreen() {
   if (loading) return <CircularProgress />;
 
   return (
-    <div className="ch-template-content">
+    <>
       <div className="ch-spaceInlineGroup--right ch-spaceStack">
         <ButtonChameleon
           label="Fornecedores"
@@ -165,6 +165,6 @@ export default function ProviderScreen() {
         </tbody>
       </table>
       {modalView()}
-    </div>
+    </>
   );
 }

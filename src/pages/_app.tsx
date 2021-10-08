@@ -5,7 +5,7 @@ import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../graphql/apolloClient';
 import Navigation from '../components/Navigation';
 import { storeWrapper } from '../store';
-import HeaderMenu from '../features/header-menu/HeaderMenu';
+import Content from '../components/content';
 
 function MyApp({ Component, pageProps }) {
   const [insertML, setInsertML] = useState<boolean>(false);
@@ -34,8 +34,9 @@ function MyApp({ Component, pageProps }) {
             : 'nex_container_collapse'
         }`}
       >
-        <HeaderMenu breadcumb="Tela Teste" />
-        <Component {...pageProps} />
+        <Content>
+          <Component {...pageProps} />
+        </Content>
       </div>
     </ApolloProvider>
   );
