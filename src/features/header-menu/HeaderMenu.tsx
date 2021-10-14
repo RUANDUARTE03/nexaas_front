@@ -23,7 +23,7 @@ export default function HeaderMenu({
 }: HeaderMenuProps) {
   const [userProfileImage, setUserProfileImage] =
     useState();
-  const [currentOrg, setCurrentOrg] = useState();
+  const [currentOrg, setCurrentOrg] = useState<Organization>();
   const [organizations, setOrganizations] = useState<
     Organization[]
   >([]);

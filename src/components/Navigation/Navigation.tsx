@@ -8,7 +8,6 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import { concat, indexOf } from 'lodash';
-import LogoEstoka from '../../assets/icon_estoka.png';
 import Styles from './navigation.module.scss';
 import {
   dataMenuInstallment,
@@ -57,7 +56,11 @@ export default function Navigation({
     } else {
       setExpanded(false);
     }
-  }, [isExpandedDrawer, isExpandedDrawerHover]);
+  }, [
+    isExpandedDrawer,
+    isExpandedDrawerHover,
+    setExpanded,
+  ]);
 
   useEffect(() => {
     if (size.width > 768) {
@@ -67,7 +70,7 @@ export default function Navigation({
       setDrawerBottom(true);
       setDrawerB(true);
     }
-  }, [size]);
+  }, [size, setExpanded, setDrawerB]);
 
   useEffect(() => {
     if (window.location) {
@@ -267,7 +270,7 @@ export default function Navigation({
         <Image
           className={`${Styles.imageLogo}`}
           layout="fill"
-          src={LogoEstoka}
+          src="/icon_estoka.png"
           alt=""
         />
         <div className="ch-brand-name">OMS</div>

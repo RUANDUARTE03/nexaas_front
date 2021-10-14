@@ -1,10 +1,5 @@
 import Image from 'next/image';
 import Styles from './StoreMenu.module.scss';
-import AnalyticsLogo from '../../../assets/logo-analytics.png';
-import CobratoLogo from '../../../assets/logo-cobrato.png';
-import EmitesLogo from '../../../assets/logo-emites.png';
-import MyFinanceLogo from '../../../assets/logo-myfinance.png';
-import PdVendLogo from '../../../assets/logo-pdvend.png';
 
 const storesUrls = {
   myFinance: 'https://sandbox.conta.fintera.com.br/',
@@ -32,7 +27,8 @@ export default function StoreMenu() {
           rel="noreferrer"
         >
           <Image
-            src={MyFinanceLogo}
+            layout="fill"
+            src="/logo-myfinance.png"
             alt="profile"
             className={Styles.leftMenuItem}
           />
@@ -51,7 +47,8 @@ export default function StoreMenu() {
           rel="noreferrer"
         >
           <Image
-            src={AnalyticsLogo}
+            layout="fill"
+            src="/logo-analytics.png"
             alt="analytics"
             className={Styles.leftMenuItem}
           />
@@ -70,7 +67,8 @@ export default function StoreMenu() {
           rel="noreferrer"
         >
           <Image
-            src={PdVendLogo}
+            layout="fill"
+            src="/logo-pdvend.png"
             alt="pdvend"
             className={Styles.leftMenuItem}
           />
@@ -89,7 +87,8 @@ export default function StoreMenu() {
           rel="noreferrer"
         >
           <Image
-            src={EmitesLogo}
+            layout="fill"
+            src="/logo-emites.png"
             alt="emites"
             className={Styles.leftMenuItem}
           />
@@ -108,7 +107,8 @@ export default function StoreMenu() {
           rel="noreferrer"
         >
           <Image
-            src={CobratoLogo}
+            layout="fill"
+            src="/logo-cobrato.png"
             alt="cobrato"
             className={Styles.leftMenuItem}
           />

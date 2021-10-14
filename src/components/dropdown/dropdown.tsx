@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-newline */
 import RCDropdown from 'rc-dropdown';
 import 'rc-dropdown/assets/index.css';
 import { useState, useMemo } from 'react';

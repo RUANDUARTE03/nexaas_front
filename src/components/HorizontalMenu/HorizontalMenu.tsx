@@ -24,7 +24,10 @@ export default function HorizontalMenu({
       }
     );
     return () => {
-      window.removeEventListener('scroll', scrollCallBack);
+      window.removeEventListener(
+        'scroll',
+        () => scrollCallBack
+      );
     };
   }, []);
 
