@@ -1,25 +1,40 @@
 /* eslint-disable no-underscore-dangle */
 import { useMemo } from 'react';
+import { onError } from '@apollo/client/link/error';
+import Router from 'next/router';
+
 import {
   ApolloClient,
-  HttpLink,
+  createHttpLink,
   InMemoryCache,
 } from '@apollo/client';
 
 let apolloClient;
 
+const requestLink = createHttpLink({
+  uri: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/graphql`,
+  credentials: 'include',
+});
+
+const errorLink = onError(
+  ({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) console.log('GraphQL Error');
+    if (networkError)
+      Router.push(process.env.NEXT_PUBLIC_API_URL);
+  }
+);
+
+const link = errorLink.concat(requestLink);
+
 function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined', // set to true for SSR
-    link: new HttpLink({
-      uri: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/graphql`,
-      credentials: 'include',
-    }),
+    link,
     cache: new InMemoryCache(),
   });
 }
 
-export function initializeApollo(initialState = null) {
+function initializeApollo(initialState = null) {
   const _apolloClient =
     apolloClient ?? createApolloClient();
 
