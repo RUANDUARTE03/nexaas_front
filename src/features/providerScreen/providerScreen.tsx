@@ -75,12 +75,30 @@ export default function ProviderScreen() {
     </DeleteModal>
   );
 
-  if (loading) return <CircularProgress />;
+  const CustomComponentLink = React.forwardRef(() => {
+    return (
+      <ButtonChameleon
+        label="Editar"
+        primary
+        outline
+        icon={false}
+        onClick={() => {}}
+      />
+    );
+  });
+
+  if (loading)
+    return (
+      <div data-testid="container-loading-data">
+        <CircularProgress />
+      </div>
+    );
 
   return (
     <>
       <div className="ch-spaceInlineGroup--right ch-spaceStack">
         <ButtonChameleon
+          dataTestId="btn-create-provider"
           label="Fornecedores"
           primary
           icon
@@ -123,7 +141,7 @@ export default function ProviderScreen() {
         </thead>
         <tbody>
           {data.providers.map((provider) => (
-            <tr id={provider.id}>
+            <tr id={provider.id} key={provider.id}>
               <td>
                 {provider.document.length === 11
                   ? cpf.format(provider.document)
@@ -140,15 +158,10 @@ export default function ProviderScreen() {
                       { id: provider.id }
                     )}
                   >
-                    <ButtonChameleon
-                      label="Editar"
-                      primary
-                      outline
-                      icon={false}
-                      onClick={() => {}}
-                    />
+                    <CustomComponentLink />
                   </Link>
                   <ButtonChameleon
+                    dataTestId="btn-delete-provider"
                     label="Excluir"
                     negative
                     outline

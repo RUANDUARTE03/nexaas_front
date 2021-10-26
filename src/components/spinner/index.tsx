@@ -14,7 +14,9 @@ export default function Spinner({
   return (
     <>
       {spinning ? (
-        <FaSpinner className={Styles.spinner} />
+        <div data-testid="container-spinner">
+          <FaSpinner className={Styles.spinner} />
+        </div>
       ) : (
         <>{children}</>
       )}

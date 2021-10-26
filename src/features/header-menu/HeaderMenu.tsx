@@ -14,6 +14,7 @@ import OrganizationMenu from './organization-menu';
 import ProfileMenu from './profile-menu/ProfileMenu';
 import StoreMenu from './store-menu/StoreMenu';
 
+/* eslint-disable react/jsx-wrap-multilines */
 interface HeaderMenuProps {
   breadcumb: string;
 }
@@ -23,7 +24,8 @@ export default function HeaderMenu({
 }: HeaderMenuProps) {
   const [userProfileImage, setUserProfileImage] =
     useState();
-  const [currentOrg, setCurrentOrg] = useState<Organization>();
+  const [currentOrg, setCurrentOrg] =
+    useState<Organization>();
   const [organizations, setOrganizations] = useState<
     Organization[]
   >([]);

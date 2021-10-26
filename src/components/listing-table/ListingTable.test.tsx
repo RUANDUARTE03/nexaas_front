@@ -1,0 +1,16 @@
+import React from 'react';
+import { render } from '@testing-library/react';
+import ListingTable from './ListingTable';
+
+function renderListingTable({ data, columns }) {
+  return render(
+    <ListingTable data={data} columns={columns} />
+  );
+}
+
+it('Should render corretly', () => {
+  renderListingTable({
+    data: [],
+    columns: 5,
+  });
+});

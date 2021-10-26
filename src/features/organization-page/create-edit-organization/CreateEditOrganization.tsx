@@ -26,6 +26,7 @@ import { getAddressByCep } from '../../../services/providerService';
 import ButtonChameleon from '../../../components/Chameleon/ButtonChameleon';
 import { formatValueToReal } from '../../../utils/formatters/Currency';
 import { submitOrganization } from '../../../store/actions/submitOrganizations';
+import { CircularProgress } from '@material-ui/core';
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
@@ -258,12 +259,19 @@ export default function CreateEditOrganization() {
   };
 
   if (errorsGetOrganization && id) {
-    return <h1>Screen error</h1>;
+    return (
+      <div data-testid="container-error-data">
+        <h1>Screen error</h1>
+      </div>
+    );
   }
 
   if (loadingGetOrganization) {
-    return <h1>Screen loading</h1>;
-  }
+    return (
+      <div data-testid="container-loading-data">
+        <CircularProgress />
+      </div>
+  )}
 
   return (
     <div className={Styles.createEditOrganization}>
@@ -639,6 +647,7 @@ export default function CreateEditOrganization() {
               style={{ marginTop: '2rem' }}
             >
               <ButtonChameleon
+                dataTestId="btn-createOrEditOrganization"
                 label={
                   id
                     ? 'Editar Organização'
@@ -653,6 +662,7 @@ export default function CreateEditOrganization() {
                 }
               />
               <ButtonChameleon
+                dataTestId="btn-createOrEditOrganization-cancel"
                 label="Cancelar"
                 outline
                 icon={false}

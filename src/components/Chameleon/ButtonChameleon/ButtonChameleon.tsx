@@ -12,6 +12,7 @@ type ButtonChameleonProps = {
   primary?: boolean;
   negative?: boolean;
   outline?: boolean;
+  dataTestId?: string;
 };
 
 export default function ButtonChameleon({
@@ -21,6 +22,7 @@ export default function ButtonChameleon({
   primary,
   negative,
   outline,
+  dataTestId,
 }: ButtonChameleonProps) {
   return (
     <button
@@ -31,11 +33,13 @@ export default function ButtonChameleon({
         outline && 'ch-button--outline'
       } ${icon && 'has-icon'}`}
       onClick={onClick}
+      data-testid={dataTestId}
     >
       {icon && (
         <FontAwesomeIcon
           icon="plus"
           style={{ marginRight: 8 }}
+          className="icon-plus-btn"
         />
       )}
       {label}

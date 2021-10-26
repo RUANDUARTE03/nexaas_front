@@ -4,3 +4,7 @@ declare namespace ApplicationWindow {
     height: number | undefined;
   };
 }
+
+type STORE_DEFINITION = ReturnType<
+  typeof import('store').default['getState']
+>;

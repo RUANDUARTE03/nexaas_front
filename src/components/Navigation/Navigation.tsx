@@ -124,11 +124,13 @@ export default function Navigation({
   }) => {
     return (
       <div
+        data-testid="container-subMenu"
         className={`ch-menu-submenu  ${
           subMenuActive.includes(label) && 'is-open'
         }`}
       >
         <button
+          data-testid="btn-subMenu"
           onClick={() => {
             changeSubMenu({ label });
           }}
@@ -195,6 +197,7 @@ export default function Navigation({
   }) => {
     return (
       <button
+        data-testid="btn-click-itemSubMenu"
         onClick={() => {
           newVersion &&
             directNewVersion &&
@@ -254,6 +257,7 @@ export default function Navigation({
   /* eslint-disable global-require */
   return (
     <div
+      data-testid="container-template"
       className={`ch-template-nav ${
         isOpenDrawerSmall && 'is-open'
       } ${isExpandedDrawer && 'is-expanded'} ${
@@ -308,6 +312,7 @@ export default function Navigation({
           }`}
         >
           <button
+            data-testid="btn-action-isOpenDraweSmall"
             type="button"
             className={Styles.containerIconLeft}
             onClick={() => {
@@ -325,6 +330,7 @@ export default function Navigation({
       )}
       {!drawerBottom && (
         <button
+          data-testid="btn-action-expandedDrawer"
           className={Styles.containerIconDirection}
           onClick={() => {
             setIsExpandedDrawer(!isExpandedDrawer);

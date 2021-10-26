@@ -24,7 +24,10 @@ export default function DeleteModal({
       onClose={onClose}
       className={Styles.container}
     >
-      <div className={Styles.content}>
+      <div
+        className={Styles.content}
+        data-testid="container-delete-modal"
+      >
         <div className={Styles.header}>
           <p>{title}</p>
         </div>
@@ -39,12 +42,14 @@ export default function DeleteModal({
             icon={false}
             outline
             onClick={onClose}
+            dataTestId="btn-action-close-modal"
           />
           <ButtonChameleon
             label="Excluir"
             icon={false}
             negative
             onClick={onSubmit}
+            dataTestId="btn-action-submit-modal"
           />
         </div>
       </div>

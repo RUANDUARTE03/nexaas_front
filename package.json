@@ -10,7 +10,7 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "jest:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@apollo/client": "^3.4.7",
@@ -27,6 +27,7 @@
     "next": "11.0.1",
     "next-redux-wrapper": "^7.0.2",
     "node-sass": "4.14.1",
+    "path": "^0.12.7",
     "rc-dropdown": "^3.2.0",
     "rc-menu": "^9.0.12",
     "rc-table": "^7.18.1",
@@ -35,6 +36,7 @@
     "react-icons": "^4.2.0",
     "react-redux": "^7.2.4",
     "redux": "^4.1.1",
+    "redux-thunk": "^2.3.0",
     "sass": "^1.37.5",
     "sass-loader": "^12.1.0"
   },

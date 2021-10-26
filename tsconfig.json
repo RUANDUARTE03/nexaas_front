@@ -21,7 +21,8 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "src/utils/formatters/assetsFormatter.js"
   ],
   "exclude": [
     "node_modules"

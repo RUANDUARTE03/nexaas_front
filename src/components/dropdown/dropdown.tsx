@@ -4,6 +4,8 @@ import 'rc-dropdown/assets/index.css';
 import { useState, useMemo } from 'react';
 import Styles from './dropdown.module.scss';
 
+/* eslint-disable react/jsx-curly-newline */
+
 interface DropdownProps {
   children: JSX.Element;
   overlay: JSX.Element;

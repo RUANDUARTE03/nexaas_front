@@ -47,6 +47,7 @@ export default function ProfileMenu() {
   return (
     <Spinner spinning={loadingGetProvider}>
       <ul
+        data-testid="container-profile-menu"
         className={Styles.profileMenuContainer}
         style={{ fontSize: '14px' }}
       >

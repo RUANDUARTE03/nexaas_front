@@ -6,6 +6,7 @@ import { cnpj as cnpjFormatter } from 'cpf-cnpj-validator';
 
 import React, { useEffect, useMemo, useState } from 'react';
 import router from 'next/router';
+import { CircularProgress } from '@material-ui/core';
 import ButtonChameleon from '../../components/Chameleon/ButtonChameleon';
 import ListingTable from '../../components/listing-table/ListingTable';
 import {
@@ -18,7 +19,6 @@ import { Organization } from './models/Organization';
 import Styles from './OrganizationPage.module.scss';
 import { GET_CURRENT_ORGANIZATION } from '../../graphql/queries/session';
 import HeaderMenu from '../header-menu';
-import Content from '../../components/content';
 
 interface FetchOrganizationData {
   organizations: Organization[];
@@ -43,9 +43,8 @@ export default function OrganizationPage() {
     }
   }, [dataGet]);
 
-  const { data, refetch } = useQuery<FetchOrganizationData>(
-    ALL_ORGANIZATIONS
-  );
+  const { data, refetch, loading } =
+    useQuery<FetchOrganizationData>(ALL_ORGANIZATIONS);
 
   const columns = useMemo(() => {
     return [
@@ -90,6 +89,7 @@ export default function OrganizationPage() {
               </div>
               {Number(id) !== currentOrg && (
                 <ButtonChameleon
+                  dataTestId="btn-delete-organization"
                   label="Excluir"
                   negative
                   outline
@@ -117,7 +117,7 @@ export default function OrganizationPage() {
       open={deleteModalOpen}
       onClose={onCloseModalDelete}
       onSubmit={confirmDeleteOrganization}
-      title="Excluir organização"
+      title="Remover organização"
     >
       <div>
         <span>
@@ -156,12 +156,20 @@ export default function OrganizationPage() {
     refetch();
   }, [refetch]);
 
+  if (loading)
+    return (
+      <div data-testid="container-loading-data">
+        <CircularProgress />
+      </div>
+    );
+
   return (
     <>
       <HeaderMenu breadcumb="Organizações" />
       <div className={Styles.organizationPage}>
         <div className={Styles.header}>
           <ButtonChameleon
+            dataTestId="btn-create-organization"
             label="Nova Organização"
             primary
             icon

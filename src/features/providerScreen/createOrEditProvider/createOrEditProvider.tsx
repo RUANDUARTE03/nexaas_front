@@ -5,6 +5,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useDispatch } from 'react-redux';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { routes } from '../../../utils/routes';
 import Styles from './createOrEditProvider.module.scss';
 import {
@@ -251,15 +252,26 @@ export default function CreateProvider() {
   };
 
   if (errorsGetProvider && id) {
-    return <h1>Screen error</h1>;
+    return (
+      <div data-testid="container-error-data">
+        <h1>Screen error</h1>
+      </div>
+    );
   }
   // only get provider
   if (loadingGetProvider) {
-    return <h1>Screen loading</h1>;
+    return (
+      <div data-testid="container-loading-data">
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (
-    <div className={Styles.containerForm}>
+    <div
+      className={Styles.containerForm}
+      data-testid="container-createOrEdit-provider"
+    >
       <h1 className="ch-spaceStack">
         {id ? 'Editar Fornecedor' : 'Novo Fornecedor'}
       </h1>
@@ -494,6 +506,7 @@ export default function CreateProvider() {
         style={{ marginTop: '2rem' }}
       >
         <ButtonChameleon
+          dataTestId="btn-createOrEditProvider"
           label={
             id ? 'Editar Fornecedor' : 'Criar Fornecedor'
           }
@@ -506,6 +519,7 @@ export default function CreateProvider() {
           }
         />
         <ButtonChameleon
+          dataTestId="btn-createOrEditProvider-cancel"
           label="Cancelar"
           outline
           icon={false}

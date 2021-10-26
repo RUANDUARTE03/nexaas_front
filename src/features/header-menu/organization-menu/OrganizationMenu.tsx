@@ -38,12 +38,15 @@ export default function OrganizationMenu({
     >
       {organizations.map((organization, index) => (
         <div
+          key={index}
           className={Styles.menuItem}
           tabIndex={index}
           role="button"
-          onClick={() =>
-            handleChangeOrganizationSubmit(organization?.id)
-          }
+          onClick={() => {
+            handleChangeOrganizationSubmit(
+              organization?.id
+            );
+          }}
         >
           <div>
             <span>{organization.name}</span>
