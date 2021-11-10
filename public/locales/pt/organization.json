@@ -1,0 +1,13 @@
+{
+    "breadcumb": "Organizações",
+    "newOrganizationBtn": "Nova Organização",
+    "table": {
+        "nameColumn": "Nome",
+        "cnpjColumn": "CNPJ",
+        "actionsColumn": "Ações"
+    },
+    "editLabel": "Editar",
+    "deleteLabel": "Excluir",
+    "removeOrgLabel": "Remover organização",
+    "confirmRemoveOrgLabel": "Tem certeza que deseja excluir a organização"
+}

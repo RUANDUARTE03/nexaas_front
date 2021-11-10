@@ -8,6 +8,8 @@ import { GET_SESSION_PROFILE } from '../../../graphql/queries/session';
 import Spinner from '../../../components/spinner';
 import router from 'next/router';
 import { routes } from '../../../utils/routes';
+import { useTranslation } from 'next-i18next';
+
 /* 
 import { routes } from '../../../utils/routes';
 import router from 'next/router';
@@ -17,6 +19,7 @@ export default function ProfileMenu() {
   const [userEmail, setUserEmail] = useState();
   const [userProfileImage, setUserProfileImage] =
     useState();
+  const { t } = useTranslation('profile-menu');
 
   const {
     data: dataGet,
@@ -38,8 +41,7 @@ export default function ProfileMenu() {
   if (errorsGetProvider) {
     return (
       <h2>
-        Ocorreu um erro inesperado, tente novamente mais
-        tarde
+        {t('error')}
       </h2>
     );
   }
@@ -80,7 +82,7 @@ export default function ProfileMenu() {
             size={16}
             className={Styles.leftMenuItem}
           />
-          <span>Meu perfil</span>
+          <span>{t('myProfile')}</span>
         </div>
         <div
           tabIndex={-2}
@@ -94,7 +96,7 @@ export default function ProfileMenu() {
             size={16}
             className={Styles.leftMenuItem}
           />
-          <span>Sair de Estoka desenvolvimento</span>
+          <span>{t('exit')}</span>
         </div>
       </ul>
     </Spinner>

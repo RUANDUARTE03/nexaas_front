@@ -1,0 +1,16 @@
+{
+  "breadcumb": "Fornecedores",
+  "removeProviderLabel": "Remover fornecedor",
+  "confirmRemoveProviderLabel": "Tem certeza que deseja excluir o fornecedor",
+  "editLabel": "Editar",
+  "providerLabel": "Fornecedores",
+  "nameLabel": "Name",
+  "createdLabel": "criado",
+  "editedLabel": "editado",
+  "docLabel": "CNPJ/CPF",
+  "companyNameLabel": "Razão Social/Nome",
+  "fantasyNameLabel": "Nome Fantasia",
+  "providerTypeLabel": "Tipo de Fonecedores",
+  "actionsLabel": "Ações",
+  "removeLabel": "Excluir"
+}

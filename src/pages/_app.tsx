@@ -6,6 +6,7 @@ import { useApollo } from '../graphql/apolloClient';
 import Navigation from '../components/Navigation';
 import { storeWrapper } from '../store';
 import Content from '../components/content';
+import { appWithTranslation } from 'next-i18next'
 
 function MyApp({ Component, pageProps }) {
   const [insertML, setInsertML] = useState<boolean>(false);
@@ -42,4 +43,6 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default storeWrapper.withRedux(MyApp);
+export default storeWrapper.withRedux(
+  appWithTranslation(MyApp)
+);

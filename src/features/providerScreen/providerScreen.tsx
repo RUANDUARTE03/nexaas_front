@@ -19,6 +19,8 @@ import {
 } from '../../graphql/queries/providers';
 import { clearSubmit } from '../../store/actions/submitProviders';
 import DeleteModal from '../../components/delete-modal';
+import { useTranslation } from 'next-i18next';
+import HeaderMenu from '../header-menu';
 
 export default function ProviderScreen() {
   const dispatch = useDispatch();
@@ -29,6 +31,7 @@ export default function ProviderScreen() {
     useState<boolean>(false);
   const [providerSelected, setProviderSelected] =
     useState(undefined);
+  const { t } = useTranslation('provider');
 
   const { data, loading, refetch } =
     useQuery(ALL_PROVIDERS);
@@ -63,13 +66,13 @@ export default function ProviderScreen() {
 
   const modalView = () => (
     <DeleteModal
-      title="Remover fornecedor"
+      title={t('removeProviderLabel')}
       open={modalDeleteOpen}
       onClose={discardModalDelete}
       onSubmit={confirmDeleteProvider}
     >
       <>
-        Tem certeza que deseja excluir o fornecedor
+        {t('confirmRemoveProviderLabel')}
         <b>{providerSelected?.name}</b> ?
       </>
     </DeleteModal>
@@ -78,7 +81,7 @@ export default function ProviderScreen() {
   const CustomComponentLink = React.forwardRef(() => {
     return (
       <ButtonChameleon
-        label="Editar"
+        label={t('editLabel')}
         primary
         outline
         icon={false}
@@ -96,10 +99,11 @@ export default function ProviderScreen() {
 
   return (
     <>
+      <HeaderMenu breadcumb={t('breadcumb')} />
       <div className="ch-spaceInlineGroup--right ch-spaceStack">
         <ButtonChameleon
           dataTestId="btn-create-provider"
-          label="Fornecedores"
+          label={t('providerLabel')}
           primary
           icon
           onClick={() => {
@@ -109,11 +113,11 @@ export default function ProviderScreen() {
       </div>
       <FormControl variant="outlined">
         <InputLabel htmlFor="component-outlined">
-          Name
+          {t('nameLabel')}
         </InputLabel>
         <OutlinedInput
           id="component-outlined"
-          label="Name"
+          label={t('nameLabel')}
         />
       </FormControl>
       {type !== '' && (
@@ -125,18 +129,20 @@ export default function ProviderScreen() {
           }}
         >
           {`Fornecedor ${
-            type === 'create' ? 'criado' : 'editado'
+            type === 'create'
+              ? t('createdLabel')
+              : t('editedLabel')
           } com sucesso`}
         </Alert>
       )}
       <table className="ch-table">
         <thead>
           <tr>
-            <th>CNPJ/CPF</th>
-            <th>Razão Social/Nome</th>
-            <th>Nome Fantasia</th>
-            <th>Tipo de Fonecedores</th>
-            <th>Ações</th>
+            <th>{t('docLabel')}</th>
+            <th>{t('companyNameLabel')}</th>
+            <th>{t('fantasyNameLabel')}</th>
+            <th>{t('providerTypeLabel')}</th>
+            <th>{t('actionsLabel')}</th>
           </tr>
         </thead>
         <tbody>
@@ -162,7 +168,7 @@ export default function ProviderScreen() {
                   </Link>
                   <ButtonChameleon
                     dataTestId="btn-delete-provider"
-                    label="Excluir"
+                    label={t('removeLabel')}
                     negative
                     outline
                     icon={false}

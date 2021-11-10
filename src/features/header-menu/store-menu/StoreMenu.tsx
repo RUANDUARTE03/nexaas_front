@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useTranslation } from 'next-i18next';
 import Styles from './StoreMenu.module.scss';
 
 const storesUrls = {
@@ -10,6 +11,8 @@ const storesUrls = {
 };
 
 export default function StoreMenu() {
+  const { t } = useTranslation('store-menu');
+
   return (
     <div>
       <div
@@ -17,7 +20,7 @@ export default function StoreMenu() {
         style={{ fontSize: '1rem' }}
       >
         <div className={Styles.menuTitle}>
-          <h6>Ir para...</h6>
+          <h6>{t('goTo')}</h6>
         </div>
 
         <a
@@ -27,7 +30,8 @@ export default function StoreMenu() {
           rel="noreferrer"
         >
           <Image
-            layout="fill"
+            width="50"
+            height="50"
             src="/logo-myfinance.png"
             alt="profile"
             className={Styles.leftMenuItem}
@@ -36,7 +40,7 @@ export default function StoreMenu() {
             <strong className={Styles.titleFont}>
               Myfinance
             </strong>
-            <span>Gestão Financeira</span>
+            <span>{t('myFinance')}</span>
           </div>
         </a>
 
@@ -47,7 +51,8 @@ export default function StoreMenu() {
           rel="noreferrer"
         >
           <Image
-            layout="fill"
+            width="50"
+            height="50"
             src="/logo-analytics.png"
             alt="analytics"
             className={Styles.leftMenuItem}
@@ -56,7 +61,7 @@ export default function StoreMenu() {
             <strong className={Styles.titleFont}>
               Analytics
             </strong>
-            <span>Inteligência de Dados</span>
+            <span>{t('analytics')}</span>
           </div>
         </a>
 
@@ -67,7 +72,8 @@ export default function StoreMenu() {
           rel="noreferrer"
         >
           <Image
-            layout="fill"
+            width="50"
+            height="50"
             src="/logo-pdvend.png"
             alt="pdvend"
             className={Styles.leftMenuItem}
@@ -76,7 +82,7 @@ export default function StoreMenu() {
             <strong className={Styles.titleFont}>
               PDVend
             </strong>
-            <span>Vendas Móveis</span>
+            <span>{t('pdVend')}</span>
           </div>
         </a>
 
@@ -87,7 +93,8 @@ export default function StoreMenu() {
           rel="noreferrer"
         >
           <Image
-            layout="fill"
+            width="50"
+            height="50"
             src="/logo-emites.png"
             alt="emites"
             className={Styles.leftMenuItem}
@@ -96,7 +103,7 @@ export default function StoreMenu() {
             <strong className={Styles.titleFont}>
               Emites
             </strong>
-            <span>Gestão Tributária</span>
+            <span>{t('emites')}</span>
           </div>
         </a>
 
@@ -107,7 +114,8 @@ export default function StoreMenu() {
           rel="noreferrer"
         >
           <Image
-            layout="fill"
+            width="50"
+            height="50"
             src="/logo-cobrato.png"
             alt="cobrato"
             className={Styles.leftMenuItem}
@@ -116,7 +124,7 @@ export default function StoreMenu() {
             <strong className={Styles.titleFont}>
               Cobrato
             </strong>
-            <span>Meios de Pagamento</span>
+            <span>{t('cobrato')}</span>
           </div>
         </a>
       </div>

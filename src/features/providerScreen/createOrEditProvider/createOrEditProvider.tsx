@@ -22,10 +22,13 @@ import {
   unformatZipCode,
 } from '../../../utils/formatters/zipcode';
 import { getAddressByCep } from '../../../services/providerService';
+import { useTranslation } from 'next-i18next';
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 export default function CreateProvider() {
+  const { t } = useTranslation('create-edit-provider');
+
   const router = useRouter();
   const dispatch = useDispatch();
   const { id } = router.query;
@@ -254,7 +257,7 @@ export default function CreateProvider() {
   if (errorsGetProvider && id) {
     return (
       <div data-testid="container-error-data">
-        <h1>Screen error</h1>
+        <h1>{t('error')}</h1>
       </div>
     );
   }
@@ -273,13 +276,13 @@ export default function CreateProvider() {
       data-testid="container-createOrEdit-provider"
     >
       <h1 className="ch-spaceStack">
-        {id ? 'Editar Fornecedor' : 'Novo Fornecedor'}
+        {id ? t('editProvider') : t('createProvider')}
       </h1>
       {errors.length > 0 && (
         <Alert severity="error">
           <AlertTitle>
             {`Erro ao ${
-              id ? 'editar' : 'criar'
+              id ? t('editLabel') : t('createLabel')
             } fornecedor.`}
           </AlertTitle>
           {errors.map((x) => {
@@ -295,7 +298,7 @@ export default function CreateProvider() {
         className={`${Styles.wrapperIpt} ${Styles.wrapperIptFirst}`}
       >
         <InputChameleon
-          label="CPF/CNPJ"
+          label={t('identifier')}
           required
           value={identifier}
           onChange={(e) => onChangeIdentifier(e)}
@@ -305,7 +308,7 @@ export default function CreateProvider() {
       <div className={Styles.wrapperIptRow}>
         <div className={Styles.wrapperIpt}>
           <InputChameleon
-            label="Razão Social/Nome"
+            label={t('companyName')}
             required
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
@@ -314,7 +317,7 @@ export default function CreateProvider() {
         </div>
         <div className={Styles.wrapperIpt}>
           <InputChameleon
-            label="Nome Fantasia"
+            label={t('fantasyName')}
             required={false}
             value={fantasyName}
             onChange={(e) => setFantasyName(e.target.value)}
@@ -325,7 +328,7 @@ export default function CreateProvider() {
       <div className={Styles.wrapperIptRow}>
         <div className={Styles.wrapperIpt}>
           <InputChameleon
-            label="Tipo de Fornecedor"
+            label={t('typeProvider')}
             required
             value={typeProvider}
             onChange={(e) => {
@@ -346,7 +349,7 @@ export default function CreateProvider() {
         </div>
         <div className={Styles.wrapperIpt}>
           <InputChameleon
-            label="Indicador Inscrição Estadual"
+            label={t('indicatorSign')}
             required={false}
             value={indicatorSign}
             onChange={(e) => {
@@ -373,7 +376,7 @@ export default function CreateProvider() {
       <div className={Styles.wrapperIptRow}>
         <div className={Styles.wrapperIpt}>
           <InputChameleon
-            label="Inscrição Estadual"
+            label={t('stateInscription')}
             required={false}
             value={stateInscription}
             onChange={(e) => {
@@ -385,7 +388,7 @@ export default function CreateProvider() {
 
         <div className={Styles.wrapperIpt}>
           <InputChameleon
-            label="ID Externo"
+            label={t('identifierExternal')}
             required={false}
             value={identifierExternal}
             onChange={(e) => {
@@ -400,13 +403,13 @@ export default function CreateProvider() {
         className="ch-spaceStackGroup--s"
         style={{ marginTop: '2rem' }}
       >
-        <h2 className="ch-title ch-title--5">Endereço</h2>
+        <h2 className="ch-title ch-title--5">{t('address')}</h2>
       </div>
       <div
         className={`${Styles.wrapperIptSM} ${Styles.wrapperIptFirst}`}
       >
         <InputChameleon
-          label="CEP"
+          label={t('formattedZipCode')}
           required={false}
           value={formattedZipCode}
           onChange={onZipCodeChange}
@@ -417,7 +420,7 @@ export default function CreateProvider() {
       <div className={Styles.wrapperIptRow}>
         <div className={Styles.wrapperIpt}>
           <InputChameleon
-            label="Logradouro"
+            label={t('street')}
             required={false}
             value={street}
             onChange={(e) => {
@@ -428,7 +431,7 @@ export default function CreateProvider() {
         </div>
         <div className={Styles.wrapperIptSM}>
           <InputChameleon
-            label="Número"
+            label={t('addressNumber')}
             required={false}
             value={addressNumber}
             onChange={(e) => {
@@ -439,7 +442,7 @@ export default function CreateProvider() {
         </div>
         <div className={Styles.wrapperIptSM}>
           <InputChameleon
-            label="Complemento"
+            label={t('addressDetail')}
             required={false}
             value={addressDetail}
             onChange={(e) => {
@@ -452,7 +455,7 @@ export default function CreateProvider() {
       <div className={Styles.wrapperIptRow}>
         <div className={Styles.wrapperIptSM}>
           <InputChameleon
-            label="Bairro"
+            label={t('district')}
             required={false}
             value={district}
             onChange={(e) => {
@@ -464,7 +467,7 @@ export default function CreateProvider() {
 
         <div className={Styles.wrapperIptSM}>
           <InputChameleon
-            label="Município"
+            label={t('city')}
             required={false}
             value={city}
             onChange={(e) => {
@@ -476,7 +479,7 @@ export default function CreateProvider() {
 
         <div className={Styles.wrapperIptSM}>
           <InputChameleon
-            label="Cod. do município no IBGE"
+            label={t('cityIbgeId')}
             required={false}
             value={cityIbgeId}
             onChange={(e) => {
@@ -488,7 +491,7 @@ export default function CreateProvider() {
 
         <div className={Styles.wrapperIptSM}>
           <InputChameleon
-            label="Estado"
+            label={t('stateName')}
             required={false}
             value={stateName}
             onChange={(e) => setStateName(e.target.value)}
@@ -520,7 +523,7 @@ export default function CreateProvider() {
         />
         <ButtonChameleon
           dataTestId="btn-createOrEditProvider-cancel"
-          label="Cancelar"
+          label={t('cancelLabel')}
           outline
           icon={false}
           onClick={() => {

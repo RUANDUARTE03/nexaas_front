@@ -7,6 +7,7 @@ import { cnpj as cnpjFormatter } from 'cpf-cnpj-validator';
 import React, { useEffect, useMemo, useState } from 'react';
 import router from 'next/router';
 import { CircularProgress } from '@material-ui/core';
+import { useTranslation } from 'next-i18next';
 import ButtonChameleon from '../../components/Chameleon/ButtonChameleon';
 import ListingTable from '../../components/listing-table/ListingTable';
 import {
@@ -34,6 +35,7 @@ export default function OrganizationPage() {
   const { data: dataGet } = useQuery(
     GET_CURRENT_ORGANIZATION
   );
+  const { t } = useTranslation('organization');
 
   useEffect(() => {
     if (dataGet && dataGet.session) {
@@ -49,12 +51,12 @@ export default function OrganizationPage() {
   const columns = useMemo(() => {
     return [
       {
-        title: 'Nome',
+        title: t('table.nameColumn'),
         dataIndex: 'name',
         key: 'name',
       },
       {
-        title: 'CNPJ',
+        title: t('table.cnpjColumn'),
         dataIndex: 'cnpj',
         key: 'cnpj',
         render: (cnpj: string) => (
@@ -62,7 +64,7 @@ export default function OrganizationPage() {
         ),
       },
       {
-        title: 'Ações',
+        title: t('table.actionsColumn'),
         key: 'actions',
         render: (organization: Organization) => {
           const { id } = organization || null;
@@ -79,7 +81,7 @@ export default function OrganizationPage() {
                   )}
                 >
                   <ButtonChameleon
-                    label="Editar"
+                    label={t('editLabel')}
                     primary
                     outline
                     icon={false}
@@ -90,7 +92,7 @@ export default function OrganizationPage() {
               {Number(id) !== currentOrg && (
                 <ButtonChameleon
                   dataTestId="btn-delete-organization"
-                  label="Excluir"
+                  label={t('deleteLabel')}
                   negative
                   outline
                   icon={false}
@@ -117,11 +119,11 @@ export default function OrganizationPage() {
       open={deleteModalOpen}
       onClose={onCloseModalDelete}
       onSubmit={confirmDeleteOrganization}
-      title="Remover organização"
+      title={t('removeOrgLabel')}
     >
       <div>
         <span>
-          Tem certeza que deseja excluir a organização
+          {t('confirmRemoveOrgLabel')}
           &nbsp;
           <b>{selectedOrganization?.name}</b>
         </span>
@@ -165,12 +167,12 @@ export default function OrganizationPage() {
 
   return (
     <>
-      <HeaderMenu breadcumb="Organizações" />
+      <HeaderMenu breadcumb={t('breadcumb')} />
       <div className={Styles.organizationPage}>
         <div className={Styles.header}>
           <ButtonChameleon
             dataTestId="btn-create-organization"
-            label="Nova Organização"
+            label={t('newOrganizationBtn')}
             primary
             icon
             onClick={() => {

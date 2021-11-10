@@ -1,5 +1,6 @@
 import { Modal } from '@material-ui/core';
 import React from 'react';
+import { useTranslation } from 'next-i18next';
 import ButtonChameleon from '../Chameleon/ButtonChameleon';
 import Styles from './DeleteModal.module.scss';
 
@@ -18,6 +19,8 @@ export default function DeleteModal({
   onClose,
   onSubmit,
 }: DeleteModalProps) {
+  const { t } = useTranslation('delete-modal');
+
   return (
     <Modal
       open={open}
@@ -38,14 +41,14 @@ export default function DeleteModal({
           className={`actions ch-spaceInlineGroup--sRight ${Styles.footer}`}
         >
           <ButtonChameleon
-            label="Não excluir"
+            label={t('notRemove')}
             icon={false}
             outline
             onClick={onClose}
             dataTestId="btn-action-close-modal"
           />
           <ButtonChameleon
-            label="Excluir"
+            label={t('remove')}
             icon={false}
             negative
             onClick={onSubmit}

@@ -27,6 +27,7 @@ import ButtonChameleon from '../../../components/Chameleon/ButtonChameleon';
 import { formatValueToReal } from '../../../utils/formatters/Currency';
 import { submitOrganization } from '../../../store/actions/submitOrganizations';
 import { CircularProgress } from '@material-ui/core';
+import { useTranslation } from 'next-i18next';
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
@@ -36,6 +37,7 @@ export default function CreateEditOrganization() {
   const dispatch = useDispatch();
   const [errors, setErrors] = useState([]);
   const { id } = router.query;
+  const { t } = useTranslation('create-edit-organization');
 
   const [name, setName] = useState<string>();
   const [cnpj, setCnpj] = useState<string>();
@@ -261,7 +263,7 @@ export default function CreateEditOrganization() {
   if (errorsGetOrganization && id) {
     return (
       <div data-testid="container-error-data">
-        <h1>Screen error</h1>
+        <h1>{t('error')}</h1>
       </div>
     );
   }
@@ -271,12 +273,13 @@ export default function CreateEditOrganization() {
       <div data-testid="container-loading-data">
         <CircularProgress />
       </div>
-  )}
+    );
+  }
 
   return (
     <div className={Styles.createEditOrganization}>
       <h1 className="ch-spaceStack">
-        {id ? 'Editar Organização' : 'Nova Organização'}
+        {id ? t('editOrgLabel') : t('newOrgLabel')}
       </h1>
 
       {errors.length > 0 && (
@@ -300,12 +303,14 @@ export default function CreateEditOrganization() {
         <div className="ch-grid-column--4 ch-grid-column--8Desktop">
           <form className="simple_form ui form ch-spaceStackGroup--xl">
             <div className="ch-spaceStackGroup--s">
-              <h2 className="ch-title">Dados Gerais</h2>
+              <h2 className="ch-title">
+                {t('generalDataLabel')}
+              </h2>
 
               <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
                 <div className="ch-field">
                   <InputChameleon
-                    label="Razão Social"
+                    label={t('nameLabel')}
                     required
                     value={companyName}
                     mode="text"
@@ -317,7 +322,7 @@ export default function CreateEditOrganization() {
 
                 <div className="ch-field">
                   <InputChameleon
-                    label="Nome Fantasia"
+                    label={t('fantasyNameLabel')}
                     required
                     value={name}
                     mode="text"
@@ -329,7 +334,7 @@ export default function CreateEditOrganization() {
 
                 <div className="ch-field">
                   <InputChameleon
-                    label="CNPJ"
+                    label={t('cnpjLabel')}
                     required
                     value={cnpj}
                     mode="text"
@@ -341,7 +346,7 @@ export default function CreateEditOrganization() {
 
                 <div className="ch-field">
                   <InputChameleon
-                    label="Inscrição estadual"
+                    label={t('stateInscriptionLabel')}
                     required
                     value={stateRegistration}
                     mode="text"
@@ -353,7 +358,7 @@ export default function CreateEditOrganization() {
 
                 <div className="ch-field">
                   <InputChameleon
-                    label="Tipo de Organização"
+                    label={t('orgTypeLabel')}
                     required
                     value={kind}
                     onChange={(e) => {
@@ -363,19 +368,21 @@ export default function CreateEditOrganization() {
                     options={[
                       {
                         value: Kind.OWN_STORE,
-                        label: 'Loja Própria',
+                        label: t('ownStoreOption'),
                       },
                       {
                         value: Kind.FRANCHISE,
-                        label: 'Franquia',
+                        label: t('franchiseOption'),
                       },
                       {
                         value: Kind.DISTRIBUTION_CENTER,
-                        label: 'Centro de Distribuição',
+                        label: t(
+                          'distributionCenterOption'
+                        ),
                       },
                       {
                         value: Kind.OTHER,
-                        label: 'Outros',
+                        label: t('otherOption'),
                       },
                     ]}
                   />
@@ -384,15 +391,13 @@ export default function CreateEditOrganization() {
             </div>
 
             <div className="ch-spaceStackGroup--s">
-              <h2 className="ch-title">
-                Informações de Retirada
-              </h2>
+              <h2 className="ch-title">{t('infoLabel')}</h2>
 
               <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
                 <div className="ch-field">
                   <InputChameleon
                     type="number"
-                    label="Prazo médio para retirada (em horas)"
+                    label={t('averageWithdrawLabel')}
                     required={false}
                     value={averageWithdrawalTerm}
                     mode="text"
@@ -406,7 +411,7 @@ export default function CreateEditOrganization() {
 
                 <div className="ch-field">
                   <InputChameleon
-                    label="Preço médio para a retirada (R$)"
+                    label={t('averageWithdrawPriceLabel')}
                     required={false}
                     value={averageWithdrawalPrice}
                     mode="text"
@@ -418,13 +423,13 @@ export default function CreateEditOrganization() {
 
             <div className="ch-spaceStackGroup--s">
               <h2 className="ch-title">
-                Informações de Entrega
+                {t('shipingInfoLabel')}
               </h2>
 
               <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
                 <div className="ch-field">
                   <InputChameleon
-                    label="Raio máximo de entrega"
+                    label={t('deliveryRadiusMaxLabel')}
                     required
                     value={deliveryRadiusMax}
                     onChange={(e) => {
@@ -436,19 +441,19 @@ export default function CreateEditOrganization() {
                     options={[
                       {
                         value: DeliveryRadiusMax.UNLIMITED,
-                        label: 'Sem Limite',
+                        label: t('unlimitedOption'),
                       },
                       {
                         value: DeliveryRadiusMax.THIRDY,
-                        label: '30 KM',
+                        label: t('thirdyOption'),
                       },
                       {
                         value: DeliveryRadiusMax.SIXTY,
-                        label: '60 KM',
+                        label: t('sixtyOption'),
                       },
                       {
                         value: DeliveryRadiusMax.AHUNDRED,
-                        label: '100 KM',
+                        label: t('ahundredOption'),
                       },
                     ]}
                   />
@@ -457,12 +462,14 @@ export default function CreateEditOrganization() {
             </div>
 
             <div className="ch-spaceStackGroup--s">
-              <h2 className="ch-title">Endereço</h2>
+              <h2 className="ch-title">
+                {t('addressLabel')}
+              </h2>
 
               <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
                 <div className="ch-field">
                   <InputChameleon
-                    label="CEP"
+                    label={t('zipCodeLabel')}
                     required={false}
                     value={zipCode}
                     mode="text"
@@ -473,7 +480,7 @@ export default function CreateEditOrganization() {
 
                 <div className="ch-field">
                   <InputChameleon
-                    label="Logradouro"
+                    label={t('streetLabel')}
                     required={false}
                     value={street}
                     mode="text"
@@ -485,7 +492,7 @@ export default function CreateEditOrganization() {
 
                 <div className="ch-field">
                   <InputChameleon
-                    label="Número"
+                    label={t('numberLabel')}
                     required={false}
                     value={number}
                     mode="text"
@@ -496,7 +503,7 @@ export default function CreateEditOrganization() {
                 </div>
                 <div className="ch-field">
                   <InputChameleon
-                    label="Complemento"
+                    label={t('complementLabel')}
                     required={false}
                     value={complement}
                     mode="text"
@@ -507,7 +514,7 @@ export default function CreateEditOrganization() {
                 </div>
                 <div className="ch-field">
                   <InputChameleon
-                    label="Bairro"
+                    label={t('neighborhoodLabel')}
                     required={false}
                     value={neighborhood}
                     mode="text"
@@ -518,7 +525,7 @@ export default function CreateEditOrganization() {
                 </div>
                 <div className="ch-field">
                   <InputChameleon
-                    label="Município"
+                    label={t('cityLabel')}
                     required={false}
                     value={city}
                     mode="text"
@@ -529,7 +536,7 @@ export default function CreateEditOrganization() {
                 </div>
                 <div className="ch-field">
                   <InputChameleon
-                    label="Cód. do município no IBGE"
+                    label={t('cityCodeLabel')}
                     required={false}
                     value={cityCode}
                     mode="text"
@@ -539,7 +546,7 @@ export default function CreateEditOrganization() {
                   />
                 </div>
                 <InputChameleon
-                  label="Estado"
+                  label={t('stateLabel')}
                   required={false}
                   value={state}
                   onChange={(e) => setState(e.target.value)}
@@ -551,7 +558,7 @@ export default function CreateEditOrganization() {
                 />
                 <div className="ch-field">
                   <InputChameleon
-                    label="Latitude"
+                    label={t('latitudeLabel')}
                     required={false}
                     value={latitude}
                     mode="text"
@@ -562,7 +569,7 @@ export default function CreateEditOrganization() {
                 </div>
                 <div className="ch-field">
                   <InputChameleon
-                    label="Longitude"
+                    label={t('longitudeLabel')}
                     required={false}
                     value={longitude}
                     mode="text"
@@ -576,14 +583,14 @@ export default function CreateEditOrganization() {
 
             <div className="ch-spaceStackGroup--s">
               <h2 className="ch-title">
-                Dados tributários
+                {t('tributationLabel')}
               </h2>
 
               <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
                 <div className="ch-field">
                   <InputChameleon
                     type="number"
-                    label="ID no Emites"
+                    label={t('emitesIdLabel')}
                     required
                     value={emitesId}
                     mode="text"
@@ -595,7 +602,7 @@ export default function CreateEditOrganization() {
 
                 <div className="ch-field">
                   <InputChameleon
-                    label="Série da última nota"
+                    label={t('serieNfeLabel')}
                     required
                     value={serieNfe}
                     mode="text"
@@ -607,7 +614,7 @@ export default function CreateEditOrganization() {
 
                 <div className="ch-field">
                   <InputChameleon
-                    label="Regime tributário"
+                    label={t('taxRegimeLabel')}
                     required
                     value={taxRegime}
                     mode="text"
@@ -621,7 +628,7 @@ export default function CreateEditOrganization() {
 
             <div className="ch-spaceStackGroup--s">
               <h2 className="ch-title">
-                Configurações adicionais
+                {t('additionalConfigLabel')}
               </h2>
               <div className="field boolean optional organization_use_average_cost ui checkbox">
                 <input
@@ -637,7 +644,7 @@ export default function CreateEditOrganization() {
                   className="boolean optional nowrap"
                   htmlFor="use_average_cost"
                 >
-                  Habilitar apuração de custo médio
+                  {t('useAverageCostLabel')}
                 </label>
               </div>
             </div>
@@ -649,9 +656,7 @@ export default function CreateEditOrganization() {
               <ButtonChameleon
                 dataTestId="btn-createOrEditOrganization"
                 label={
-                  id
-                    ? 'Editar Organização'
-                    : 'Criar Organização'
+                  id ? t('editOrgLabel') : t('newOrgLabel')
                 }
                 primary
                 icon={false}
@@ -663,7 +668,7 @@ export default function CreateEditOrganization() {
               />
               <ButtonChameleon
                 dataTestId="btn-createOrEditOrganization-cancel"
-                label="Cancelar"
+                label={t('cancelLabel')}
                 outline
                 icon={false}
                 onClick={handleCancel}
