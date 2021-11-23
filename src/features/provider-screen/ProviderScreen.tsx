@@ -10,16 +10,16 @@ import InputLabel from '@material-ui/core/InputLabel';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { useDispatch, useSelector } from 'react-redux';
 import Alert from '@material-ui/lab/Alert';
+import { useTranslation } from 'next-i18next';
 import { routes } from '../../utils/routes';
-import ButtonChameleon from '../../components/Chameleon/ButtonChameleon';
-import Styles from './providerScreen.module.scss';
+import ButtonChameleon from '../../components/Chameleon/button-chameleon';
+import Styles from './ProviderScreen.module.scss';
 import {
   ALL_PROVIDERS,
   DELETE_PROVIDER,
 } from '../../graphql/queries/providers';
-import { clearSubmit } from '../../store/actions/submitProviders';
+import { clearSubmit } from '../../store/actions/SubmitProviders';
 import DeleteModal from '../../components/delete-modal';
-import { useTranslation } from 'next-i18next';
 import HeaderMenu from '../header-menu';
 
 export default function ProviderScreen() {

@@ -1,7 +1,7 @@
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-export { default } from '../../features/providerScreen';
+export { default } from '../../features/provider-screen';
 
 export const getStaticProps: GetStaticProps = async ({
   locale,

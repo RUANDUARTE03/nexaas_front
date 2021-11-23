@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { BsGrid3X3Gap } from 'react-icons/bs';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import Dropdown from '../../components/dropdown';
-import HorizontalMenu from '../../components/HorizontalMenu/HorizontalMenu';
+import HorizontalMenu from '../../components/horizontal-menu/HorizontalMenu';
 import {
   GET_CURRENT_ORGANIZATION,
   GET_SESSION_PROFILE,

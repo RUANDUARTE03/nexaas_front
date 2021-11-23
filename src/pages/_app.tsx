@@ -3,7 +3,7 @@ import '@nexaas/chameleon/dist/chameleon.css';
 import '../styles/styleGlobal.css';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '../graphql/apolloClient';
-import Navigation from '../components/Navigation';
+import Navigation from '../components/navigation';
 import { storeWrapper } from '../store';
 import Content from '../components/content';
 import { appWithTranslation } from 'next-i18next'

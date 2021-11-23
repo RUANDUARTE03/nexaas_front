@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
-import ProviderScreen from './providerScreen';
+import ProviderScreen from './ProviderScreen';
 import { Provider } from 'react-redux';
 import { mockStore } from '../../utils/tests';
 import { MockedProvider } from '@apollo/client/testing';

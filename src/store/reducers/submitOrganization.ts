@@ -1,7 +1,7 @@
 import {
   SUBMIT_ORGANIZATION,
   CLEAR_ORGANIZATION,
-} from '../actions/submitOrganizations';
+} from '../actions/SubmitOrganizations';
 
 const initialState: {
   type: 'create' | 'edit' | '';

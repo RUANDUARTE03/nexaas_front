@@ -8,7 +8,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import router from 'next/router';
 import { CircularProgress } from '@material-ui/core';
 import { useTranslation } from 'next-i18next';
-import ButtonChameleon from '../../components/Chameleon/ButtonChameleon';
+import ButtonChameleon from '../../components/Chameleon/button-chameleon';
 import ListingTable from '../../components/listing-table/ListingTable';
 import {
   ALL_ORGANIZATIONS,

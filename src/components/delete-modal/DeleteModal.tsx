@@ -1,7 +1,7 @@
 import { Modal } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'next-i18next';
-import ButtonChameleon from '../Chameleon/ButtonChameleon';
+import ButtonChameleon from '../Chameleon/button-chameleon';
 import Styles from './DeleteModal.module.scss';
 
 type DeleteModalProps = {

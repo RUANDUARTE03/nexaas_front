@@ -15,7 +15,7 @@ import {
   dataMenuSellers,
   dataMenuSupplies,
   dataMenuSettings,
-} from './dataMenu';
+} from './DataMenu';
 import useWindowSize from '../../utils/hooks/useWindowSize';
 
 library.add(fas);

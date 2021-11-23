@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-export { default } from '../../../../features/providerScreen/createOrEditProvider';
+export { default } from '../../../../features/provider-screen/create-edit-provider';
 
 export const getServerSideProps: GetServerSideProps =
   async ({ locale }) => ({

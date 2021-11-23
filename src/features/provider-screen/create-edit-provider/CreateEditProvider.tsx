@@ -6,27 +6,27 @@ import { useDispatch } from 'react-redux';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { useTranslation } from 'next-i18next';
 import { routes } from '../../../utils/routes';
-import Styles from './createOrEditProvider.module.scss';
+import Styles from './CreateEditProvider.module.scss';
 import {
   CREATE_PROVIDER,
   GET_PROVIDER,
   UPDATE_PROVIDER,
 } from '../../../graphql/queries/providers';
-import { submitProvider } from '../../../store/actions/submitProviders';
-import InputChameleon from '../../../components/Chameleon/InputChameleon';
-import ButtonChameleon from '../../../components/Chameleon/ButtonChameleon';
+import { submitProvider } from '../../../store/actions/SubmitProviders';
+import InputChameleon from '../../../components/Chameleon/input-chameleon';
+import ButtonChameleon from '../../../components/Chameleon/button-chameleon';
 import { states } from '../../../utils/constants/states';
 import {
   formatZipCode,
   unformatZipCode,
-} from '../../../utils/formatters/zipcode';
-import { getAddressByCep } from '../../../services/providerService';
-import { useTranslation } from 'next-i18next';
+} from '../../../utils/formatters/Zipcode';
+import { getAddressByCep } from '../../../services/ProviderService';
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-export default function CreateProvider() {
+export default function CreateOrEditProvider() {
   const { t } = useTranslation('create-edit-provider');
 
   const router = useRouter();
@@ -403,7 +403,9 @@ export default function CreateProvider() {
         className="ch-spaceStackGroup--s"
         style={{ marginTop: '2rem' }}
       >
-        <h2 className="ch-title ch-title--5">{t('address')}</h2>
+        <h2 className="ch-title ch-title--5">
+          {t('address')}
+        </h2>
       </div>
       <div
         className={`${Styles.wrapperIptSM} ${Styles.wrapperIptFirst}`}

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { cnpj as cnpjFormatter } from 'cpf-cnpj-validator';
 import { useDispatch } from 'react-redux';
 import { Alert, AlertTitle } from '@material-ui/lab';
-import InputChameleon from '../../../components/Chameleon/InputChameleon';
+import InputChameleon from '../../../components/Chameleon/input-chameleon';
 import {
   CREATE_ORGANIZATION,
   GET_ORGANIZATION,
@@ -21,11 +21,11 @@ import { states } from '../../../utils/constants/states';
 import {
   formatZipCode,
   unformatZipCode,
-} from '../../../utils/formatters/zipcode';
-import { getAddressByCep } from '../../../services/providerService';
-import ButtonChameleon from '../../../components/Chameleon/ButtonChameleon';
+} from '../../../utils/formatters/Zipcode';
+import { getAddressByCep } from '../../../services/ProviderService';
+import ButtonChameleon from '../../../components/Chameleon/button-chameleon';
 import { formatValueToReal } from '../../../utils/formatters/Currency';
-import { submitOrganization } from '../../../store/actions/submitOrganizations';
+import { submitOrganization } from '../../../store/actions/SubmitOrganizations';
 import { CircularProgress } from '@material-ui/core';
 import { useTranslation } from 'next-i18next';
 
