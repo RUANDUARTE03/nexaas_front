@@ -107,7 +107,7 @@ export default function OrganizationPage() {
         },
       },
     ];
-  }, [data, currentOrg]);
+  }, [currentOrg]);
 
   function onCloseModalDelete(): void {
     setDeleteModalOpen(false);

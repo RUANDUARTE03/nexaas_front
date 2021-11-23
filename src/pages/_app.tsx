@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import '@nexaas/chameleon/dist/chameleon.css';
 import '../styles/styleGlobal.css';
 import { ApolloProvider } from '@apollo/client';
+import { appWithTranslation } from 'next-i18next';
 import { useApollo } from '../graphql/apolloClient';
 import Navigation from '../components/navigation';
 import { storeWrapper } from '../store';
 import Content from '../components/content';
-import { appWithTranslation } from 'next-i18next'
 
 function MyApp({ Component, pageProps }) {
   const [insertML, setInsertML] = useState<boolean>(false);

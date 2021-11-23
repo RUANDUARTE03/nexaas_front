@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { AiOutlineUser } from 'react-icons/ai';
 import { IoExitOutline } from 'react-icons/io5';
+import router from 'next/router';
+import { useTranslation } from 'next-i18next';
 import Styles from './ProfileMenu.module.scss';
 
 import { GET_SESSION_PROFILE } from '../../../graphql/queries/session';
 import Spinner from '../../../components/spinner';
-import router from 'next/router';
 import { routes } from '../../../utils/routes';
-import { useTranslation } from 'next-i18next';
 
 /* 
 import { routes } from '../../../utils/routes';
@@ -39,11 +39,7 @@ export default function ProfileMenu() {
   }, [dataGet]);
 
   if (errorsGetProvider) {
-    return (
-      <h2>
-        {t('error')}
-      </h2>
-    );
+    return <h2>{t('error')}</h2>;
   }
 
   return (

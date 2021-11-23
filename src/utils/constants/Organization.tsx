@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-shadow */
+
 export enum TaxRegime {
   UNKNOWN = 0,
   SIMPLES_NACIONAL = 1,

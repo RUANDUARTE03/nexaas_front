@@ -17,3 +17,16 @@ body,
 .nex_container_collapse {
   margin-left: 70px;
 }
+
+.ch-menu::-webkit-scrollbar {
+  width: 10px;
+}
+
+.ch-menu::-webkit-scrollbar-thumb {
+  background-color: #17214b;
+  border-radius: 12px;
+}
+
+.ch-menu::-webkit-scrollbar-thumb:hover {
+  background-color: #6a7279;
+}

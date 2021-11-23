@@ -4,7 +4,10 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { cnpj as cnpjFormatter } from 'cpf-cnpj-validator';
 import { useDispatch } from 'react-redux';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { useTranslation } from 'next-i18next';
 import InputChameleon from '../../../components/Chameleon/input-chameleon';
 import {
   CREATE_ORGANIZATION,
@@ -21,13 +24,11 @@ import { states } from '../../../utils/constants/states';
 import {
   formatZipCode,
   unformatZipCode,
-} from '../../../utils/formatters/Zipcode';
-import { getAddressByCep } from '../../../services/ProviderService';
+} from '../../../utils/formatters/zipcode';
+import { getAddressByCep } from '../../../services/providerService';
 import ButtonChameleon from '../../../components/Chameleon/button-chameleon';
 import { formatValueToReal } from '../../../utils/formatters/Currency';
-import { submitOrganization } from '../../../store/actions/SubmitOrganizations';
-import { CircularProgress } from '@material-ui/core';
-import { useTranslation } from 'next-i18next';
+import { submitOrganization } from '../../../store/actions/submitOrganizations';
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
 

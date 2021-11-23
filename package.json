@@ -7,10 +7,11 @@
     "dev:staging": "env-cmd -f .env.staging yarn run dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "check-lint": "eslint . --ext ts --ext tsx --ext js --quiet --fix",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@apollo/client": "^3.4.7",
@@ -62,13 +63,29 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^7.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.6",
+    "lint-staged": "^11.2.6",
     "prettier": "^2.2.1",
     "redux-devtools-extension": "^2.13.9",
     "typescript": "^4.3.5"
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "jest.setup.ts"
+    "setupTestFrameworkScriptFile": "jest.setup.ts",
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  },
+  "lint-staged": {
+    "src/**/*": [
+      "yarn check-lint",
+      "yarn test -- --findRelatedTests --bail"
+    ]
   }
 }

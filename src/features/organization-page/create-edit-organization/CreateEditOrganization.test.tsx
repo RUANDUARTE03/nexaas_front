@@ -4,7 +4,10 @@ import { Provider } from 'react-redux';
 import { mockStore } from '../../../utils/tests';
 import { MockedProvider } from '@apollo/client/testing';
 import userEvent from '@testing-library/user-event';
-import { CREATE_ORGANIZATION, GET_ORGANIZATION } from '../../../graphql/queries/organizations';
+import {
+  CREATE_ORGANIZATION,
+  GET_ORGANIZATION,
+} from '../../../graphql/queries/organizations';
 import CreateEditOrganization from '.';
 
 jest.mock(
@@ -21,29 +24,29 @@ const mocks = [
     result: {
       data: {
         organization: {
-            id: "1",
-            name: "Loja 123",
-            cnpj: "55492986000156",
-            stateRegistration: "23231323231",
-            companyName: "Loja Teste Ltda.",
-            averageWithdrawalTerm: 3,
-            averageWithdrawalPrice: 14,
-            deliveryRadiusMax: "unlimited",
-            kind: "other",
-            cityCode: "3549904",
-            city: "São José dos Campos",
-            street: "Rua Manoel Fiel Filho",
-            state: "SP",
-            number: "2",
-            neighborhood: "Bosque dos Eucaliptos",
-            zipCode: "12233690",
-            complement: null,
-            latitude: "-23.2529701",
-            longitude: "-45.8872027",
-            emitesId: 558,
-            serieNfe: "1",
-            taxRegime: "normal",
-            useAverageCost: true
+          id: '1',
+          name: 'Loja 123',
+          cnpj: '55492986000156',
+          stateRegistration: '23231323231',
+          companyName: 'Loja Teste Ltda.',
+          averageWithdrawalTerm: 3,
+          averageWithdrawalPrice: 14,
+          deliveryRadiusMax: 'unlimited',
+          kind: 'other',
+          cityCode: '3549904',
+          city: 'São José dos Campos',
+          street: 'Rua Manoel Fiel Filho',
+          state: 'SP',
+          number: '2',
+          neighborhood: 'Bosque dos Eucaliptos',
+          zipCode: '12233690',
+          complement: null,
+          latitude: '-23.2529701',
+          longitude: '-45.8872027',
+          emitesId: 558,
+          serieNfe: '1',
+          taxRegime: 'normal',
+          useAverageCost: true,
         },
       },
     },
@@ -172,7 +175,9 @@ describe('Test feature Organization', () => {
     });
 
     userEvent.click(
-      wrapper.getByTestId('btn-createOrEditOrganization-cancel')
+      wrapper.getByTestId(
+        'btn-createOrEditOrganization-cancel'
+      )
     );
   });
 
@@ -199,26 +204,26 @@ describe('Test feature Organization', () => {
     });
 
     [
-      "Loja 123",
-      "55.492.986/0001-56",
-      "23231323231",
-      "Loja Teste Ltda.",
+      'Loja 123',
+      '55.492.986/0001-56',
+      '23231323231',
+      'Loja Teste Ltda.',
       '3',
       '14',
-      "unlimited",
-      "other",
-      "3549904",
-      "São José dos Campos",
-      "Rua Manoel Fiel Filho",
-      "SP",
-      "2",
-      "Bosque dos Eucaliptos",
-      "12233690",
-      "-23.2529701",
-      "-45.8872027",
+      'unlimited',
+      'other',
+      '3549904',
+      'São José dos Campos',
+      'Rua Manoel Fiel Filho',
+      'SP',
+      '2',
+      'Bosque dos Eucaliptos',
+      '12233690',
+      '-23.2529701',
+      '-45.8872027',
       '558',
-      "1",
-      "normal",
+      '1',
+      'normal',
     ].map((el) => {
       expect(wrapper.getByDisplayValue(el)).toBeDefined();
     });

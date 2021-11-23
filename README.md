@@ -13,7 +13,7 @@ Via linha de comando instale os pacotes com
 
 Após instalados os pacotes, execultar o projeto com `npm run dev` ou `yarn run dev`
 
-### Agora o projeto será execultado em https://localhost:3000
+### Agora o projeto será execultado em https://localhost:3001
 
 <br>
 

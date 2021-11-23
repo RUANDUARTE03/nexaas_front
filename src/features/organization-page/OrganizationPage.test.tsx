@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { render, act } from '@testing-library/react';
 import OrganizationPage from './OrganizationPage';
@@ -18,15 +17,15 @@ const mocks = [
       data: {
         organizations: [
           {
-            id: "1",
-            name: "Loja 123",
-            cnpj: "55492986000156"
+            id: '1',
+            name: 'Loja 123',
+            cnpj: '55492986000156',
           },
           {
-            id: "2",
-            name: "Zeenow - Botafogo",
-            cnpj: "96833622000170"
-          }
+            id: '2',
+            name: 'Zeenow - Botafogo',
+            cnpj: '96833622000170',
+          },
         ],
       },
     },

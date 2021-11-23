@@ -73,7 +73,7 @@ export default function ProviderScreen() {
     >
       <>
         {t('confirmRemoveProviderLabel')}
-        <b>{providerSelected?.name}</b> ?
+        <b>{providerSelected?.name}</b>
       </>
     </DeleteModal>
   );
