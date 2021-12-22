@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import SubmitProvider from './SubmitProviders';
-import SubmitOrganization from './SubmitOrganization';
+import SubmitProvider from './submitProviders';
+import SubmitOrganization from './submitOrganization';
+import SubmitUser from './submitUsers';
 
 export default combineReducers({
   SubmitProvider,
   SubmitOrganization,
+  SubmitUser,
 });

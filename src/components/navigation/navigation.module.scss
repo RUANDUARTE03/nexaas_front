@@ -1,0 +1,189 @@
+$colorIcon: #f5568b;
+$colorWhite: #ffffff;
+@import url('https://s3-us-west-2.amazonaws.com/nexaas-chameleon/fontawesome/v5.3.1/css/all.css');
+$drawerBottom: 768px;
+
+.containerHeader {
+  padding: 12px;
+  display: flex;
+}
+
+.menuContainer {
+}
+
+.imageLogo {
+  top: 30px !important;
+  left: 30px !important;
+  right: 176px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  width: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  margin: unset !important;
+}
+
+.borderActive {
+  transition-property: opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  transition-delay: unset;
+  border-radius: 999px;
+  display: block;
+  content: '';
+  position: absolute;
+  opacity: 1;
+  background: $colorIcon;
+}
+
+@media (max-width: $drawerBottom) {
+  .borderActive {
+    width: 1.25rem;
+    height: 0.25rem;
+    top: auto;
+    bottom: 0.25rem;
+    transform: translateX(-50%);
+  }
+
+  .borderActiveExpanded {
+    height: 1.25rem !important;
+    left: 0.25rem !important;
+    width: 0.25rem !important;
+    transform: translateY(-50%) !important;
+    top: 50% !important;
+    bottom: inherit Impo !important;
+  }
+}
+
+@media (min-width: $drawerBottom) {
+  .borderActive {
+    height: 1.25rem;
+    left: 0.25rem;
+    width: 0.25rem;
+    transform: translateY(-50%);
+    top: 50%;
+  }
+}
+
+.containerIconLeft {
+  padding-top: 3px;
+  padding-left: 4px;
+  min-width: 40px;
+}
+
+.textMenuItem {
+  padding-left: 3px;
+}
+
+.menuFont {
+  font-size: 14px !important;
+}
+
+.iconLeft {
+  color: $colorWhite;
+  margin-right: 20px;
+}
+
+.iconLeftActive {
+  color: $colorIcon !important;
+}
+
+.iconDirectionActive {
+  transform: rotate(90deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+.animationReverse {
+  transition: transform 0.3s ease-in-out;
+  position: absolute;
+  right: 8px;
+}
+
+.subMenuItem {
+  height: 45px;
+}
+
+.btnMenuItem {
+  height: 45px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: $drawerBottom) {
+  .btnMenuItem {
+    height: 60px;
+  }
+}
+
+.isActiveContainer {
+  position: relative;
+}
+
+.logoFont {
+  font-weight: 400;
+  font-stretch: 100%;
+  text-decoration-thickness: auto;
+}
+
+.isActive {
+  background-color: $colorIcon;
+  width: 4px;
+  height: 20px;
+  position: absolute;
+  left: 4px;
+  border-radius: 999px;
+}
+
+.subMenuIsActiveTitle {
+  color: #fff;
+}
+
+.containerIconDirection {
+  height: 60px;
+  padding-left: 16px;
+}
+
+.iconDirectionDrawer {
+  color: $colorWhite;
+}
+
+.nexMenuSubmenu {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.containerDrawerSmall {
+  display: flex;
+  align-items: center;
+}
+
+.containerDrawerSmallOpened {
+  display: flex;
+  justify-content: flex-end;
+  height: 50px;
+}
+
+.nexMenu {
+  overflow-x: hidden !important;
+  width: unset !important;
+  justify-content: unset m !important;
+}
+
+.iconDrawer {
+  height: unset !important;
+  min-height: unset !important;
+  max-height: unset !important;
+  width: 20px !important;
+  margin-left: 0px !important;
+}
+
+.iconDrawerRotated {
+  height: unset !important;
+  min-height: unset !important;
+  max-height: unset !important;
+  width: 20px !important;
+  margin-left: 0px !important;
+  transform: rotate(180deg);
+}

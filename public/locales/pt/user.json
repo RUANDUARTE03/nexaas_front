@@ -1,0 +1,19 @@
+{
+  "breadcumb": "Usuários",
+  "newOrganizationBtn": "Novo Usuário",
+  "table": {
+    "nameColumn": "Nome",
+    "emailColumn": "Email",
+    "roleColumn": "Perfil de acesso",
+    "actionsColumn": "Ações"
+  },
+  "editLabel": "Editar",
+  "deleteLabel": "Excluir",
+  "removeUserLabel": "Remover usuário",
+  "confirmRemoveUserLabel": "Tem certeza que deseja excluir o usuário",
+  "newUserBtn": "Novo usuário",
+  "createUserBtn": "Criar",
+  "editUserBtn": "Editar",
+  "admin": "Administrador",
+  "member": "Membro"
+}

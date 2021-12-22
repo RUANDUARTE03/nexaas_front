@@ -7,8 +7,9 @@ type dataMenuProps = {
     | 'Suprimentos'
     | 'Cadastros'
     | 'Crediário'
+    | 'Promoções'
     | 'Configurações';
-  icon: IconProp;
+  icon: IconProp | string;
   redirects: string[];
   items: {
     href: string;
@@ -27,6 +28,11 @@ export const dataMenuSellers: dataMenuProps = {
       href: '/',
       newVersion: false,
       label: 'Pedidos de Vendas',
+    },
+    {
+      href: '/budgets',
+      newVersion: false,
+      label: 'Orçamentos',
     },
     {
       href: '/boxes',
@@ -123,17 +129,16 @@ export const dataMenuRegisters: dataMenuProps = {
     {
       href: '/sellers',
       newVersion: false,
-      label: 'Vendedores',
+      label: 'Colaboradores',
     },
     {
       href: '/price_tables',
       newVersion: false,
-      label: 'Tabelas de Preços',
+      label: 'Tabelas de Preço',
     },
     {
       href: '/organizations',
-      newVersion: true,
-      directNewVersion: routes.organizations.index,
+      newVersion: false,
       label: 'Organizações',
     },
     {
@@ -164,7 +169,7 @@ export const dataMenuRegisters: dataMenuProps = {
     {
       href: '/sale_channels',
       newVersion: false,
-      label: 'Canais de Venda',
+      label: 'Canais de Vendas',
     },
   ],
 };
@@ -178,6 +183,19 @@ export const dataMenuInstallment: dataMenuProps = {
       href: '/credit_limit_rules',
       newVersion: false,
       label: 'Regras de Exceção',
+    },
+  ],
+};
+
+export const dataMenuPromotions: dataMenuProps = {
+  label: 'Promoções',
+  icon: 'badge-percent',
+  redirects: ['/discounts'],
+  items: [
+    {
+      href: '/discounts',
+      newVersion: false,
+      label: 'Descontos',
     },
   ],
 };

@@ -37,23 +37,11 @@ describe('Test StoreMenu component', () => {
       mockStoreProvider: mockStore(),
     });
 
-    wrapper.getByText('Myfinance');
-    wrapper.getByText('Analytics');
-    wrapper.getByText('PDVend');
-    wrapper.getByText('Emites');
-    wrapper.getByText('Cobrato');
-  });
-
-  it('Should render all descriptions', () => {
-    const wrapper = renderStoreMenu({
-      mockStoreProvider: mockStore(),
-    });
-
-    wrapper.getByText('Gestão Financeira');
-    wrapper.getByText('Inteligência de Dados');
-    wrapper.getByText('Vendas Móveis');
-    wrapper.getByText('Gestão Tributária');
-    wrapper.getByText('Meios de Pagamento');
+    wrapper.getByTestId('my-finance');
+    wrapper.getByTestId('analytics');
+    wrapper.getByTestId('pd-vend');
+    wrapper.getByTestId('emites');
+    wrapper.getByTestId('cobrato');
   });
 
   it.each([

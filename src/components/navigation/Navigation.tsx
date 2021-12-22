@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-indent */
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import {
@@ -15,7 +16,8 @@ import {
   dataMenuSellers,
   dataMenuSupplies,
   dataMenuSettings,
-} from './DataMenu';
+  dataMenuPromotions,
+} from './dataMenu';
 import useWindowSize from '../../utils/hooks/useWindowSize';
 
 library.add(fas);
@@ -49,6 +51,7 @@ export default function Navigation({
     useState<string>('');
   const [subCategoryActive, setSubCategoryActive] =
     useState<string>('');
+  const [showArrow, setShowArrow] = useState<boolean>(true);
 
   useEffect(() => {
     if (isExpandedDrawer || isExpandedDrawerHover) {
@@ -82,11 +85,15 @@ export default function Navigation({
         dataMenuSupplies,
         dataMenuRegisters,
         dataMenuInstallment,
+        dataMenuPromotions,
         dataMenuSettings
       ).map((item) =>
         item.redirects.map((itemRedirects) => {
           if (indexOf(itemRedirects, local) === -1) {
-            setCategoryActive(item.label);
+            if (itemRedirects === local) {
+              setSubMenuActive([item.label]);
+              setCategoryActive(item.label);
+            }
           }
         })
       );
@@ -122,12 +129,42 @@ export default function Navigation({
       label: string;
     }[];
   }) => {
+    const drawerIsOpen: boolean =
+      isExpandedDrawerHover || isExpandedDrawer;
+
+    // When drawer is closed
+    const showBorderDrawerClosed: boolean =
+      !drawerIsOpen && label === categoryActive;
+
+    // When drawer is open
+    const showBorderDrawerOpen: boolean =
+      drawerIsOpen &&
+      label === categoryActive &&
+      !subMenuActive.includes(label);
+
+    // Uniq border drawer
+    const uniqBorderDrawer: boolean =
+      showBorderDrawerClosed || showBorderDrawerOpen;
+
+    // Drawer when collapse to equal true
+    const shouldDrawerActive: boolean =
+      drawerBottom && label === categoryActive;
+
+    const showBorder: boolean =
+      uniqBorderDrawer ||
+      (shouldDrawerActive && !isOpenDrawerSmall);
+
+    const showLabel: boolean =
+      !drawerBottom || isOpenDrawerSmall;
+
     return (
       <div
         data-testid="container-subMenu"
         className={`ch-menu-submenu  ${
-          subMenuActive.includes(label) && 'is-open'
-        }`}
+          subMenuActive.includes(label) &&
+          drawerIsOpen &&
+          'is-open'
+        } ${Styles.menuContainer}`}
       >
         <button
           data-testid="btn-subMenu"
@@ -139,30 +176,47 @@ export default function Navigation({
             Styles.btnMenuItem
           } ${!isOpenDrawerSmall && Styles.nexMenuSubmenu}`}
         >
+          {showBorder && (
+            <div
+              className={`${Styles.borderActive} ${
+                isOpenDrawerSmall &&
+                Styles.borderActiveExpanded
+              }`}
+            />
+          )}
+
           <div className={Styles.containerIconLeft}>
-            <FontAwesomeIcon
-              className={`ch-icon ${Styles.iconLeft} ${
+            <i
+              className={`ch-icon fal fa-${icon} ${
                 categoryActive === label &&
                 Styles.iconLeftActive
               }`}
-              icon={icon}
             />
           </div>
-          <span className="ch-menu-item-label">
-            {label}
-          </span>
-          {(!drawerBottom &&
+
+          {showLabel && (
+            <span
+              style={{ fontSize: 14, paddingLeft: '4px' }}
+              className={`ch-menu-item-label ${
+                subMenuActive.includes(label) ||
+                (label === categoryActive &&
+                  Styles.subMenuIsActiveTitle)
+              }`}
+            >
+              {label}
+            </span>
+          )}
+
+          {showArrow &&
+          ((!drawerBottom &&
             (!!isExpandedDrawerHover ||
               isExpandedDrawer)) ||
-          isOpenDrawerSmall ? (
-            <FontAwesomeIcon
-              className={`ch-icon ${
-                Styles.animationReverse
-              } ${
+            isOpenDrawerSmall) ? (
+            <i
+              className={`ch-icon fal fa-angle-right ${
                 subMenuActive.includes(label) &&
                 Styles.iconDirectionActive
-              }`}
-              icon="angle-right"
+              } ${Styles.animationReverse}`}
             />
           ) : null}
         </button>
@@ -195,6 +249,9 @@ export default function Navigation({
     directNewVersion: string;
     label: string;
   }) => {
+    const isActiveSubCategory: boolean =
+      subCategoryActive === href;
+
     return (
       <button
         data-testid="btn-click-itemSubMenu"
@@ -207,10 +264,17 @@ export default function Navigation({
       >
         <div
           className={`${
-            subCategoryActive === href && Styles.isActive
+            isActiveSubCategory && Styles.isActive
           }`}
         />
-        <span className="ch-menu-item-label">{label}</span>
+        <span
+          className={`ch-menu-item-label ${
+            isActiveSubCategory &&
+            Styles.subMenuIsActiveTitle
+          }`}
+        >
+          {label}
+        </span>
       </button>
     );
   };
@@ -229,7 +293,9 @@ export default function Navigation({
     return (
       <>
         {newVersion ? (
-          <div className="ch-menu-item">
+          <div
+            className={`ch-menu-item ${Styles.subMenuItem}`}
+          >
             {showByVersion({
               href,
               directNewVersion,
@@ -239,7 +305,7 @@ export default function Navigation({
           </div>
         ) : (
           <a
-            className="ch-menu-item"
+            className={`ch-menu-item ${Styles.subMenuItem}`}
             href={`${process.env.NEXT_PUBLIC_REDIRECT_URL}${href}`}
           >
             {showByVersion({
@@ -277,7 +343,9 @@ export default function Navigation({
           src="/icon_estoka.png"
           alt=""
         />
-        <div className="ch-brand-name">OMS</div>
+        <div className={`ch-brand-name ${Styles.logoFont}`}>
+          OMS
+        </div>
       </a>
       <div
         className={`ch-menu ${
@@ -289,6 +357,7 @@ export default function Navigation({
           dataMenuSupplies,
           dataMenuRegisters,
           dataMenuInstallment,
+          dataMenuPromotions,
           dataMenuSettings
         ).map((item) => {
           return (
@@ -319,28 +388,50 @@ export default function Navigation({
               setIsOpenDrawerSmall(!isOpenDrawerSmall);
             }}
           >
-            <FontAwesomeIcon
-              className={`ch-icon ${Styles.iconLeft}`}
-              icon={
-                isOpenDrawerSmall ? 'times' : 'ellipsis-h'
-              }
+            <i
+              className={`ch-icon fal fa-${
+                isOpenDrawerSmall
+                  ? 'times'
+                  : 'ellipsis-h-alt'
+              }`}
+              style={{ color: 'white' }}
             />
           </button>
         </label>
       )}
+      <span className="ch-toggle-icon" />
       {!drawerBottom && (
         <button
           data-testid="btn-action-expandedDrawer"
           className={Styles.containerIconDirection}
           onClick={() => {
-            setIsExpandedDrawer(!isExpandedDrawer);
+            setIsExpandedDrawer(
+              (isExpanded) => !isExpanded
+            );
+            setIsExpandedDrawerHover(false);
+            setDrawerBottom(false);
+            setIsOpenDrawerSmall(true);
+            setShowArrow(
+              (actualShowArrow) => !actualShowArrow
+            );
           }}
           type="button"
         >
-          <FontAwesomeIcon
+          <Image
+            width="20"
+            height="20"
+            src="/iconDrawerOpenNexaas.png"
+            alt="drawerOpen"
+            className={
+              isExpandedDrawer
+                ? Styles.iconDrawer
+                : Styles.iconDrawerRotated
+            }
+          />
+          {/* <FontAwesomeIcon
             className={`ch-icon ${Styles.iconDirectionDrawer}`}
             icon={isExpandedDrawer ? 'reply' : 'share'}
-          />
+          /> */}
         </button>
       )}
     </div>

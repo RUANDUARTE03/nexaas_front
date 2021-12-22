@@ -40,7 +40,9 @@ export default function StoreMenu() {
             <strong className={Styles.titleFont}>
               Myfinance
             </strong>
-            <span>{t('myFinance')}</span>
+            <span data-testId="my-finance">
+              {t('myFinance')}
+            </span>
           </div>
         </a>
 
@@ -61,7 +63,9 @@ export default function StoreMenu() {
             <strong className={Styles.titleFont}>
               Analytics
             </strong>
-            <span>{t('analytics')}</span>
+            <span data-testId="analytics">
+              {t('analytics')}
+            </span>
           </div>
         </a>
 
@@ -82,7 +86,7 @@ export default function StoreMenu() {
             <strong className={Styles.titleFont}>
               PDVend
             </strong>
-            <span>{t('pdVend')}</span>
+            <span data-testId="pd-vend">{t('pdVend')}</span>
           </div>
         </a>
 
@@ -103,7 +107,7 @@ export default function StoreMenu() {
             <strong className={Styles.titleFont}>
               Emites
             </strong>
-            <span>{t('emites')}</span>
+            <span data-testId="emites">{t('emites')}</span>
           </div>
         </a>
 
@@ -124,7 +128,9 @@ export default function StoreMenu() {
             <strong className={Styles.titleFont}>
               Cobrato
             </strong>
-            <span>{t('cobrato')}</span>
+            <span data-testId="cobrato">
+              {t('cobrato')}
+            </span>
           </div>
         </a>
       </div>

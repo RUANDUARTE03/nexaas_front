@@ -3,7 +3,7 @@
   "removeProviderLabel": "Remover fornecedor",
   "confirmRemoveProviderLabel": "Tem certeza que deseja excluir o fornecedor",
   "editLabel": "Editar",
-  "providerLabel": "Fornecedores",
+  "providerLabel": "Criar novo fornecedor",
   "nameLabel": "Name",
   "createdLabel": "criado",
   "editedLabel": "editado",
@@ -12,5 +12,11 @@
   "fantasyNameLabel": "Nome Fantasia",
   "providerTypeLabel": "Tipo de Fonecedores",
   "actionsLabel": "Ações",
-  "removeLabel": "Excluir"
+  "removeLabel": "Excluir",
+  "provider": {
+    "manufacturer": "Fabricante",
+    "importer": "Importadora",
+    "distributor": "Distribuidora",
+    "carrier": "Transportadora"
+  }
 }

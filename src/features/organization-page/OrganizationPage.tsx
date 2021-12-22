@@ -20,6 +20,7 @@ import { Organization } from './models/Organization';
 import Styles from './OrganizationPage.module.scss';
 import { GET_CURRENT_ORGANIZATION } from '../../graphql/queries/session';
 import HeaderMenu from '../header-menu';
+import Content from '../../components/content';
 
 interface FetchOrganizationData {
   organizations: Organization[];
@@ -48,25 +49,29 @@ export default function OrganizationPage() {
   const { data, refetch, loading } =
     useQuery<FetchOrganizationData>(ALL_ORGANIZATIONS);
 
-  const columns = useMemo(() => {
-    return [
+  const tableData = React.useMemo(
+    () => (data ? data.organizations : []),
+    [data]
+  );
+
+  const columns = useMemo(
+    () => [
       {
-        title: t('table.nameColumn'),
-        dataIndex: 'name',
-        key: 'name',
+        Header: t('table.nameColumn'),
+        accessor: 'name',
       },
       {
-        title: t('table.cnpjColumn'),
-        dataIndex: 'cnpj',
-        key: 'cnpj',
-        render: (cnpj: string) => (
-          <>{cnpjFormatter.format(cnpj)}</>
+        Header: t('table.cnpjColumn'),
+        accessor: 'cnpj',
+        Cell: ({ value }) => (
+          <>{cnpjFormatter.format(value)}</>
         ),
       },
       {
-        title: t('table.actionsColumn'),
-        key: 'actions',
-        render: (organization: Organization) => {
+        Header: t('table.actionsColumn'),
+        accessor: 'actions',
+        Cell: ({ row }) => {
+          const organization = row.original;
           const { id } = organization || null;
 
           return (
@@ -106,8 +111,9 @@ export default function OrganizationPage() {
           );
         },
       },
-    ];
-  }, [currentOrg]);
+    ],
+    [currentOrg]
+  );
 
   function onCloseModalDelete(): void {
     setDeleteModalOpen(false);
@@ -167,29 +173,31 @@ export default function OrganizationPage() {
 
   return (
     <>
-      <HeaderMenu breadcumb={t('breadcumb')} />
-      <div className={Styles.organizationPage}>
-        <div className={Styles.header}>
-          <ButtonChameleon
-            dataTestId="btn-create-organization"
-            label={t('newOrganizationBtn')}
-            primary
-            icon
-            onClick={() => {
-              router.push(
-                routes.organizations.create.index
-              );
-            }}
-          />
+      <HeaderMenu breadcumb={[{ text: t('breadcumb') }]} />
+      <Content>
+        <div className={Styles.organizationPage}>
+          <div className={Styles.header}>
+            <ButtonChameleon
+              dataTestId="btn-create-organization"
+              label={t('newOrganizationBtn')}
+              primary
+              icon
+              onClick={() => {
+                router.push(
+                  routes.organizations.create.index
+                );
+              }}
+            />
+          </div>
+          <div>
+            <ListingTable
+              data={tableData}
+              columns={columns}
+            />
+            {modalView()}
+          </div>
         </div>
-        <div>
-          <ListingTable
-            data={data?.organizations}
-            columns={columns}
-          />
-          {modalView()}
-        </div>
-      </div>
+      </Content>
     </>
   );
 }

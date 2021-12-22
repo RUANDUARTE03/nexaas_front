@@ -1,17 +1,48 @@
 @import '../../styles/';
 
-.listingTableContainer {
-  display: flex;
-  flex-direction: column;
-
-  .header {
-    align-self: end;
-  }
-  table {
-    width: 100%;
-  }
+.listingTable {
+  width: 100%;
+  
 
   thead {
     background-color: $backgroundColorHeaderTable;
+  }
+
+  th {
+    font-weight: 400;
+  }
+
+  
+  /* tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+
+      :last-child {
+        border-right: 0;
+      }
+    } */
+}
+
+.paginator {
+  display: flex;
+  flex-direction: row;
+  place-content: flex-end;
+  place-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  .icon {
+    display: flex;
   }
 }

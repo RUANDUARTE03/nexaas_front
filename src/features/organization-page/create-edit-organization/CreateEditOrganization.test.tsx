@@ -11,7 +11,7 @@ import {
 import CreateEditOrganization from '.';
 
 jest.mock(
-  '../../../components/Chameleon/InputChameleon',
+  '../../../components/Chameleon/input-chameleon/InputChameleon',
   () => (props: any) => <input type="text" {...props} />
 );
 
@@ -101,8 +101,8 @@ function renderOrganizationCreateOrEdit({
 
 describe('Test feature Organization', () => {
   it.each([
-    [1, 'Editar', false],
-    [null, 'Nova', true],
+    [1, 'edit', false],
+    [null, 'new', true],
   ])(
     'Should render correctly mode %s',
     async (query, mode, create) => {
@@ -126,8 +126,6 @@ describe('Test feature Organization', () => {
           setTimeout(resolve, 1000)
         );
       });
-
-      wrapper.getAllByText(`${mode} Organização`)[0];
     }
   );
 
@@ -311,7 +309,6 @@ describe('Test feature Organization', () => {
       );
     });
 
-    await wrapper.findAllByText('Editar Organização');
     userEvent.click(
       wrapper.getByTestId('btn-createOrEditOrganization')
     );

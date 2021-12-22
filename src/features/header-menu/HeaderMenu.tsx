@@ -16,7 +16,10 @@ import StoreMenu from './store-menu/StoreMenu';
 
 /* eslint-disable react/jsx-wrap-multilines */
 interface HeaderMenuProps {
-  breadcumb: string;
+  breadcumb: {
+    text: string | HTMLElement;
+    click?: () => void;
+  }[];
 }
 
 export default function HeaderMenu({

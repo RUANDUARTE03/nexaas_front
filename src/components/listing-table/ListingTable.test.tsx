@@ -11,6 +11,19 @@ function renderListingTable({ data, columns }) {
 it('Should render corretly', () => {
   renderListingTable({
     data: [],
-    columns: 5,
+    columns: [
+      {
+        Header: 'test',
+        accessor: 'name'
+      },
+      {
+        Header: 'test',
+        accessor: 'cnpj'
+      },
+      {
+        Header: 'test',
+        accessor: 'actions'
+      },
+    ],
   });
 });

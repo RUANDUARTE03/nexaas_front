@@ -29,6 +29,8 @@ import { getAddressByCep } from '../../../services/providerService';
 import ButtonChameleon from '../../../components/Chameleon/button-chameleon';
 import { formatValueToReal } from '../../../utils/formatters/Currency';
 import { submitOrganization } from '../../../store/actions/submitOrganizations';
+import HeaderMenu from '../../header-menu';
+import Content from '../../../components/content';
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
@@ -278,406 +280,437 @@ export default function CreateEditOrganization() {
   }
 
   return (
-    <div className={Styles.createEditOrganization}>
-      <h1 className="ch-spaceStack">
-        {id ? t('editOrgLabel') : t('newOrgLabel')}
-      </h1>
+    <>
+      <HeaderMenu
+        breadcumb={[
+          {
+            text: t('breadcumb'),
+            click: () => {
+              router.push(routes.organizations.index);
+            },
+          },
+          { text: id ? t('editLabel') : t('newLabel') },
+        ]}
+      />
+      <Content>
+        <div className={Styles.createEditOrganization}>
+          <h1 className="ch-spaceStack">
+            {id ? t('editOrgLabel') : t('newOrgLabel')}
+          </h1>
 
-      {errors.length > 0 && (
-        <Alert severity="error">
-          <AlertTitle>
-            {`Erro ao ${
-              id ? 'editar' : 'criar'
-            } organização.`}
-          </AlertTitle>
-          {errors.map((x) => {
-            return (
-              <ul>
-                <li>{x}</li>
-              </ul>
-            );
-          })}
-        </Alert>
-      )}
+          {errors.length > 0 && (
+            <Alert severity="error">
+              <AlertTitle>
+                {`Erro ao ${
+                  id ? 'editar' : 'criar'
+                } organização.`}
+              </AlertTitle>
+              {errors.map((x) => {
+                return (
+                  <ul>
+                    <li>{x}</li>
+                  </ul>
+                );
+              })}
+            </Alert>
+          )}
 
-      <div className="ch-grid">
-        <div className="ch-grid-column--4 ch-grid-column--8Desktop">
-          <form className="simple_form ui form ch-spaceStackGroup--xl">
-            <div className="ch-spaceStackGroup--s">
-              <h2 className="ch-title">
-                {t('generalDataLabel')}
-              </h2>
+          <div className="ch-grid">
+            <div className="ch-grid-column--4 ch-grid-column--8Desktop">
+              <form className="simple_form ui form ch-spaceStackGroup--xl">
+                <div className="ch-spaceStackGroup--s">
+                  <h2 className="ch-title">
+                    {t('generalDataLabel')}
+                  </h2>
 
-              <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('nameLabel')}
-                    required
-                    value={companyName}
-                    mode="text"
-                    onChange={(e) =>
-                      setCompanyName(e.target.value)
-                    }
-                  />
+                  <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('nameLabel')}
+                        required
+                        value={companyName}
+                        mode="text"
+                        onChange={(e) =>
+                          setCompanyName(e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('fantasyNameLabel')}
+                        required
+                        value={name}
+                        mode="text"
+                        onChange={(e) =>
+                          setName(e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('cnpjLabel')}
+                        required
+                        value={cnpj}
+                        mode="text"
+                        onChange={(e) =>
+                          setCnpj(e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('stateInscriptionLabel')}
+                        required
+                        value={stateRegistration}
+                        mode="text"
+                        onChange={(e) =>
+                          setStateRegistration(
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('orgTypeLabel')}
+                        required
+                        value={kind}
+                        onChange={(e) => {
+                          setKind(
+                            e.target.value.toString()
+                          );
+                        }}
+                        mode="select"
+                        options={[
+                          {
+                            value: Kind.OWN_STORE,
+                            label: t('ownStoreOption'),
+                          },
+                          {
+                            value: Kind.FRANCHISE,
+                            label: t('franchiseOption'),
+                          },
+                          {
+                            value: Kind.DISTRIBUTION_CENTER,
+                            label: t(
+                              'distributionCenterOption'
+                            ),
+                          },
+                          {
+                            value: Kind.OTHER,
+                            label: t('otherOption'),
+                          },
+                        ]}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('fantasyNameLabel')}
-                    required
-                    value={name}
-                    mode="text"
-                    onChange={(e) =>
-                      setName(e.target.value)
-                    }
-                  />
+                <div className="ch-spaceStackGroup--s">
+                  <h2 className="ch-title">
+                    {t('infoLabel')}
+                  </h2>
+
+                  <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
+                    <div className="ch-field">
+                      <InputChameleon
+                        type="number"
+                        label={t('averageWithdrawLabel')}
+                        required={false}
+                        value={averageWithdrawalTerm}
+                        mode="text"
+                        onChange={(e) =>
+                          setAverageWithdrawalTerm(
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t(
+                          'averageWithdrawPriceLabel'
+                        )}
+                        required={false}
+                        value={averageWithdrawalPrice}
+                        mode="text"
+                        onChange={onWithdrawPriceChange}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('cnpjLabel')}
-                    required
-                    value={cnpj}
-                    mode="text"
-                    onChange={(e) =>
-                      setCnpj(e.target.value)
-                    }
-                  />
+                <div className="ch-spaceStackGroup--s">
+                  <h2 className="ch-title">
+                    {t('shipingInfoLabel')}
+                  </h2>
+
+                  <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('deliveryRadiusMaxLabel')}
+                        required
+                        value={deliveryRadiusMax}
+                        onChange={(e) => {
+                          setDeliveryRadiusMax(
+                            e.target.value.toString()
+                          );
+                        }}
+                        mode="select"
+                        options={[
+                          {
+                            value:
+                              DeliveryRadiusMax.UNLIMITED,
+                            label: t('unlimitedOption'),
+                          },
+                          {
+                            value: DeliveryRadiusMax.THIRDY,
+                            label: t('thirdyOption'),
+                          },
+                          {
+                            value: DeliveryRadiusMax.SIXTY,
+                            label: t('sixtyOption'),
+                          },
+                          {
+                            value:
+                              DeliveryRadiusMax.AHUNDRED,
+                            label: t('ahundredOption'),
+                          },
+                        ]}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('stateInscriptionLabel')}
-                    required
-                    value={stateRegistration}
-                    mode="text"
-                    onChange={(e) =>
-                      setStateRegistration(e.target.value)
-                    }
-                  />
+                <div className="ch-spaceStackGroup--s">
+                  <h2 className="ch-title">
+                    {t('addressLabel')}
+                  </h2>
+
+                  <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('zipCodeLabel')}
+                        required={false}
+                        value={zipCode}
+                        mode="text"
+                        onChange={onZipCodeChange}
+                        onKeyUp={zipCodeKeyUp}
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('streetLabel')}
+                        required={false}
+                        value={street}
+                        mode="text"
+                        onChange={(e) =>
+                          setStreet(e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('numberLabel')}
+                        required={false}
+                        value={number}
+                        mode="text"
+                        onChange={(e) =>
+                          setNumber(e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('complementLabel')}
+                        required={false}
+                        value={complement}
+                        mode="text"
+                        onChange={(e) =>
+                          setComplement(e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('neighborhoodLabel')}
+                        required={false}
+                        value={neighborhood}
+                        mode="text"
+                        onChange={(e) =>
+                          setNeighborhood(e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('cityLabel')}
+                        required={false}
+                        value={city}
+                        mode="text"
+                        onChange={(e) =>
+                          setCity(e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('cityCodeLabel')}
+                        required={false}
+                        value={cityCode}
+                        mode="text"
+                        onChange={(e) =>
+                          setCityCode(e.target.value)
+                        }
+                      />
+                    </div>
+                    <InputChameleon
+                      label={t('stateLabel')}
+                      required={false}
+                      value={state}
+                      onChange={(e) =>
+                        setState(e.target.value)
+                      }
+                      mode="select"
+                      options={states.map(
+                        (actualState) => ({
+                          label: actualState.code,
+                          value: actualState.code,
+                        })
+                      )}
+                    />
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('latitudeLabel')}
+                        required={false}
+                        value={latitude}
+                        mode="text"
+                        onChange={(e) =>
+                          setLatitude(e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('longitudeLabel')}
+                        required={false}
+                        value={longitude}
+                        mode="text"
+                        onChange={(e) =>
+                          setLongitude(e.target.value)
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('orgTypeLabel')}
-                    required
-                    value={kind}
-                    onChange={(e) => {
-                      setKind(e.target.value.toString());
-                    }}
-                    mode="select"
-                    options={[
-                      {
-                        value: Kind.OWN_STORE,
-                        label: t('ownStoreOption'),
-                      },
-                      {
-                        value: Kind.FRANCHISE,
-                        label: t('franchiseOption'),
-                      },
-                      {
-                        value: Kind.DISTRIBUTION_CENTER,
-                        label: t(
-                          'distributionCenterOption'
-                        ),
-                      },
-                      {
-                        value: Kind.OTHER,
-                        label: t('otherOption'),
-                      },
-                    ]}
-                  />
-                </div>
-              </div>
-            </div>
+                <div className="ch-spaceStackGroup--s">
+                  <h2 className="ch-title">
+                    {t('tributationLabel')}
+                  </h2>
 
-            <div className="ch-spaceStackGroup--s">
-              <h2 className="ch-title">{t('infoLabel')}</h2>
+                  <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
+                    <div className="ch-field">
+                      <InputChameleon
+                        type="number"
+                        label={t('emitesIdLabel')}
+                        required
+                        value={emitesId}
+                        mode="text"
+                        onChange={(e) => {
+                          setEmitesId(e.target.value);
+                        }}
+                      />
+                    </div>
 
-              <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
-                <div className="ch-field">
-                  <InputChameleon
-                    type="number"
-                    label={t('averageWithdrawLabel')}
-                    required={false}
-                    value={averageWithdrawalTerm}
-                    mode="text"
-                    onChange={(e) =>
-                      setAverageWithdrawalTerm(
-                        e.target.value
-                      )
-                    }
-                  />
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('serieNfeLabel')}
+                        required
+                        value={serieNfe}
+                        mode="text"
+                        onChange={(e) =>
+                          setSerieNfe(e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('taxRegimeLabel')}
+                        required
+                        value={taxRegime}
+                        mode="text"
+                        onChange={(e) =>
+                          setTaxRegime(e.target.value)
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('averageWithdrawPriceLabel')}
-                    required={false}
-                    value={averageWithdrawalPrice}
-                    mode="text"
-                    onChange={onWithdrawPriceChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="ch-spaceStackGroup--s">
-              <h2 className="ch-title">
-                {t('shipingInfoLabel')}
-              </h2>
-
-              <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('deliveryRadiusMaxLabel')}
-                    required
-                    value={deliveryRadiusMax}
-                    onChange={(e) => {
-                      setDeliveryRadiusMax(
-                        e.target.value.toString()
-                      );
-                    }}
-                    mode="select"
-                    options={[
-                      {
-                        value: DeliveryRadiusMax.UNLIMITED,
-                        label: t('unlimitedOption'),
-                      },
-                      {
-                        value: DeliveryRadiusMax.THIRDY,
-                        label: t('thirdyOption'),
-                      },
-                      {
-                        value: DeliveryRadiusMax.SIXTY,
-                        label: t('sixtyOption'),
-                      },
-                      {
-                        value: DeliveryRadiusMax.AHUNDRED,
-                        label: t('ahundredOption'),
-                      },
-                    ]}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="ch-spaceStackGroup--s">
-              <h2 className="ch-title">
-                {t('addressLabel')}
-              </h2>
-
-              <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('zipCodeLabel')}
-                    required={false}
-                    value={zipCode}
-                    mode="text"
-                    onChange={onZipCodeChange}
-                    onKeyUp={zipCodeKeyUp}
-                  />
+                <div className="ch-spaceStackGroup--s">
+                  <h2 className="ch-title">
+                    {t('additionalConfigLabel')}
+                  </h2>
+                  <div className="field boolean optional organization_use_average_cost ui checkbox">
+                    <input
+                      type="checkbox"
+                      checked={useAverageCost}
+                      onChange={(e) =>
+                        setUseAverageCost(e.target.checked)
+                      }
+                      name="use_average_cost"
+                      id="use_average_cost"
+                    />
+                    <label
+                      className="boolean optional nowrap"
+                      htmlFor="use_average_cost"
+                    >
+                      {t('useAverageCostLabel')}
+                    </label>
+                  </div>
                 </div>
 
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('streetLabel')}
-                    required={false}
-                    value={street}
-                    mode="text"
-                    onChange={(e) =>
-                      setStreet(e.target.value)
-                    }
-                  />
-                </div>
-
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('numberLabel')}
-                    required={false}
-                    value={number}
-                    mode="text"
-                    onChange={(e) =>
-                      setNumber(e.target.value)
-                    }
-                  />
-                </div>
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('complementLabel')}
-                    required={false}
-                    value={complement}
-                    mode="text"
-                    onChange={(e) =>
-                      setComplement(e.target.value)
-                    }
-                  />
-                </div>
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('neighborhoodLabel')}
-                    required={false}
-                    value={neighborhood}
-                    mode="text"
-                    onChange={(e) =>
-                      setNeighborhood(e.target.value)
-                    }
-                  />
-                </div>
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('cityLabel')}
-                    required={false}
-                    value={city}
-                    mode="text"
-                    onChange={(e) =>
-                      setCity(e.target.value)
-                    }
-                  />
-                </div>
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('cityCodeLabel')}
-                    required={false}
-                    value={cityCode}
-                    mode="text"
-                    onChange={(e) =>
-                      setCityCode(e.target.value)
-                    }
-                  />
-                </div>
-                <InputChameleon
-                  label={t('stateLabel')}
-                  required={false}
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  mode="select"
-                  options={states.map((actualState) => ({
-                    label: actualState.code,
-                    value: actualState.code,
-                  }))}
-                />
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('latitudeLabel')}
-                    required={false}
-                    value={latitude}
-                    mode="text"
-                    onChange={(e) =>
-                      setLatitude(e.target.value)
-                    }
-                  />
-                </div>
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('longitudeLabel')}
-                    required={false}
-                    value={longitude}
-                    mode="text"
-                    onChange={(e) =>
-                      setLongitude(e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="ch-spaceStackGroup--s">
-              <h2 className="ch-title">
-                {t('tributationLabel')}
-              </h2>
-
-              <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
-                <div className="ch-field">
-                  <InputChameleon
-                    type="number"
-                    label={t('emitesIdLabel')}
-                    required
-                    value={emitesId}
-                    mode="text"
-                    onChange={(e) => {
-                      setEmitesId(e.target.value);
-                    }}
-                  />
-                </div>
-
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('serieNfeLabel')}
-                    required
-                    value={serieNfe}
-                    mode="text"
-                    onChange={(e) =>
-                      setSerieNfe(e.target.value)
-                    }
-                  />
-                </div>
-
-                <div className="ch-field">
-                  <InputChameleon
-                    label={t('taxRegimeLabel')}
-                    required
-                    value={taxRegime}
-                    mode="text"
-                    onChange={(e) =>
-                      setTaxRegime(e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="ch-spaceStackGroup--s">
-              <h2 className="ch-title">
-                {t('additionalConfigLabel')}
-              </h2>
-              <div className="field boolean optional organization_use_average_cost ui checkbox">
-                <input
-                  type="checkbox"
-                  checked={useAverageCost}
-                  onChange={(e) =>
-                    setUseAverageCost(e.target.checked)
-                  }
-                  name="use_average_cost"
-                  id="use_average_cost"
-                />
-                <label
-                  className="boolean optional nowrap"
-                  htmlFor="use_average_cost"
+                <div
+                  className="ch-spaceInlineGroup--s"
+                  style={{ marginTop: '2rem' }}
                 >
-                  {t('useAverageCostLabel')}
-                </label>
-              </div>
+                  <ButtonChameleon
+                    dataTestId="btn-createOrEditOrganization"
+                    label={
+                      id
+                        ? t('editOrgLabel')
+                        : t('newOrgLabel')
+                    }
+                    primary
+                    icon={false}
+                    onClick={
+                      id
+                        ? handleUpdateOrganizationSubmit
+                        : handleCreateOrganizationSubmit
+                    }
+                  />
+                  <ButtonChameleon
+                    dataTestId="btn-createOrEditOrganization-cancel"
+                    label={t('cancelLabel')}
+                    outline
+                    icon={false}
+                    onClick={handleCancel}
+                  />
+                </div>
+              </form>
             </div>
-
-            <div
-              className="ch-spaceInlineGroup--s"
-              style={{ marginTop: '2rem' }}
-            >
-              <ButtonChameleon
-                dataTestId="btn-createOrEditOrganization"
-                label={
-                  id ? t('editOrgLabel') : t('newOrgLabel')
-                }
-                primary
-                icon={false}
-                onClick={
-                  id
-                    ? handleUpdateOrganizationSubmit
-                    : handleCreateOrganizationSubmit
-                }
-              />
-              <ButtonChameleon
-                dataTestId="btn-createOrEditOrganization-cancel"
-                label={t('cancelLabel')}
-                outline
-                icon={false}
-                onClick={handleCancel}
-              />
-            </div>
-          </form>
+          </div>
         </div>
-      </div>
-    </div>
+      </Content>
+    </>
   );
 }

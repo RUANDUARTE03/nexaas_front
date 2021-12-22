@@ -11,7 +11,7 @@ import {
 } from '../../../graphql/queries/providers';
 
 jest.mock(
-  '../../../components/Chameleon/InputChameleon',
+  '../../../components/Chameleon/input-chameleon/InputChameleon',
   () => (props: any) => <input type="text" {...props} />
 );
 
@@ -108,7 +108,7 @@ function renderProviderCreateOrEdit({
 describe('Test feature Provider', () => {
   it.each([
     [1, 'Editar', false],
-    [null, 'Novo', true],
+    [null, 'Criar', true],
   ])(
     'Should render correctly mode %s',
     async (query, mode, create) => {
@@ -133,7 +133,13 @@ describe('Test feature Provider', () => {
         );
       });
 
-      wrapper.getAllByText(`${mode} Fornecedor`)[0];
+      wrapper.getAllByText(
+        `${
+          mode === 'Editar'
+            ? 'editProvider'
+            : 'createProvider'
+        }`
+      )[0];
     }
   );
 
@@ -194,7 +200,6 @@ describe('Test feature Provider', () => {
       '52.723.924/0001-10',
       'name',
       'tradingName',
-      'Transportadora',
       '1',
       'stateInscription',
       'ExternalId',
@@ -275,7 +280,7 @@ describe('Test feature Provider', () => {
       {
         NumberRole: 5,
         text: 'Test',
-        expect: 'stateInscriptionTest',
+        expect: 'stateInscription',
       },
       {
         NumberRole: 6,
@@ -337,8 +342,6 @@ describe('Test feature Provider', () => {
     });
   });
 
-  it('Should created provider when click in btn success', async () => {});
-
   it('Should show error in provider', async () => {
     mockByEdit();
 
@@ -372,7 +375,7 @@ describe('Test feature Provider', () => {
       );
     });
 
-    await wrapper.findAllByText('Editar Fornecedor');
+    await wrapper.findAllByText('editProvider');
     userEvent.click(
       wrapper.getByTestId('btn-createOrEditProvider')
     );

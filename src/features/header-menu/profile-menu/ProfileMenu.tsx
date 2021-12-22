@@ -19,6 +19,7 @@ export default function ProfileMenu() {
   const [userEmail, setUserEmail] = useState();
   const [userProfileImage, setUserProfileImage] =
     useState();
+  const [profileLogoutPath, setLogoutPath] = useState();
   const { t } = useTranslation('profile-menu');
 
   const {
@@ -29,17 +30,20 @@ export default function ProfileMenu() {
 
   useEffect(() => {
     if (dataGet && dataGet.session) {
-      const { fullName, email, picture } =
+      const { fullName, email, picture, logoutPath } =
         dataGet.session.profile;
 
       setUserName(fullName);
       setUserEmail(email);
       setUserProfileImage(picture);
+      setLogoutPath(logoutPath);
     }
   }, [dataGet]);
 
   if (errorsGetProvider) {
-    return <h2>{t('error')}</h2>;
+    return (
+      <h2 data-testid="profile-error">{t('error')}</h2>
+    );
   }
 
   return (
@@ -80,20 +84,16 @@ export default function ProfileMenu() {
           />
           <span>{t('myProfile')}</span>
         </div>
-        <div
-          tabIndex={-2}
-          role="button"
+        <a
           className={Styles.menuItem}
-          /* onClick={() => {
-            router.push(routes.providers.create.index);
-          }} */
+          href={profileLogoutPath}
         >
           <IoExitOutline
             size={16}
             className={Styles.leftMenuItem}
           />
           <span>{t('exit')}</span>
-        </div>
+        </a>
       </ul>
     </Spinner>
   );

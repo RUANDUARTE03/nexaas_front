@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-newline */
 import React, { useState, useEffect } from 'react';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { useRouter } from 'next/router';
@@ -14,15 +15,16 @@ import {
   GET_PROVIDER,
   UPDATE_PROVIDER,
 } from '../../../graphql/queries/providers';
-import { submitProvider } from '../../../store/actions/SubmitProviders';
+import { submitProvider } from '../../../store/actions/submitProviders';
 import InputChameleon from '../../../components/Chameleon/input-chameleon';
 import ButtonChameleon from '../../../components/Chameleon/button-chameleon';
 import { states } from '../../../utils/constants/states';
 import {
   formatZipCode,
   unformatZipCode,
-} from '../../../utils/formatters/Zipcode';
-import { getAddressByCep } from '../../../services/ProviderService';
+} from '../../../utils/formatters/zipcode';
+import { getAddressByCep } from '../../../services/providerService';
+import HeaderMenu from '../../header-menu';
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
@@ -46,7 +48,7 @@ export default function CreateOrEditProvider() {
     useState<string>();
   const [stateName, setStateName] = useState<number>();
   const [identifierExternal, setIdentifierExternal] =
-    useState<string>('');
+    useState(null);
 
   const [zipCode, setZipCode] = useState<string>();
   const [formattedZipCode, setFormattedZipCode] =
@@ -85,10 +87,8 @@ export default function CreateOrEditProvider() {
           tradingName: fantasyName,
           stateInscriptionType: indicatorSign || null,
           providerType:
-            typeProvider === 'Distribuidora'
-              ? 'distributor'
-              : 'carrier',
-          externalId: identifierExternal,
+            indentifyProviderTypeValue(typeProvider),
+          externalId: identifierExternal || null,
 
           street,
           number: addressNumber,
@@ -105,6 +105,48 @@ export default function CreateOrEditProvider() {
     });
   };
   // Finish Logic For Create Provider
+
+  const indentifyProviderType = (providerType: string) => {
+    if (providerType === 'manufacturer') {
+      return 'Fabricante';
+    }
+
+    if (providerType === 'importer') {
+      return 'Importadora';
+    }
+
+    if (providerType === 'distributor') {
+      return 'Distribuidora';
+    }
+
+    if (providerType === 'carrier') {
+      return 'Transportadora';
+    }
+
+    return '';
+  };
+
+  const indentifyProviderTypeValue = (
+    providerType: string
+  ) => {
+    if (providerType === 'Fabricante') {
+      return 'manufacturer';
+    }
+
+    if (providerType === 'Importadora') {
+      return 'importer';
+    }
+
+    if (providerType === 'Distribuidora') {
+      return 'distributor';
+    }
+
+    if (providerType === 'Transportadora') {
+      return 'carrier';
+    }
+
+    return '';
+  };
 
   // Init Logic For Edit Provider
   const {
@@ -125,12 +167,12 @@ export default function CreateOrEditProvider() {
       setIndicatorSign(
         dataGet.provider.stateInscriptionType === 'icms'
           ? 1
+          : dataGet.provider.stateInscriptionType === 'free'
+          ? 2
           : 9
       );
       setTypeProvider(
-        dataGet.provider.providerType === 'distributor'
-          ? 'Distribuidora'
-          : 'Transportadora'
+        indentifyProviderType(dataGet.provider.providerType)
       );
       setIdentifierExternal(dataGet.provider.externalId);
       setStateName(dataGet.provider.state);
@@ -174,10 +216,8 @@ export default function CreateOrEditProvider() {
           tradingName: fantasyName,
           stateInscriptionType: indicatorSign || null,
           providerType:
-            typeProvider === 'Distribuidora'
-              ? 'distributor'
-              : 'carrier',
-          externalId: identifierExternal,
+            indentifyProviderTypeValue(typeProvider),
+          externalId: identifierExternal || null,
           street,
           number: addressNumber,
           detail: addressDetail,
@@ -204,7 +244,7 @@ export default function CreateOrEditProvider() {
     setIndicatorSign(undefined);
     setStateName(undefined);
     setStateInscription('');
-    setIdentifierExternal('');
+    setIdentifierExternal(undefined);
   };
 
   const onChangeIdentifier = (e: any) => {
@@ -233,7 +273,7 @@ export default function CreateOrEditProvider() {
   };
 
   const zipCodeKeyUp = () => {
-    if (zipCode.length === 8) {
+    if (zipCode?.length === 8) {
       getAddressByCep(zipCode).then((response) => {
         const {
           bairro,
@@ -271,269 +311,303 @@ export default function CreateOrEditProvider() {
   }
 
   return (
-    <div
-      className={Styles.containerForm}
-      data-testid="container-createOrEdit-provider"
-    >
-      <h1 className="ch-spaceStack">
-        {id ? t('editProvider') : t('createProvider')}
-      </h1>
-      {errors.length > 0 && (
-        <Alert severity="error">
-          <AlertTitle>
-            {`Erro ao ${
-              id ? t('editLabel') : t('createLabel')
-            } fornecedor.`}
-          </AlertTitle>
-          {errors.map((x) => {
-            return (
-              <ul>
-                <li>{x}</li>
-              </ul>
-            );
-          })}
-        </Alert>
-      )}
+    <>
+      <HeaderMenu
+        breadcumb={[
+          {
+            text: t('breadcumb'),
+            click: () => {
+              router.push(routes.providers.index);
+              resetForm();
+            },
+          },
+          { text: id ? t('editLabel') : t('newLabel') },
+        ]}
+      />
       <div
-        className={`${Styles.wrapperIpt} ${Styles.wrapperIptFirst}`}
+        className={Styles.containerForm}
+        data-testid="container-createOrEdit-provider"
       >
-        <InputChameleon
-          label={t('identifier')}
-          required
-          value={identifier}
-          onChange={(e) => onChangeIdentifier(e)}
-          mode="text"
-        />
-      </div>
-      <div className={Styles.wrapperIptRow}>
-        <div className={Styles.wrapperIpt}>
+        <h1 className="ch-spaceStack">
+          {id ? t('editProvider') : t('createProvider')}
+        </h1>
+        {errors.length > 0 && (
+          <Alert severity="error">
+            <AlertTitle>
+              {`Erro ao ${
+                id ? t('editLabel') : t('createLabel')
+              } fornecedor.`}
+            </AlertTitle>
+            {errors.map((x) => {
+              return (
+                <ul>
+                  <li>{x}</li>
+                </ul>
+              );
+            })}
+          </Alert>
+        )}
+        <div
+          className={`${Styles.wrapperIpt} ${Styles.wrapperIptFirst}`}
+        >
           <InputChameleon
-            label={t('companyName')}
+            label={t('identifier')}
             required
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
+            value={identifier}
+            onChange={(e) => onChangeIdentifier(e)}
             mode="text"
           />
         </div>
-        <div className={Styles.wrapperIpt}>
-          <InputChameleon
-            label={t('fantasyName')}
-            required={false}
-            value={fantasyName}
-            onChange={(e) => setFantasyName(e.target.value)}
-            mode="text"
-          />
+        <div className={Styles.wrapperIptRow}>
+          <div className={Styles.wrapperIpt}>
+            <InputChameleon
+              label={t('companyName')}
+              required
+              value={companyName}
+              onChange={(e) =>
+                setCompanyName(e.target.value)
+              }
+              mode="text"
+            />
+          </div>
+          <div className={Styles.wrapperIpt}>
+            <InputChameleon
+              label={t('fantasyName')}
+              required={false}
+              value={fantasyName}
+              onChange={(e) =>
+                setFantasyName(e.target.value)
+              }
+              mode="text"
+            />
+          </div>
         </div>
-      </div>
-      <div className={Styles.wrapperIptRow}>
-        <div className={Styles.wrapperIpt}>
-          <InputChameleon
-            label={t('typeProvider')}
-            required
-            value={typeProvider}
-            onChange={(e) => {
-              setTypeProvider(e.target.value.toString());
-            }}
-            mode="select"
-            options={[
-              {
-                value: 'Transportadora',
-                label: 'Transportadora',
-              },
-              {
-                value: 'Distribuidora',
-                label: 'Distribuidora',
-              },
-            ]}
-          />
+        <div className={Styles.wrapperIptRow}>
+          <div className={Styles.wrapperIpt}>
+            <InputChameleon
+              label={t('typeProvider')}
+              required
+              value={typeProvider}
+              onChange={(e) => {
+                setTypeProvider(e.target.value.toString());
+              }}
+              mode="select"
+              options={[
+                {
+                  value: 'Fabricante',
+                  label: 'Fabricante',
+                },
+                {
+                  value: 'Importadora',
+                  label: 'Importadora',
+                },
+                {
+                  value: 'Distribuidora',
+                  label: 'Distribuidora',
+                },
+                {
+                  value: 'Transportadora',
+                  label: 'Transportadora',
+                },
+              ]}
+            />
+          </div>
+          <div className={Styles.wrapperIpt}>
+            <InputChameleon
+              label={t('indicatorSign')}
+              required={false}
+              value={indicatorSign}
+              onChange={(e) => {
+                setIndicatorSign(Number(e.target.value));
+              }}
+              mode="select"
+              options={[
+                {
+                  value: 1,
+                  label: '1: Contribuinte ICMS',
+                },
+                {
+                  value: 2,
+                  label: '2: Contribuinte Isento',
+                },
+                {
+                  value: 9,
+                  label: '9: Não Contribuinte',
+                },
+              ]}
+            />
+          </div>
         </div>
-        <div className={Styles.wrapperIpt}>
-          <InputChameleon
-            label={t('indicatorSign')}
-            required={false}
-            value={indicatorSign}
-            onChange={(e) => {
-              setIndicatorSign(Number(e.target.value));
-            }}
-            mode="select"
-            options={[
-              {
-                value: 1,
-                label: '1: Contribuinte ICMS',
-              },
-              {
-                value: 2,
-                label: '2: Contribuinte Isento',
-              },
-              {
-                value: 9,
-                label: '9: Não Contribuinte',
-              },
-            ]}
-          />
-        </div>
-      </div>
-      <div className={Styles.wrapperIptRow}>
-        <div className={Styles.wrapperIpt}>
-          <InputChameleon
-            label={t('stateInscription')}
-            required={false}
-            value={stateInscription}
-            onChange={(e) => {
-              setStateInscription(e.target.value);
-            }}
-            mode="text"
-          />
+        <div className={Styles.wrapperIptRow}>
+          <div className={Styles.wrapperIpt}>
+            <InputChameleon
+              label={t('identifierExternal')}
+              required={false}
+              value={identifierExternal}
+              onChange={(e) => {
+                setIdentifierExternal(e.target.value);
+              }}
+              mode="text"
+            />
+          </div>
+
+          <div
+            className={Styles.wrapperIpt}
+            style={{ whiteSpace: 'nowrap' }}
+          >
+            <InputChameleon
+              label={t('stateInscription')}
+              required={false}
+              value={stateInscription}
+              onChange={(e) => {
+                setStateInscription(e.target.value);
+              }}
+              mode="text"
+            />
+          </div>
         </div>
 
-        <div className={Styles.wrapperIpt}>
+        <div
+          className="ch-spaceStackGroup--s"
+          style={{ marginTop: '2rem' }}
+        >
+          <h2 className="ch-title ch-title--5">
+            {t('address')}
+          </h2>
+        </div>
+        <div
+          className={`${Styles.wrapperIptSM} ${Styles.wrapperIptFirst}`}
+        >
           <InputChameleon
-            label={t('identifierExternal')}
+            label={t('formattedZipCode')}
             required={false}
-            value={identifierExternal}
-            onChange={(e) => {
-              setIdentifierExternal(e.target.value);
-            }}
+            value={formattedZipCode}
+            onChange={onZipCodeChange}
+            onKeyUp={zipCodeKeyUp}
             mode="text"
           />
         </div>
-      </div>
+        <div className={Styles.wrapperIptRow}>
+          <div className={Styles.wrapperIpt}>
+            <InputChameleon
+              label={t('street')}
+              required={false}
+              value={street}
+              onChange={(e) => {
+                setStreet(e.target.value);
+              }}
+              mode="text"
+            />
+          </div>
+          <div className={Styles.wrapperIptSM}>
+            <InputChameleon
+              label={t('addressNumber')}
+              required={false}
+              value={addressNumber}
+              onChange={(e) => {
+                setAddressNumber(e.target.value);
+              }}
+              mode="text"
+            />
+          </div>
+          <div className={Styles.wrapperIptSM}>
+            <InputChameleon
+              label={t('addressDetail')}
+              required={false}
+              value={addressDetail}
+              onChange={(e) => {
+                setAddressDetail(e.target.value);
+              }}
+              mode="text"
+            />
+          </div>
+        </div>
+        <div className={Styles.wrapperIptRow}>
+          <div className={Styles.wrapperIptSM}>
+            <InputChameleon
+              label={t('district')}
+              required={false}
+              value={district}
+              onChange={(e) => {
+                setDistrict(e.target.value);
+              }}
+              mode="text"
+            />
+          </div>
 
-      <div
-        className="ch-spaceStackGroup--s"
-        style={{ marginTop: '2rem' }}
-      >
-        <h2 className="ch-title ch-title--5">
-          {t('address')}
-        </h2>
-      </div>
-      <div
-        className={`${Styles.wrapperIptSM} ${Styles.wrapperIptFirst}`}
-      >
-        <InputChameleon
-          label={t('formattedZipCode')}
-          required={false}
-          value={formattedZipCode}
-          onChange={onZipCodeChange}
-          onKeyUp={zipCodeKeyUp}
-          mode="text"
-        />
-      </div>
-      <div className={Styles.wrapperIptRow}>
-        <div className={Styles.wrapperIpt}>
-          <InputChameleon
-            label={t('street')}
-            required={false}
-            value={street}
-            onChange={(e) => {
-              setStreet(e.target.value);
-            }}
-            mode="text"
-          />
-        </div>
-        <div className={Styles.wrapperIptSM}>
-          <InputChameleon
-            label={t('addressNumber')}
-            required={false}
-            value={addressNumber}
-            onChange={(e) => {
-              setAddressNumber(e.target.value);
-            }}
-            mode="text"
-          />
-        </div>
-        <div className={Styles.wrapperIptSM}>
-          <InputChameleon
-            label={t('addressDetail')}
-            required={false}
-            value={addressDetail}
-            onChange={(e) => {
-              setAddressDetail(e.target.value);
-            }}
-            mode="text"
-          />
-        </div>
-      </div>
-      <div className={Styles.wrapperIptRow}>
-        <div className={Styles.wrapperIptSM}>
-          <InputChameleon
-            label={t('district')}
-            required={false}
-            value={district}
-            onChange={(e) => {
-              setDistrict(e.target.value);
-            }}
-            mode="text"
-          />
+          <div className={Styles.wrapperIptSM}>
+            <InputChameleon
+              label={t('city')}
+              required={false}
+              value={city}
+              onChange={(e) => {
+                setCity(e.target.value);
+              }}
+              mode="text"
+            />
+          </div>
+
+          <div
+            className={Styles.wrapperIptMD}
+            style={{ whiteSpace: 'nowrap' }}
+          >
+            <InputChameleon
+              label={t('cityIbgeId')}
+              required={false}
+              value={cityIbgeId}
+              onChange={(e) => {
+                setCityIbgeId(e.target.value);
+              }}
+              mode="text"
+            />
+          </div>
+
+          <div className={Styles.wrapperIptSM}>
+            <InputChameleon
+              label={t('stateName')}
+              required={false}
+              value={stateName}
+              onChange={(e) => setStateName(e.target.value)}
+              mode="select"
+              options={states.map((state) => ({
+                label: state.code,
+                value: state.code,
+              }))}
+            />
+          </div>
         </div>
 
-        <div className={Styles.wrapperIptSM}>
-          <InputChameleon
-            label={t('city')}
-            required={false}
-            value={city}
-            onChange={(e) => {
-              setCity(e.target.value);
-            }}
-            mode="text"
+        <div
+          className="ch-spaceInlineGroup--s"
+          style={{ marginTop: '2rem' }}
+        >
+          <ButtonChameleon
+            dataTestId="btn-createOrEditProvider"
+            label={
+              id
+                ? 'Atualizar Fornecedor'
+                : 'Criar Fornecedor'
+            }
+            primary
+            icon={false}
+            onClick={
+              id
+                ? handleSubmitEditProvider
+                : handleSubmitCreateProvider
+            }
           />
-        </div>
-
-        <div className={Styles.wrapperIptSM}>
-          <InputChameleon
-            label={t('cityIbgeId')}
-            required={false}
-            value={cityIbgeId}
-            onChange={(e) => {
-              setCityIbgeId(e.target.value);
+          <ButtonChameleon
+            dataTestId="btn-createOrEditProvider-cancel"
+            label={t('cancelLabel')}
+            outline
+            icon={false}
+            onClick={() => {
+              router.push(routes.providers.index);
+              resetForm();
             }}
-            mode="text"
-          />
-        </div>
-
-        <div className={Styles.wrapperIptSM}>
-          <InputChameleon
-            label={t('stateName')}
-            required={false}
-            value={stateName}
-            onChange={(e) => setStateName(e.target.value)}
-            mode="select"
-            options={states.map((state) => ({
-              label: state.code,
-              value: state.code,
-            }))}
           />
         </div>
       </div>
-
-      <div
-        className="ch-spaceInlineGroup--s"
-        style={{ marginTop: '2rem' }}
-      >
-        <ButtonChameleon
-          dataTestId="btn-createOrEditProvider"
-          label={
-            id ? 'Editar Fornecedor' : 'Criar Fornecedor'
-          }
-          primary
-          icon={false}
-          onClick={
-            id
-              ? handleSubmitEditProvider
-              : handleSubmitCreateProvider
-          }
-        />
-        <ButtonChameleon
-          dataTestId="btn-createOrEditProvider-cancel"
-          label={t('cancelLabel')}
-          outline
-          icon={false}
-          onClick={() => {
-            router.push(routes.providers.index);
-            resetForm();
-          }}
-        />
-      </div>
-    </div>
+    </>
   );
 }

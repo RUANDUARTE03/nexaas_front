@@ -122,7 +122,6 @@ describe('Test Organization feature', () => {
     );
 
     await wrapper.findAllByTestId('container-delete-modal');
-    wrapper.getByText('Remover organização');
 
     userEvent.click(
       wrapper.getByTestId('btn-action-close-modal')

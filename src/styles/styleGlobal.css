@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:600|Nunito+Sans:400,600,700,900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -10,6 +12,9 @@ body,
   height: 100%;
 }
 
+button, input, optgroup, select, textarea {
+  font-size: 14px;
+}
 .nex_container {
   margin-left: 240px;
 }
@@ -29,4 +34,8 @@ body,
 
 .ch-menu::-webkit-scrollbar-thumb:hover {
   background-color: #6a7279;
+}
+
+.ch-menu-submenu {
+  position: relative;
 }

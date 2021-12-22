@@ -7,6 +7,7 @@ const GET_SESSION_PROFILE = gql`
         fullName
         email
         picture
+        logoutPath
       }
     }
   }

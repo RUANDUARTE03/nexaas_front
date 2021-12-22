@@ -26,7 +26,10 @@ const mock = [
 ];
 
 type HeaderMenuProps = {
-  breadcumb: string;
+  breadcumb: {
+    text: string;
+    click?: () => void;
+  }[];
   mockStoreProvider: ReturnType<typeof mockStore>;
   mocksByAction: any;
 };
@@ -53,7 +56,7 @@ describe('Test HeaderMenu component', () => {
     renderHeaderMenu({
       mockStoreProvider: mockStore(),
       mocksByAction: mock,
-      breadcumb: 'breadcumb',
+      breadcumb: [{ text: 'breadcumb' }],
     });
   });
 });

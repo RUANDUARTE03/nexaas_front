@@ -5,9 +5,6 @@ import { reverse } from 'named-urls';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import router from 'next/router';
 import Link from 'next/link';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { useDispatch, useSelector } from 'react-redux';
 import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from 'next-i18next';
@@ -18,9 +15,10 @@ import {
   ALL_PROVIDERS,
   DELETE_PROVIDER,
 } from '../../graphql/queries/providers';
-import { clearSubmit } from '../../store/actions/SubmitProviders';
+import { clearSubmit } from '../../store/actions/submitProviders';
 import DeleteModal from '../../components/delete-modal';
 import HeaderMenu from '../header-menu';
+import Content from '../../components/content';
 
 export default function ProviderScreen() {
   const dispatch = useDispatch();
@@ -78,18 +76,6 @@ export default function ProviderScreen() {
     </DeleteModal>
   );
 
-  const CustomComponentLink = React.forwardRef(() => {
-    return (
-      <ButtonChameleon
-        label={t('editLabel')}
-        primary
-        outline
-        icon={false}
-        onClick={() => {}}
-      />
-    );
-  });
-
   if (loading)
     return (
       <div data-testid="container-loading-data">
@@ -99,91 +85,95 @@ export default function ProviderScreen() {
 
   return (
     <>
-      <HeaderMenu breadcumb={t('breadcumb')} />
-      <div className="ch-spaceInlineGroup--right ch-spaceStack">
-        <ButtonChameleon
-          dataTestId="btn-create-provider"
-          label={t('providerLabel')}
-          primary
-          icon
-          onClick={() => {
-            router.push(routes.providers.create.index);
-          }}
-        />
-      </div>
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="component-outlined">
-          {t('nameLabel')}
-        </InputLabel>
-        <OutlinedInput
-          id="component-outlined"
-          label={t('nameLabel')}
-        />
-      </FormControl>
-      {type !== '' && (
-        <Alert
-          className={Styles.alert}
-          severity="success"
-          onClose={() => {
-            dispatch(clearSubmit());
-          }}
-        >
-          {`Fornecedor ${
-            type === 'create'
-              ? t('createdLabel')
-              : t('editedLabel')
-          } com sucesso`}
-        </Alert>
-      )}
-      <table className="ch-table">
-        <thead>
-          <tr>
-            <th>{t('docLabel')}</th>
-            <th>{t('companyNameLabel')}</th>
-            <th>{t('fantasyNameLabel')}</th>
-            <th>{t('providerTypeLabel')}</th>
-            <th>{t('actionsLabel')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.providers.map((provider) => (
-            <tr id={provider.id} key={provider.id}>
-              <td>
-                {provider.document.length === 11
-                  ? cpf.format(provider.document)
-                  : cnpj.format(provider.document)}
-              </td>
-              <td>{provider.name}</td>
-              <td>{provider.tradingName}</td>
-              <td>{provider.providerType}</td>
-              <td className="three wide">
-                <div className="ch-spaceInlineGroup--s">
-                  <Link
-                    href={reverse(
-                      `${routes.providers.edit}`,
-                      { id: provider.id }
-                    )}
-                  >
-                    <CustomComponentLink />
-                  </Link>
-                  <ButtonChameleon
-                    dataTestId="btn-delete-provider"
-                    label={t('removeLabel')}
-                    negative
-                    outline
-                    icon={false}
-                    onClick={() => {
-                      setModalDeleteOpen(true);
-                      setProviderSelected(provider);
-                    }}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {modalView()}
+      <HeaderMenu breadcumb={[{ text: t('breadcumb') }]} />
+      <Content>
+        <>
+          <div className="ch-spaceInlineGroup--right ch-spaceStack">
+            <ButtonChameleon
+              dataTestId="btn-create-provider"
+              label={t('providerLabel')}
+              primary
+              icon
+              onClick={() => {
+                router.push(routes.providers.create.index);
+              }}
+            />
+          </div>
+
+          {type !== '' && (
+            <Alert
+              className={Styles.alert}
+              severity="success"
+              onClose={() => {
+                dispatch(clearSubmit());
+              }}
+            >
+              {`Fornecedor ${
+                type === 'create'
+                  ? t('createdLabel')
+                  : t('editedLabel')
+              } com sucesso`}
+            </Alert>
+          )}
+          <table className={`ch-table ${Styles.chTable}`}>
+            <thead>
+              <tr>
+                <th>{t('docLabel')}</th>
+                <th>{t('companyNameLabel')}</th>
+                <th>{t('fantasyNameLabel')}</th>
+                <th>{t('providerTypeLabel')}</th>
+                <th>{t('actionsLabel')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.providers.map((provider) => (
+                <tr id={provider.id} key={provider.id}>
+                  <td>
+                    {provider.document.length === 11
+                      ? cpf.format(provider.document)
+                      : cnpj.format(provider.document)}
+                  </td>
+                  <td>{provider.name}</td>
+                  <td>{provider.tradingName}</td>
+                  <td>
+                    {t(`provider.${provider.providerType}`)}
+                  </td>
+                  <td className="three wide">
+                    <div className="ch-spaceInlineGroup--s">
+                      <Link
+                        href={reverse(
+                          `${routes.providers.edit}`,
+                          { id: provider.id }
+                        )}
+                      >
+                        <ButtonChameleon
+                          label={t('editLabel')}
+                          primary
+                          outline
+                          icon={false}
+                          onClick={() => {}}
+                        />
+                      </Link>
+                      <ButtonChameleon
+                        dataTestId="btn-delete-provider"
+                        label={t('removeLabel')}
+                        negative
+                        outline
+                        icon={false}
+                        onClick={() => {
+                          setModalDeleteOpen(true);
+                          setProviderSelected(provider);
+                        }}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {modalView()}
+        </>
+      </Content>
     </>
   );
 }

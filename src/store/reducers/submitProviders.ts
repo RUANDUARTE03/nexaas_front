@@ -1,7 +1,7 @@
 import {
   SUBMIT_PROVIDER,
   CLEAR_PROVIDER,
-} from '../actions/SubmitProviders';
+} from '../actions/submitProviders';
 
 const initialState: {
   type: 'create' | 'edit' | '';

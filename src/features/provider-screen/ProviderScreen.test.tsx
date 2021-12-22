@@ -92,7 +92,7 @@ describe('Test feature Provider', () => {
 
     wrapper.getByText('Correios LTDA.');
     wrapper.getByText('Correios');
-    await wrapper.findAllByText('distributor');
+    await wrapper.findAllByText('provider.distributor');
   });
 
   it('Should show document formatted', async () => {
@@ -128,7 +128,6 @@ describe('Test feature Provider', () => {
     );
 
     await wrapper.findAllByTestId('container-delete-modal');
-    wrapper.getByText('Remover fornecedor');
 
     userEvent.click(
       wrapper.getByTestId('btn-action-close-modal')

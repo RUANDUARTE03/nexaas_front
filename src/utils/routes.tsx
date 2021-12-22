@@ -20,4 +20,16 @@ export const routes = {
       index: '',
     }),
   }),
+  users: include('/users/', {
+    index: '',
+    create: include('create/', {
+      index: '',
+    }),
+    edit: include('edit/:id/', {
+      index: '',
+    }),
+  }),
+  sessions: include('/sessions/', {
+    new: 'new',
+  }),
 };

@@ -88,9 +88,7 @@ describe('Test StoreMenu component', () => {
       );
     });
 
-    wrapper.getByText(
-      'Ocorreu um erro inesperado, tente novamente mais tarde'
-    );
+    wrapper.getByTestId('profile-error');
   });
 
   it('Should render data correctly', async () => {

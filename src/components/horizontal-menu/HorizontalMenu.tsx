@@ -1,8 +1,12 @@
 import { useEffect } from 'react';
 import styles from './HorizontalMenu.module.scss';
 
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 interface HorizontalMenuProps {
-  breadcumb: string;
+  breadcumb: {
+    text: string | HTMLElement;
+    click?: () => void;
+  }[];
   children: JSX.Element;
 }
 
@@ -36,7 +40,20 @@ export default function HorizontalMenu({
       id="header"
       className={`${styles.horizontalMenu}`}
     >
-      <div className={styles.breadcumb}>{breadcumb}</div>
+      <div className={styles.breadcumb}>
+        {breadcumb.map((bread, index) => {
+          return (
+            <div
+              key={index}
+              onClick={bread.click ? bread.click : () => {}}
+              className={bread.click ? styles.bread : ''}
+            >
+              {bread.text}
+              <p>{bread.click && '/'}</p>
+            </div>
+          );
+        })}
+      </div>
       <div>{children}</div>
     </header>
   );

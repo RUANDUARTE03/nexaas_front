@@ -1,0 +1,18 @@
+.userPage {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    align-self: flex-end;
+    margin-bottom: 16px;
+  }
+
+  .actionButton {
+    display: flex;
+
+    .editButton {
+      margin-right: 10px;
+    }
+  }
+}

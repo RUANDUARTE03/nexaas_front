@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { get } from './Api';
+import { get } from './api';
 
 const api = 'https://viacep.com.br';
 

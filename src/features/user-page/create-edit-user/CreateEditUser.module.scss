@@ -1,0 +1,48 @@
+@import '../../../styles/';
+
+.containerForm {
+  .wrapperIpt {
+    width: 28%;
+  }
+
+  .wrapperIptSM {
+    width: calc(28% / 2 - 10px);
+  }
+
+  .wrapperIptFirst {
+    margin-top: 20px;
+  }
+
+  @media (max-width: $minTablet) {
+    .wrapperIptSM,
+    .wrapperIpt {
+      width: 100%;
+    }
+  }
+
+  .wrapperIptRow {
+    width: 100%;
+    display: flex;
+    margin: 20px 0;
+
+    & > :not(:first-child) {
+      margin-left: 20px;
+    }
+  }
+
+  @media (max-width: $minTablet) {
+    .wrapperIptRow {
+      flex-direction: column;
+
+      & > :not(:first-child) {
+        margin-top: 20px;
+        margin-left: 0;
+      }
+    }
+  }
+
+  .bodyChecked {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

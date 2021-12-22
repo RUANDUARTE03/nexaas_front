@@ -1,9 +1,11 @@
 {
+    "breadcumb": "Fornecedores",
     "error": "Screen error",
     "editProvider": "Editar Fornecedor",
     "createProvider": "Novo Fornecedor",
-    "editLabel": "editar",
+    "editLabel": "Editar",
     "createLabel": "criar",
+    "newLabel": "Novo",
     "address": "Endereço",
     "identifier": "CPF/CNPJ",
     "companyName": "Razão Social/Nome",
