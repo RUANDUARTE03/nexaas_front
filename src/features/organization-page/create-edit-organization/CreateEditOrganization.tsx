@@ -8,6 +8,8 @@ import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useTranslation } from 'next-i18next';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import InputChameleon from '../../../components/Chameleon/input-chameleon';
 import {
   CREATE_ORGANIZATION,
@@ -33,6 +35,12 @@ import HeaderMenu from '../../header-menu';
 import Content from '../../../components/content';
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/jsx-wrap-multilines */
+
+type customerAquisitionChannelsProps = {
+  id: number;
+  name: string;
+};
 
 export default function CreateEditOrganization() {
   const router = useRouter();
@@ -72,6 +80,17 @@ export default function CreateEditOrganization() {
   const [taxRegime, setTaxRegime] = useState<string>();
   const [useAverageCost, setUseAverageCost] =
     useState<boolean>();
+
+  const [
+    customerAquisitionChannels,
+    setCustomerAquisitionChannels,
+  ] = useState<
+    customerAquisitionChannelsProps[] | undefined
+  >();
+  const [aquisitionChannels, setAquisitionChannels] =
+    useState<
+      customerAquisitionChannelsProps[] | undefined
+    >();
 
   const [createOrganization] = useMutation(
     CREATE_ORGANIZATION,
@@ -126,6 +145,12 @@ export default function CreateEditOrganization() {
       setSerieNfe(organization.serieNfe);
       setTaxRegime(organization.taxRegime);
       setUseAverageCost(organization.useAverageCost);
+      setCustomerAquisitionChannels(
+        organization.customerAquisitionChannels
+      );
+      setAquisitionChannels(
+        organization.aquisitionChannels
+      );
     }
   }, [dataGet]);
 
@@ -228,6 +253,11 @@ export default function CreateEditOrganization() {
   );
 
   const handleUpdateOrganizationSubmit = () => {
+    const newChannelsIds = [];
+    customerAquisitionChannels?.map((cac) =>
+      newChannelsIds.push(cac.id)
+    );
+
     updateOrganization({
       variables: {
         input: {
@@ -258,9 +288,31 @@ export default function CreateEditOrganization() {
           serieNfe,
           taxRegime,
           useAverageCost,
+          aquisitionChannelIds: newChannelsIds,
         },
       },
     });
+  };
+
+  const onChangeChannel = (
+    channel: customerAquisitionChannelsProps
+  ) => {
+    const checkIsActive =
+      customerAquisitionChannels.includes(channel);
+    if (checkIsActive) {
+      const removeChannel =
+        customerAquisitionChannels.filter(
+          (cha) => cha.id !== channel.id
+        );
+      setCustomerAquisitionChannels(removeChannel);
+    } else {
+      const joined = [];
+      customerAquisitionChannels.map((chan) =>
+        joined.push(chan)
+      );
+      joined.push(channel);
+      setCustomerAquisitionChannels(joined);
+    }
   };
 
   if (errorsGetOrganization && id) {
@@ -658,26 +710,226 @@ export default function CreateEditOrganization() {
 
                 <div className="ch-spaceStackGroup--s">
                   <h2 className="ch-title">
+                    {t('addressLabel')}
+                  </h2>
+
+                  <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('zipCodeLabel')}
+                        required={false}
+                        value={zipCode}
+                        mode="text"
+                        onChange={onZipCodeChange}
+                        onKeyUp={zipCodeKeyUp}
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('streetLabel')}
+                        required={false}
+                        value={street}
+                        mode="text"
+                        onChange={(e) =>
+                          setStreet(e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('numberLabel')}
+                        required={false}
+                        value={number}
+                        mode="text"
+                        onChange={(e) =>
+                          setNumber(e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('complementLabel')}
+                        required={false}
+                        value={complement}
+                        mode="text"
+                        onChange={(e) =>
+                          setComplement(e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('neighborhoodLabel')}
+                        required={false}
+                        value={neighborhood}
+                        mode="text"
+                        onChange={(e) =>
+                          setNeighborhood(e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('cityLabel')}
+                        required={false}
+                        value={city}
+                        mode="text"
+                        onChange={(e) =>
+                          setCity(e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('cityCodeLabel')}
+                        required={false}
+                        value={cityCode}
+                        mode="text"
+                        onChange={(e) =>
+                          setCityCode(e.target.value)
+                        }
+                      />
+                    </div>
+                    <InputChameleon
+                      label={t('stateLabel')}
+                      required={false}
+                      value={state}
+                      onChange={(e) =>
+                        setState(e.target.value)
+                      }
+                      mode="select"
+                      options={states.map(
+                        (actualState) => ({
+                          label: actualState.code,
+                          value: actualState.code,
+                        })
+                      )}
+                    />
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('latitudeLabel')}
+                        required={false}
+                        value={latitude}
+                        mode="text"
+                        onChange={(e) =>
+                          setLatitude(e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('longitudeLabel')}
+                        required={false}
+                        value={longitude}
+                        mode="text"
+                        onChange={(e) =>
+                          setLongitude(e.target.value)
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="ch-spaceStackGroup--s">
+                  <h2 className="ch-title">
+                    {t('tributationLabel')}
+                  </h2>
+
+                  <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
+                    <div className="ch-field">
+                      <InputChameleon
+                        type="number"
+                        label={t('emitesIdLabel')}
+                        required
+                        value={emitesId}
+                        mode="text"
+                        onChange={(e) => {
+                          setEmitesId(e.target.value);
+                        }}
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('serieNfeLabel')}
+                        required
+                        value={serieNfe}
+                        mode="text"
+                        onChange={(e) =>
+                          setSerieNfe(e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div className="ch-field">
+                      <InputChameleon
+                        label={t('taxRegimeLabel')}
+                        required
+                        value={taxRegime}
+                        mode="text"
+                        onChange={(e) =>
+                          setTaxRegime(e.target.value)
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="ch-spaceStackGroup--s">
+                  <h2 className="ch-title">
                     {t('additionalConfigLabel')}
                   </h2>
                   <div className="field boolean optional organization_use_average_cost ui checkbox">
-                    <input
-                      type="checkbox"
-                      checked={useAverageCost}
-                      onChange={(e) =>
-                        setUseAverageCost(e.target.checked)
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={useAverageCost}
+                          onChange={(e) =>
+                            setUseAverageCost(
+                              e.target.checked
+                            )
+                          }
+                          color="primary"
+                        />
                       }
-                      name="use_average_cost"
-                      id="use_average_cost"
+                      label={t('useAverageCostLabel')}
                     />
-                    <label
-                      className="boolean optional nowrap"
-                      htmlFor="use_average_cost"
-                    >
-                      {t('useAverageCostLabel')}
-                    </label>
                   </div>
                 </div>
+
+                {id && aquisitionChannels && (
+                  <div className="ch-spaceStackGroup--s">
+                    <h2 className="ch-title">
+                      {t('aquisitionChannelLabel')}
+                    </h2>
+                    <div className="cch-grid-column--4 ch-grid-column--8Desktop">
+                      {aquisitionChannels.map((channel) => {
+                        const isChecked =
+                          customerAquisitionChannels.find(
+                            (customer) =>
+                              channel.id === customer.id
+                          );
+
+                        return (
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={!!isChecked}
+                                onChange={() => {
+                                  onChangeChannel(channel);
+                                }}
+                                color="primary"
+                              />
+                            }
+                            label={channel.name}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 <div
                   className="ch-spaceInlineGroup--s"

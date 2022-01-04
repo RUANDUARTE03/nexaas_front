@@ -88,6 +88,14 @@ const GET_ORGANIZATION = gql`
       taxRegime
       useAverageCost
       zipCode
+      aquisitionChannels {
+        id
+        name
+      }
+      customerAquisitionChannels {
+        id
+        name
+      }
     }
   }
 `;

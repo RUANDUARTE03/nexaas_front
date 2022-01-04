@@ -40,5 +40,6 @@
   "sixtyOption": "60 KM",
   "ahundredOption": "100 KM",
   "newLabel": "Novo",
-  "editLabel": "Editar"
+  "editLabel": "Editar",
+  "aquisitionChannelLabel": "Canais de aquisição"
 }

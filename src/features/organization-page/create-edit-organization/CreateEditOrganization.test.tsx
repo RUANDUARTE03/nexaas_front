@@ -223,7 +223,9 @@ describe('Test feature Organization', () => {
       '1',
       'normal',
     ].map((el) => {
-      expect(wrapper.getByDisplayValue(el)).toBeDefined();
+      expect(
+        wrapper.getAllByDisplayValue(el)[0]
+      ).toBeDefined();
     });
   });
 
