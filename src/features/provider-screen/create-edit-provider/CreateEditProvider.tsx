@@ -304,7 +304,10 @@ export default function CreateOrEditProvider() {
   // only get provider
   if (loadingGetProvider) {
     return (
-      <div data-testid="container-loading-data">
+      <div
+        className="containerLoading"
+        data-testid="container-loading-data"
+      >
         <CircularProgress />
       </div>
     );

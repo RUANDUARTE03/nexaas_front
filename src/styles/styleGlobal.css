@@ -39,3 +39,10 @@ button, input, optgroup, select, textarea {
 .ch-menu-submenu {
   position: relative;
 }
+
+.containerLoading {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

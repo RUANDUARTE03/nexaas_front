@@ -47,6 +47,26 @@ const mocks = [
           serieNfe: '1',
           taxRegime: 'normal',
           useAverageCost: true,
+          customerAquisitionChannels: [
+            {
+              id: 3,
+              name: 'nexxas1',
+            },
+            {
+              id: 6,
+              name: 'nexaas2',
+            },
+          ],
+          aquisitionChannels: [
+            {
+              id: 3,
+              name: 'nexxas1',
+            },
+            {
+              id: 6,
+              name: 'nexaas2',
+            },
+          ],
         },
       },
     },

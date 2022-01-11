@@ -71,14 +71,20 @@ export default function ProviderScreen() {
     >
       <>
         {t('confirmRemoveProviderLabel')}
+        &nbsp;
         <b>{providerSelected?.name}</b>
+        &nbsp;
+        {`${'?'}`}
       </>
     </DeleteModal>
   );
 
   if (loading)
     return (
-      <div data-testid="container-loading-data">
+      <div
+        className="containerLoading"
+        data-testid="container-loading-data"
+      >
         <CircularProgress />
       </div>
     );
@@ -126,7 +132,7 @@ export default function ProviderScreen() {
               </tr>
             </thead>
             <tbody>
-              {data.providers.map((provider) => (
+              {data?.providers?.map((provider) => (
                 <tr id={provider.id} key={provider.id}>
                   <td>
                     {provider.document.length === 11

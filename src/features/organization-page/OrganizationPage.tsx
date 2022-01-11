@@ -132,6 +132,8 @@ export default function OrganizationPage() {
           {t('confirmRemoveOrgLabel')}
           &nbsp;
           <b>{selectedOrganization?.name}</b>
+          &nbsp;
+          {`${'?'}`}
         </span>
       </div>
     </DeleteModal>
@@ -166,7 +168,10 @@ export default function OrganizationPage() {
 
   if (loading)
     return (
-      <div data-testid="container-loading-data">
+      <div
+        className="containerLoading"
+        data-testid="container-loading-data"
+      >
         <CircularProgress />
       </div>
     );

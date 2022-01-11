@@ -1,6 +1,5 @@
 /* eslint-disable react/button-has-type */
 import React from 'react';
-import Table from 'rc-table';
 import { useTable, usePagination } from 'react-table';
 import Style from './ListingTable.module.scss';
 import Pagination from './Pagination';
@@ -70,13 +69,4 @@ export default function ListingTable({ data, columns }) {
       />
     </>
   );
-}
-// eslint-disable-next-line no-lone-blocks
-{
-  /*       <Table
-        className={`${Styles.listingTableContainer} ch-table`}
-        columns={columns}
-        data={data}
-      />
-      <Pagination /> */
 }

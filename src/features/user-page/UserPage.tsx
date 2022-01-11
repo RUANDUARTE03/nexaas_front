@@ -124,6 +124,8 @@ export default function UserPage() {
           {t('confirmRemoveUserLabel')}
           &nbsp;
           <b>{selectedUser?.name}</b>
+          &nbsp;
+          {`${'?'}`}
         </span>
       </div>
     </DeleteModal>
@@ -131,7 +133,10 @@ export default function UserPage() {
 
   if (loading)
     return (
-      <div data-testid="container-loading-data">
+      <div
+        className="containerLoading"
+        data-testid="container-loading-data"
+      >
         <CircularProgress />
       </div>
     );
