@@ -11,6 +11,15 @@ export const routes = {
       index: '',
     }),
   }),
+  manufacturers: include('/manufacturers/', {
+    index: '',
+    create: include('create/', {
+      index: '',
+    }),
+    edit: include('edit/:id/', {
+      index: '',
+    }),
+  }),
   organizations: include('/organizations/', {
     index: '',
     create: include('create/', {

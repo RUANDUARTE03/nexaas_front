@@ -2,9 +2,17 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import ListingTable from './ListingTable';
 
-function renderListingTable({ data, columns }) {
+function renderListingTable({
+  data,
+  columns,
+  hidePagination,
+}) {
   return render(
-    <ListingTable data={data} columns={columns} />
+    <ListingTable
+      data={data}
+      columns={columns}
+      hidePagination={hidePagination}
+    />
   );
 }
 
@@ -14,16 +22,17 @@ it('Should render corretly', () => {
     columns: [
       {
         Header: 'test',
-        accessor: 'name'
+        accessor: 'name',
       },
       {
         Header: 'test',
-        accessor: 'cnpj'
+        accessor: 'cnpj',
       },
       {
         Header: 'test',
-        accessor: 'actions'
+        accessor: 'actions',
       },
     ],
+    hidePagination: false,
   });
 });

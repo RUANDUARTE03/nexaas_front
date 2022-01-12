@@ -172,6 +172,7 @@ export default function UserPage() {
             <ListingTable
               data={tableData}
               columns={columns}
+              hidePagination={false}
             />
           </div>
           {modalView()}

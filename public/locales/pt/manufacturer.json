@@ -1,0 +1,12 @@
+{
+  "breadcumb": "Fabricantes",
+  "newManufacturerBtn": "Novo Fabricante",
+  "table": {
+    "nameColumn": "Nome",
+    "actionsColumn": "Ações"
+  },
+  "editLabel": "Editar",
+  "deleteLabel": "Excluir",
+  "removeOrgLabel": "Remover Fabricante",
+  "confirmRemoveOrgLabel": "Tem certeza que deseja excluir o fabricante"
+}

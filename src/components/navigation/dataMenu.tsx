@@ -106,7 +106,7 @@ export const dataMenuRegisters: dataMenuProps = {
     '/product_categories',
     '/product_feature',
     '/product_brands',
-    '/manufactures',
+    '/manufacturers',
     '/sale_channels',
   ],
   items: [
@@ -162,7 +162,7 @@ export const dataMenuRegisters: dataMenuProps = {
       label: 'Marcas',
     },
     {
-      href: '/manufactures',
+      href: '/manufacturers',
       newVersion: false,
       label: 'Fabricantes',
     },
