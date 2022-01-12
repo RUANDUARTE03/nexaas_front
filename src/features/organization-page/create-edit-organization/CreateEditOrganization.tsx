@@ -21,6 +21,7 @@ import { routes } from '../../../utils/routes';
 import {
   DeliveryRadiusMax,
   Kind,
+  TaxRegime,
 } from '../../../utils/constants/Organization';
 import { states } from '../../../utils/constants/states';
 import {
@@ -33,6 +34,8 @@ import { formatValueToReal } from '../../../utils/formatters/Currency';
 import { submitOrganization } from '../../../store/actions/submitOrganizations';
 import HeaderMenu from '../../header-menu';
 import Content from '../../../components/content';
+import { getLatLngByZipCode } from '../../../services/mapsService';
+import GMap from '../../../components/google-map/GMap';
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-wrap-multilines */
@@ -177,8 +180,8 @@ export default function CreateEditOrganization() {
   };
 
   const zipCodeKeyUp = () => {
-    if (zipCode.replace('-', '').length === 8) {
-      getAddressByCep(zipCode.replace('-', '')).then(
+    if (zipCode?.replace('-', '').length === 8) {
+      getAddressByCep(zipCode?.replace('-', '')).then(
         (response) => {
           const {
             bairro,
@@ -195,6 +198,14 @@ export default function CreateEditOrganization() {
           setCityCode(ibge);
           setNeighborhood(bairro);
           setState(uf);
+
+          getLatLngByZipCode(zipCode).then((data) => {
+            const { lat, lng } =
+              data.data.results[0]?.geometry.location;
+            console.log(lat, lng);
+            setLatitude(lat);
+            setLongitude(lng);
+          });
         }
       );
     }
@@ -212,7 +223,7 @@ export default function CreateEditOrganization() {
             averageWithdrawalTerm
           ),
           averageWithdrawalPrice: Number(
-            averageWithdrawalPrice.replace(',', '')
+            averageWithdrawalPrice?.replace(',', '')
           ),
           deliveryRadiusMax,
           kind,
@@ -547,7 +558,7 @@ export default function CreateEditOrganization() {
                     {t('addressLabel')}
                   </h2>
 
-                  <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
+                  <div className="ch-fieldGroup">
                     <div className="ch-field">
                       <InputChameleon
                         label={t('zipCodeLabel')}
@@ -559,7 +570,7 @@ export default function CreateEditOrganization() {
                       />
                     </div>
 
-                    <div className="ch-field">
+                    <div className="ch-field ch-field--2Tablet ch-field--start1Tablet">
                       <InputChameleon
                         label={t('streetLabel')}
                         required={false}
@@ -641,8 +652,9 @@ export default function CreateEditOrganization() {
                         })
                       )}
                     />
-                    <div className="ch-field">
+                    <div className="ch-field ch-field--2Tablet">
                       <InputChameleon
+                        disabled
                         label={t('latitudeLabel')}
                         required={false}
                         value={latitude}
@@ -652,8 +664,9 @@ export default function CreateEditOrganization() {
                         }
                       />
                     </div>
-                    <div className="ch-field">
+                    <div className="ch-field ch-field--2Tablet">
                       <InputChameleon
+                        disabled
                         label={t('longitudeLabel')}
                         required={false}
                         value={longitude}
@@ -664,6 +677,10 @@ export default function CreateEditOrganization() {
                       />
                     </div>
                   </div>
+
+                  <div className="ch-field ch-field--2Tablet">
+                    <GMap lat={latitude} lng={longitude} />
+                  </div>
                 </div>
 
                 <div className="ch-spaceStackGroup--s">
@@ -671,7 +688,7 @@ export default function CreateEditOrganization() {
                     {t('tributationLabel')}
                   </h2>
 
-                  <div className="ch-fieldGroup ch-fieldGroup--2Tablet">
+                  <div className="ch-fieldGroup">
                     <div className="ch-field">
                       <InputChameleon
                         type="number"
@@ -697,15 +714,27 @@ export default function CreateEditOrganization() {
                       />
                     </div>
 
-                    <div className="ch-field">
+                    <div className="ch-field ch-field--2Tablet">
                       <InputChameleon
                         label={t('taxRegimeLabel')}
                         required
                         value={taxRegime}
-                        mode="text"
-                        onChange={(e) =>
-                          setTaxRegime(e.target.value)
-                        }
+                        onChange={(e) => {
+                          setTaxRegime(
+                            e.target.value.toString()
+                          );
+                        }}
+                        mode="select"
+                        options={[
+                          {
+                            value: TaxRegime.SIMPLE,
+                            label: t('simpleOption'),
+                          },
+                          {
+                            value: TaxRegime.NORMAL,
+                            label: t('normalOption'),
+                          },
+                        ]}
                       />
                     </div>
                   </div>

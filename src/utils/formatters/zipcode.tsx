@@ -10,5 +10,5 @@ export function formatZipCode(zipcode: string): string {
 }
 
 export function unformatZipCode(zipcode: string): string {
-  return zipcode.replace('-', '');
+  return zipcode?.replace('-', '');
 }

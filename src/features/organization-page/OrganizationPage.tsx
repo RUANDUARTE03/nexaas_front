@@ -198,6 +198,7 @@ export default function OrganizationPage() {
             <ListingTable
               data={tableData}
               columns={columns}
+              hidePagination
             />
             {modalView()}
           </div>

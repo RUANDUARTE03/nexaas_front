@@ -23,6 +23,7 @@ type InputChameleonProps = {
   mode: 'text' | 'select';
   options?: optionsProps[];
   type?: 'text' | 'number';
+  disabled?: boolean;
 };
 
 export default function InputChameleon({
@@ -34,6 +35,7 @@ export default function InputChameleon({
   mode,
   options,
   type,
+  disabled,
 }: InputChameleonProps) {
   return (
     <FormControl className={Styles.containerIptChameleon}>
@@ -42,6 +44,7 @@ export default function InputChameleon({
       </InputLabel>
       {mode === 'text' ? (
         <InputBase
+          disabled={disabled}
           type={type}
           style={{ width: '100%' }}
           id={Styles.wrapperIptChameleon}
@@ -55,6 +58,7 @@ export default function InputChameleon({
         />
       ) : (
         <NativeSelect
+          style={{ width: '100%' }}
           value={value}
           onChange={(e) => {
             onChange(e);

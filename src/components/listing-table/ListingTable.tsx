@@ -4,7 +4,17 @@ import { useTable, usePagination } from 'react-table';
 import Style from './ListingTable.module.scss';
 import Pagination from './Pagination';
 
-export default function ListingTable({ data, columns }) {
+interface ListingTableProps {
+  data: any;
+  columns: any;
+  hidePagination?: any;
+}
+
+export default function ListingTable({
+  data,
+  columns,
+  hidePagination,
+}: ListingTableProps) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -56,17 +66,19 @@ export default function ListingTable({ data, columns }) {
           })}
         </tbody>
       </table>
-      <Pagination
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        nextPage={nextPage}
-        previousPage={previousPage}
-        pageIndex={pageIndex}
-        pageOptions={pageOptions}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-        pageCount={pageCount}
-      />
+      {!hidePagination && (
+        <Pagination
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          pageIndex={pageIndex}
+          pageOptions={pageOptions}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          pageCount={pageCount}
+        />
+      )}
     </>
   );
 }

@@ -1,4 +1,5 @@
 {
+  "breadcumb": "Organizações",
   "error": "Erro",
   "editOrgLabel": "Editar Organização",
   "newOrgLabel": "Nova Organização",
@@ -41,5 +42,7 @@
   "ahundredOption": "100 KM",
   "newLabel": "Novo",
   "editLabel": "Editar",
+  "simpleOption": "Simples Nacional",
+  "normalOption": "Normal",
   "aquisitionChannelLabel": "Canais de aquisição"
 }

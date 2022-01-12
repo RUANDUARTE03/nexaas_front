@@ -1,12 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 
-export enum TaxRegime {
-  UNKNOWN = 0,
-  SIMPLES_NACIONAL = 1,
-  NORMAL = 3,
-}
-
 export enum DeliveryRadiusMax {
   UNLIMITED = 'unlimited',
   THIRDY = '30km',
@@ -20,4 +14,9 @@ export enum Kind {
   FRANCHISE = 'franchise',
   DISTRIBUTION_CENTER = 'distribution_center',
   OTHER = 'other',
+}
+
+export enum TaxRegime {
+  SIMPLE = 'simples_nacional',
+  NORMAL = 'normal',
 }
