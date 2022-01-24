@@ -8,12 +8,14 @@ interface ListingTableProps {
   data: any;
   columns: any;
   hidePagination?: any;
+  borderedTable?: any;
 }
 
 export default function ListingTable({
   data,
   columns,
   hidePagination,
+  borderedTable,
 }: ListingTableProps) {
   const {
     getTableProps,
@@ -35,14 +37,20 @@ export default function ListingTable({
   return (
     <>
       <table
-        className={`${Style.listingTable} ch-table`}
+        className={`${Style.listingTable} ch-table ${
+          borderedTable ? Style.bordered : ''
+        }`}
         {...getTableProps()}
       >
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>
+                <th
+                  {...column.getHeaderProps({
+                    style: column.style,
+                  })}
+                >
                   {column.render('Header')}
                 </th>
               ))}
@@ -56,7 +64,11 @@ export default function ListingTable({
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
-                    <td {...cell.getCellProps()}>
+                    <td
+                      {...cell.getCellProps({
+                        style: cell.column.style,
+                      })}
+                    >
                       {cell.render('Cell')}
                     </td>
                   );

@@ -1,9 +1,10 @@
 @import '../../styles/';
 
+
 .listingTable {
   width: 100%;
   
-
+  
   thead {
     background-color: $backgroundColorHeaderTable;
   }
@@ -44,5 +45,14 @@
 
   .icon {
     display: flex;
+  }
+}
+.bordered {
+  --border-gray: rgba(34, 36, 38, 0.15);
+
+  border: 1px solid var(--border-gray);
+
+  td, th {
+    border: 1px solid var(--border-gray);
   }
 }

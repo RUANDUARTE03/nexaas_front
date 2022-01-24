@@ -39,7 +39,7 @@ export default function CreateEditManufacturer() {
     {
       onCompleted: (response) => {
         const { errors: errorsCreate } =
-          response.createManufacturers;
+          response.createManufacturer;
 
         if (!errorsCreate.length) {
           dispatch(submitManufacturer({ type: 'create' }));

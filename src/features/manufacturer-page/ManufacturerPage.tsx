@@ -1,16 +1,21 @@
-import React, { useEffect, useMemo } from 'react';
-import { useQuery } from '@apollo/client';
+/* eslint-disable react/jsx-wrap-multilines */
+import React, { useEffect, useMemo, useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
 import { reverse } from 'named-urls';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import router from 'next/router';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
+import DeleteModal from 'src/components/delete-modal';
 import { routes } from '../../utils/routes';
 import ButtonChameleon from '../../components/Chameleon/button-chameleon';
 import Styles from './ManufacturerPage.module.scss';
 import HeaderMenu from '../header-menu';
 import Content from '../../components/content';
-import { ALL_MANUFACTURERS } from '../../graphql/queries/manufacturers';
+import {
+  ALL_MANUFACTURERS,
+  DELETE_MANUFACTURER,
+} from '../../graphql/queries/manufacturers';
 import ListingTable from '../../components/listing-table/ListingTable';
 
 export default function ManufacturerPage() {
@@ -18,7 +23,10 @@ export default function ManufacturerPage() {
   const { data, loading, refetch } = useQuery(
     ALL_MANUFACTURERS
   );
-
+  const [selectedManufacturer, setSelectedManufacturer] =
+    useState();
+  const [deleteModalOpen, setDeleteModalOpen] =
+    useState(false);
   const tableData = useMemo(
     () => (data ? data.manufacturers : []),
     [data]
@@ -29,10 +37,16 @@ export default function ManufacturerPage() {
       {
         Header: t('table.nameColumn'),
         accessor: 'name',
+        Cell: (s) => (
+          <span style={{ width: '80%' }}>{s.value}</span>
+        ),
       },
       {
         Header: t('table.actionsColumn'),
         accessor: 'actions',
+        style: {
+          width: '400px',
+        },
         Cell: ({ row }) => {
           const manufacturer = row.original;
           const { id } = manufacturer || null;
@@ -57,12 +71,71 @@ export default function ManufacturerPage() {
                   />
                 </Link>
               </div>
+
+              <ButtonChameleon
+                dataTestId="btn-delete-manufacturer"
+                label={t('deleteLabel')}
+                negative
+                outline
+                icon={false}
+                onClick={() => {
+                  setDeleteModalOpen(true);
+                  setSelectedManufacturer(manufacturer);
+                }}
+              />
             </div>
           );
         },
       },
     ],
     []
+  );
+
+  function onCloseModalDelete(): void {
+    setDeleteModalOpen(false);
+    setSelectedManufacturer(null);
+  }
+
+  const [deleteManufacturer] = useMutation(
+    DELETE_MANUFACTURER,
+    {
+      onCompleted: (response) => {
+        const { errors } = response.deleteManufacturer;
+
+        if (!errors.length) {
+          setDeleteModalOpen(false);
+
+          setTimeout(() => {
+            refetch();
+          }, 1000);
+        }
+      },
+    }
+  );
+
+  const confirmDeleteManufacturer = () => {
+    deleteManufacturer({
+      variables: { input: { id: selectedManufacturer.id } },
+    });
+  };
+
+  const modalView = () => (
+    <DeleteModal
+      open={deleteModalOpen}
+      onClose={onCloseModalDelete}
+      onSubmit={confirmDeleteManufacturer}
+      title={t('removeOrgLabel')}
+    >
+      <div>
+        <span>
+          {t('confirmRemoveOrgLabel')}
+          &nbsp;
+          <b>{selectedManufacturer?.name}</b>
+          &nbsp;
+          {`${'?'}`}
+        </span>
+      </div>
+    </DeleteModal>
   );
 
   useEffect(() => {
@@ -99,10 +172,12 @@ export default function ManufacturerPage() {
               data={tableData}
               columns={columns}
               hidePagination
+              borderedTable
             />
           </div>
         </div>
       </Content>
+      {modalView()}
     </>
   );
 }
