@@ -9,4 +9,58 @@ const ALL_MANUFACTURERS = gql`
   }
 `;
 
-export { ALL_MANUFACTURERS };
+const CREATE_MANUFACTURER = gql`
+  mutation CreateManufacturer(
+    $input: CreateManufacturerInput!
+  ) {
+    createManufacturer(input: $input) {
+      manufacturer {
+        name
+      }
+      errors
+    }
+  }
+`;
+
+const UPDATE_MANUFACTURER = gql`
+  mutation UpdateManufacturer(
+    $input: UpdateManufacturerInput!
+  ) {
+    updateManufacturer(input: $input) {
+      manufacturer {
+        id
+      }
+      errors
+    }
+  }
+`;
+
+const DELETE_MANUFACTURER = gql`
+  mutation DeleteManufacturer(
+    $input: DeleteManufacturerInput!
+  ) {
+    deleteManufacturer(input: $input) {
+      manufacturer {
+        id
+      }
+      errors
+    }
+  }
+`;
+
+const GET_MANUFACTURER = gql`
+  query GetManufacturer($id: ID!) {
+    manufacturer(id: $id) {
+      id
+      name
+    }
+  }
+`;
+
+export {
+  ALL_MANUFACTURERS,
+  CREATE_MANUFACTURER,
+  DELETE_MANUFACTURER,
+  GET_MANUFACTURER,
+  UPDATE_MANUFACTURER,
+};

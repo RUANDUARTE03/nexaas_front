@@ -39,7 +39,7 @@
     "next-redux-wrapper": "^7.0.2",
     "next-transpile-modules": "^9.0.0",
     "nextjs-cors": "^2.1.0",
-    "node-sass": "4.14.1",
+    "node-sass": "^7.0.1",
     "path": "^0.12.7",
     "rc-dropdown": "^3.2.0",
     "rc-table": "^7.18.1",

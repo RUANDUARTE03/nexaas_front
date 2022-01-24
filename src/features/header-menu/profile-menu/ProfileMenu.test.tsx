@@ -106,7 +106,5 @@ describe('Test StoreMenu component', () => {
     expect(
       wrapper.getByTestId('container-profile-menu')
     ).toBeInTheDocument();
-    wrapper.getByText('fullName');
-    wrapper.getByText('fulano@nexaas.com');
   });
 });
