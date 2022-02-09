@@ -20,6 +20,15 @@ export const routes = {
       index: '',
     }),
   }),
+  brands: include('/brands/', {
+    index: '',
+    create: include('create/', {
+      index: '',
+    }),
+    edit: include('edit/:id/', {
+      index: '',
+    }),
+  }),
   organizations: include('/organizations/', {
     index: '',
     create: include('create/', {

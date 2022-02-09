@@ -1,0 +1,14 @@
+{
+    "breadcumb": "Marcas",
+    "newManufacturerBtn": "Nova Marca",
+    "table": {
+      "nameColumn": "Nome",
+      "manufacturerColumn": "Fabricante",
+      "actionsColumn": "Ações"
+    },
+    "editLabel": "Editar",
+    "deleteLabel": "Excluir",
+    "removeBrandLabel": "Remover Marca",
+    "confirmRemoveBrandLabel": "Tem certeza que deseja excluir a marca?",
+    "newBrandBtn": "Nova marca"
+  }
