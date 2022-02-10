@@ -4,8 +4,7 @@
   flex-direction: column;
 
   .header {
-    display: flex;
-    justify-content: flex-end;
+    align-self: flex-end;
     margin-bottom: 16px;
   }
 

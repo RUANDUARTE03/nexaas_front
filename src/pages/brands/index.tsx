@@ -9,7 +9,12 @@ export const getStaticProps: GetStaticProps = async ({
   props: {
     ...(await serverSideTranslations(
       locale,
-      ['brand'],
+      [
+        'brand',
+        'store-menu',
+        'profile-menu',
+        'delete-modal',
+      ],
       i18nConfig
     )),
   },

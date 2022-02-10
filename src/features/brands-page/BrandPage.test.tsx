@@ -15,16 +15,34 @@ const mocks = [
     },
     result: {
       data: {
+<<<<<<< HEAD
+        productBrands: [
+          {
+            id: '1',
+            name: 'Apple',
+            manufacturer: {
+              id: '1',
+              name: 'Foxconn Brasil',
+            },
+=======
         brands: [
           {
             id: '1',
             name: 'Apple',
             manufacturer: 'Foxconn Brasil'
+>>>>>>> main
           },
           {
             id: '2',
             name: 'ASUS',
+<<<<<<< HEAD
+            manufacturer: {
+              id: '2',
+              name: 'ASUS da Amazonia S/A',
+            },
+=======
             manufacturer: 'ASUS da Amazonia S/A'
+>>>>>>> main
           },
         ],
       },
@@ -87,6 +105,29 @@ describe('Test Brand feature', () => {
     });
 
     wrapper.getByText('Apple');
+  });
+
+  it('Should show modal when click in btn delete', async () => {
+    const wrapper = renderBrand({
+      mockStoreProvider: mockStore(),
+      mocksByAction: mocks,
+    });
+
+    await act(async () => {
+      await new Promise((resolve) =>
+        setTimeout(resolve, 1000)
+      );
+    });
+
+    userEvent.click(
+      wrapper.getAllByTestId('btn-delete-brand')[0]
+    );
+
+    await wrapper.findAllByTestId('container-delete-modal');
+
+    userEvent.click(
+      wrapper.getByTestId('btn-action-close-modal')
+    );
   });
 
   it('Should redirect for screen create brand', async () => {

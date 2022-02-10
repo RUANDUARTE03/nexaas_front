@@ -13,6 +13,17 @@ const ALL_BRANDS = gql`
   }
 `;
 
+const DELETE_BRAND = gql`
+  mutation deleteBrands($input: DeleteProductBrandInput!) {
+    deleteProductBrand(input: $input) {
+      productBrand {
+        id
+        name
+      }
+    }
+  }
+`;
+
 const GET_BRAND = gql`
   query GetProductBrand($id: ID!) {
     productBrand(id: $id) {
@@ -60,4 +71,5 @@ export {
   GET_BRAND,
   CREATE_BRAND,
   UPDATE_BRAND,
+  DELETE_BRAND,
 };

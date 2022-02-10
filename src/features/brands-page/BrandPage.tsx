@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { useQuery } from '@apollo/client';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
 import { reverse } from 'named-urls';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import router from 'next/router';
@@ -11,11 +11,28 @@ import Styles from './BrandPage.module.scss';
 import HeaderMenu from '../header-menu';
 import Content from '../../components/content';
 import ListingTable from '../../components/listing-table/ListingTable';
-import { ALL_BRANDS } from '../../graphql/queries/brands';
+import {
+  ALL_BRANDS,
+  DELETE_BRAND,
+} from '../../graphql/queries/brands';
+import DeleteModal from '../../components/delete-modal';
+
+type BrandType = {
+  id: number;
+  name: string;
+  manufacturer: {
+    id: number;
+    name: string;
+  };
+};
 
 export default function BrandPage() {
   const { t } = useTranslation('brand');
   const { data, loading, refetch } = useQuery(ALL_BRANDS);
+  const [deleteModalOpen, setDeleteModalOpen] =
+    useState<boolean>(false);
+  const [selectedBrand, setSelectedBrand] =
+    useState<BrandType>();
 
   const tableData = useMemo(
     () => (data ? data.productBrands : []),
@@ -56,17 +73,72 @@ export default function BrandPage() {
                   />
                 </Link>
               </div>
+              <ButtonChameleon
+                dataTestId="btn-delete-brand"
+                label={t('deleteLabel')}
+                negative
+                outline
+                icon={false}
+                onClick={() => {
+                  setDeleteModalOpen(true);
+                  setSelectedBrand(brand);
+                }}
+              />
             </div>
           );
         },
       },
     ],
-    []
+    [t]
   );
 
   useEffect(() => {
     refetch();
   }, [refetch]);
+
+  const [deleteBrand] = useMutation(DELETE_BRAND, {
+    onCompleted: (response) => {
+      const { errors } = response.deleteProductBrand;
+
+      if (!errors.length) {
+        setDeleteModalOpen(false);
+
+        setTimeout(() => {
+          refetch();
+        }, 1000);
+      }
+    },
+  });
+
+  const modalView = () => (
+    <DeleteModal
+      open={deleteModalOpen}
+      onClose={onCloseModalDelete}
+      onSubmit={confirmDeleteBrand}
+      title={t('removeBrandLabel')}
+    >
+      <div>
+        <span>
+          {t('confirmRemoveBrandLabel')}
+          &nbsp;
+          <b>{selectedBrand?.name}</b>
+          &nbsp;
+          {`${'?'}`}
+        </span>
+      </div>
+    </DeleteModal>
+  );
+
+  const confirmDeleteBrand = () => {
+    deleteBrand({
+      variables: { input: { id: selectedBrand.id } },
+    });
+  };
+
+  const onCloseModalDelete = () => {
+    setDeleteModalOpen(false);
+    setSelectedBrand(null);
+  };
 
   if (loading)
     return (
@@ -97,6 +169,7 @@ export default function BrandPage() {
               columns={columns}
               hidePagination
             />
+            {modalView()}
           </div>
         </div>
       </Content>
