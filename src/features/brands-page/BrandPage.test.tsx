@@ -15,7 +15,6 @@ const mocks = [
     },
     result: {
       data: {
-<<<<<<< HEAD
         productBrands: [
           {
             id: '1',
@@ -24,25 +23,14 @@ const mocks = [
               id: '1',
               name: 'Foxconn Brasil',
             },
-=======
-        brands: [
-          {
-            id: '1',
-            name: 'Apple',
-            manufacturer: 'Foxconn Brasil'
->>>>>>> main
           },
           {
             id: '2',
             name: 'ASUS',
-<<<<<<< HEAD
             manufacturer: {
               id: '2',
               name: 'ASUS da Amazonia S/A',
             },
-=======
-            manufacturer: 'ASUS da Amazonia S/A'
->>>>>>> main
           },
         ],
       },
