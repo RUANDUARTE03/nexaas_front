@@ -11,7 +11,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "check-lint": "eslint . --ext ts --ext tsx --ext js --quiet --fix",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "open-sandbox": "npx cypress open --env BASE_URL=https://sandbox.oms.nexaas.com"
   },
   "dependencies": {
     "@apollo/client": "^3.4.7",
@@ -27,6 +28,7 @@
     "axios": "^0.21.4",
     "cpf-cnpj-validator": "^1.0.3",
     "env-cmd": "^10.1.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "fast-equals": "^2.0.4",
     "google-map-react": "^2.1.10",
     "google-maps-react": "^2.0.6",
@@ -63,6 +65,7 @@
     "@types/react": "^17.0.14",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
+    "cypress": "^9.4.1",
     "eslint": "^7.30.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-next": "11.0.1",

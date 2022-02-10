@@ -1,0 +1,4 @@
+{
+    "baseUrl": "https://homologation.oms.nexaas.com",
+    "testFiles": "**/*.spec.ts"
+}
