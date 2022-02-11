@@ -12,7 +12,7 @@
     "test:coverage": "jest --coverage",
     "check-lint": "eslint . --ext ts --ext tsx --ext js --quiet --fix",
     "lint-staged": "lint-staged",
-    "open-sandbox": "npx cypress open --env BASE_URL=https://sandbox.oms.nexaas.com"
+    "open-sandbox": "npx cypress open --env BASE_URL=https://id.nexaas.com/sign_in"
   },
   "dependencies": {
     "@apollo/client": "^3.4.7",

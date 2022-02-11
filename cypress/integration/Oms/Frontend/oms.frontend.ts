@@ -2,17 +2,13 @@
 
 export class OmsFrontend {
   public static Login() {
-    cy.visit('https://id.nexaas.com/sign_in');
+    cy.visit(Cypress.env('BASE_URL'));
 
-    /* cy.get('.ch-button').click(); */
+    cy.get('#session_email').type('lucas.silva@nexaas.com');
 
-    cy.get('#session_password').type('Senha123@');
+    cy.get('#session_password').click().type('Luc@s123');
 
-    cy.get('#session_email').type(
-      'lucas.duarte@nexaas.com'
-    );
-
-    cy.get('.submit').click();
+    cy.get('.primary').click();
 
     cy.screenshot(`Login-page-${Date.now()}`);
 
