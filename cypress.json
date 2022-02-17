@@ -1,4 +1,5 @@
 {
     "baseUrl": "https://homologation.oms.nexaas.com",
-    "testFiles": "**/*.spec.ts"
+    "testFiles": "**/*.spec.ts",
+    "chromeWebSecurity": false
 }
