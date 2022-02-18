@@ -1,5 +1,13 @@
 {
-    "baseUrl": "https://homologation.oms.nexaas.com",
-    "testFiles": "**/*.spec.ts",
-    "chromeWebSecurity": false
+  "baseUrl": "https://homologation.oms.nexaas.com",
+  "testFiles": "**/*.spec.ts",
+  "chromeWebSecurity": false,
+  "env": {
+    "adminEmail": "lucas.silva@nexaas.com",
+    "adminPassword": "Luc@s123",
+    "home": "http://localhost:3000/",
+    "newSession": "http://localhost:3000/sessions/new",
+    "accountSelectionURL": "http://localhost:3000/account_selection",
+    "credentialsURL": "https://sandbox.id.nexaas.com/sign_in"
+  }
 }
