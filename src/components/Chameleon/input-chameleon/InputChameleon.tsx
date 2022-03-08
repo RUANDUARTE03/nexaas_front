@@ -24,6 +24,7 @@ type InputChameleonProps = {
   options?: optionsProps[];
   type?: 'text' | 'number';
   disabled?: boolean;
+  dataCy?: string;
 };
 
 export default function InputChameleon({
@@ -36,6 +37,7 @@ export default function InputChameleon({
   options,
   type,
   disabled,
+  dataCy,
 }: InputChameleonProps) {
   return (
     <FormControl className={Styles.containerIptChameleon}>
@@ -55,6 +57,7 @@ export default function InputChameleon({
           onKeyUp={(e: any) =>
             onKeyUp ? onKeyUp(e) : null
           }
+          data-cy={dataCy}
         />
       ) : (
         <NativeSelect
@@ -66,6 +69,7 @@ export default function InputChameleon({
           input={
             <InputBase id={Styles.wrapperIptChameleon} />
           }
+          data-cy={dataCy}
         >
           <option aria-label="None" value="" />
           {options.map((o) => (

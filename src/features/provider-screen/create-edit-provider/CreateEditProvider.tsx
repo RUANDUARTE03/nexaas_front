@@ -360,6 +360,7 @@ export default function CreateOrEditProvider() {
             value={identifier}
             onChange={(e) => onChangeIdentifier(e)}
             mode="text"
+            dataCy="identifier"
           />
         </div>
         <div className={Styles.wrapperIptRow}>
@@ -372,6 +373,7 @@ export default function CreateOrEditProvider() {
                 setCompanyName(e.target.value)
               }
               mode="text"
+              dataCy="companyName"
             />
           </div>
           <div className={Styles.wrapperIpt}>
@@ -383,6 +385,7 @@ export default function CreateOrEditProvider() {
                 setFantasyName(e.target.value)
               }
               mode="text"
+              dataCy="fantasyName"
             />
           </div>
         </div>
@@ -414,6 +417,7 @@ export default function CreateOrEditProvider() {
                   label: 'Transportadora',
                 },
               ]}
+              dataCy="typeProvider"
             />
           </div>
           <div className={Styles.wrapperIpt}>
@@ -439,6 +443,7 @@ export default function CreateOrEditProvider() {
                   label: '9: Não Contribuinte',
                 },
               ]}
+              dataCy="indicatorSign"
             />
           </div>
         </div>
@@ -452,6 +457,7 @@ export default function CreateOrEditProvider() {
                 setIdentifierExternal(e.target.value);
               }}
               mode="text"
+              dataCy="identifierExternal"
             />
           </div>
 
@@ -467,6 +473,7 @@ export default function CreateOrEditProvider() {
                 setStateInscription(e.target.value);
               }}
               mode="text"
+              dataCy="stateInscription"
             />
           </div>
         </div>
@@ -489,6 +496,7 @@ export default function CreateOrEditProvider() {
             onChange={onZipCodeChange}
             onKeyUp={zipCodeKeyUp}
             mode="text"
+            dataCy="formattedZipCode"
           />
         </div>
         <div className={Styles.wrapperIptRow}>
@@ -501,6 +509,7 @@ export default function CreateOrEditProvider() {
                 setStreet(e.target.value);
               }}
               mode="text"
+              dataCy="street"
             />
           </div>
           <div className={Styles.wrapperIptSM}>
@@ -512,6 +521,7 @@ export default function CreateOrEditProvider() {
                 setAddressNumber(e.target.value);
               }}
               mode="text"
+              dataCy="addressNumber"
             />
           </div>
           <div className={Styles.wrapperIptSM}>
@@ -523,6 +533,7 @@ export default function CreateOrEditProvider() {
                 setAddressDetail(e.target.value);
               }}
               mode="text"
+              dataCy="addressDetail"
             />
           </div>
         </div>
@@ -536,6 +547,7 @@ export default function CreateOrEditProvider() {
                 setDistrict(e.target.value);
               }}
               mode="text"
+              dataCy="district"
             />
           </div>
 
@@ -548,6 +560,7 @@ export default function CreateOrEditProvider() {
                 setCity(e.target.value);
               }}
               mode="text"
+              dataCy="city"
             />
           </div>
 
@@ -563,6 +576,7 @@ export default function CreateOrEditProvider() {
                 setCityIbgeId(e.target.value);
               }}
               mode="text"
+              dataCy="cityIbgeId"
             />
           </div>
 
@@ -577,6 +591,7 @@ export default function CreateOrEditProvider() {
                 label: state.code,
                 value: state.code,
               }))}
+              dataCy="stateName"
             />
           </div>
         </div>

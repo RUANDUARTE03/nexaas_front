@@ -11,6 +11,7 @@ type dataMenuProps = {
     | 'Configurações';
   icon: IconProp | string;
   redirects: string[];
+  dataCy?: string;
   items: {
     href: string;
     newVersion: boolean;
@@ -95,6 +96,7 @@ export const dataMenuSupplies: dataMenuProps = {
 export const dataMenuRegisters: dataMenuProps = {
   label: 'Cadastros',
   icon: 'clipboard-list',
+  dataCy: 'cadastros',
   redirects: [
     '/products',
     '/customers',

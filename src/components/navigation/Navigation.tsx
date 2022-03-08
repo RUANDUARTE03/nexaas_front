@@ -30,6 +30,14 @@ type NavigationProps = {
   setDrawerB: (drawerB: boolean) => void;
 };
 
+interface ShowByVersionProps {
+  href: string;
+  newVersion: boolean;
+  directNewVersion: string;
+  label: string;
+  dataCy?: string;
+}
+
 export default function Navigation({
   setExpanded,
   setDrawerB,
@@ -119,14 +127,17 @@ export default function Navigation({
     label,
     icon,
     items,
+    dataCy,
   }: {
     label: string;
     icon: IconProp;
+    dataCy?: string;
     items: {
       href: string;
       newVersion: boolean;
       directNewVersion?: string;
       label: string;
+      dataCy?: string;
     }[];
   }) => {
     const drawerIsOpen: boolean =
@@ -175,6 +186,7 @@ export default function Navigation({
           className={`ch-menu-item has-icon has-iconRight ${
             Styles.btnMenuItem
           } ${!isOpenDrawerSmall && Styles.nexMenuSubmenu}`}
+          data-cy={dataCy}
         >
           {showBorder && (
             <div
@@ -229,6 +241,7 @@ export default function Navigation({
                   newVersion: item.newVersion,
                   directNewVersion: item.directNewVersion,
                   label: item.label,
+                  dataCy: item.dataCy,
                 })}
               </div>
             );
@@ -243,12 +256,8 @@ export default function Navigation({
     newVersion = false,
     directNewVersion,
     label,
-  }: {
-    href: string;
-    newVersion: boolean;
-    directNewVersion: string;
-    label: string;
-  }) => {
+    dataCy,
+  }: ShowByVersionProps) => {
     const isActiveSubCategory: boolean =
       subCategoryActive === href;
 
@@ -261,6 +270,7 @@ export default function Navigation({
             router.push(directNewVersion);
         }}
         type="button"
+        data-cy={dataCy}
       >
         <div
           className={`${
@@ -284,12 +294,8 @@ export default function Navigation({
     newVersion = false,
     directNewVersion,
     label,
-  }: {
-    href: string;
-    newVersion: boolean;
-    directNewVersion: string;
-    label: string;
-  }) => {
+    dataCy,
+  }: ShowByVersionProps) => {
     return (
       <>
         {newVersion ? (
@@ -301,6 +307,7 @@ export default function Navigation({
               directNewVersion,
               label,
               newVersion,
+              dataCy,
             })}
           </div>
         ) : (
@@ -313,6 +320,7 @@ export default function Navigation({
               directNewVersion,
               label,
               newVersion,
+              dataCy,
             })}
           </a>
         )}
@@ -366,6 +374,7 @@ export default function Navigation({
                 label: item.label,
                 icon: item.icon,
                 items: item.items,
+                dataCy: item.dataCy,
               })}
             </div>
           );

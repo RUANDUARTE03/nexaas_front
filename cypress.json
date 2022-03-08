@@ -6,6 +6,7 @@
     "adminEmail": "lucas.silva@nexaas.com",
     "adminPassword": "Luc@s123",
     "home": "http://localhost:3000/",
+    "reactHome": "http://localhost:3001/",
     "newSession": "http://localhost:3000/sessions/new",
     "accountSelectionURL": "http://localhost:3000/account_selection",
     "credentialsURL": "https://sandbox.id.nexaas.com/sign_in"
