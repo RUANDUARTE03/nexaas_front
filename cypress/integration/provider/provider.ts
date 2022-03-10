@@ -89,30 +89,89 @@ export class Provider {
     cy.get('[data-cy=formattedZipCode]')
       .click()
       .type(provider.zipcode);
-    cy.get('[data-cy=street]')
-      .click()
-      .type(provider.street);
     cy.get('[data-cy=addressNumber]')
       .click()
       .type(provider.number);
     cy.get('[data-cy=addressDetail]')
       .click()
       .type(provider.detail);
-    cy.get('[data-cy=district]')
-      .click()
-      .type(provider.neighborhood);
-    cy.get('[data-cy=city]').click().type(provider.city);
-    cy.get('[data-cy=cityIbgeId]')
-      .click()
-      .type(provider.cityCode);
+    /*     
+      cy.get('[data-cy=district]')
+        .click()
+        .type(provider.neighborhood);
+      cy.get('[data-cy=city]').click().type(provider.city);
+      cy.get('[data-cy=cityIbgeId]')
+        .click()
+        .type(provider.cityCode);
+      
+    */
+
     cy.get('[data-cy=stateName] > select').select(
       provider.state
     );
-
     cy.get(
       '[data-testid=btn-createOrEditProvider]'
     ).click();
 
     cy.url().should('equal', HOME_URL);
+  }
+
+  public static createWithExistentDocument() {
+    cy.get('[data-testid=btn-create-provider]').click();
+
+    cy.get('[data-cy=identifier]')
+      .click()
+      .type(provider.document);
+
+    cy.get(
+      '[data-testid=btn-createOrEditProvider]'
+    ).click();
+    cy.contains('CNPJ/CPF já está em uso');
+    cy.url().should('equal', CREATE_URL);
+  }
+
+  public static existentCepShouldFillAddress() {
+    cy.get('[data-cy=formattedZipCode]')
+      .click()
+      .type('07400295');
+
+    cy.get('[data-cy=street] > input').should(
+      'have.value',
+      'Rua Perfeita Liberdade'
+    );
+    cy.get('[data-cy=district] > input').should(
+      'have.value',
+      'Jardim Ângelo'
+    );
+    cy.get('[data-cy=city] > input').should(
+      'have.value',
+      'Arujá'
+    );
+    cy.get('[data-cy=cityIbgeId] > input').should(
+      'have.value',
+      '3503901'
+    );
+    cy.get('[data-cy=stateName] > select').should(
+      'have.value',
+      'SP'
+    );
+  }
+
+  public static nonExistentCepShouldNotFillAddress() {
+    cy.visit(CREATE_URL);
+
+    cy.get('[data-cy=formattedZipCode]')
+      .click()
+      .type('12345678');
+
+    cy.get('[data-cy=street] > input').should('be.empty');
+    cy.get('[data-cy=district] > input').should('be.empty');
+    cy.get('[data-cy=city] > input').should('be.empty');
+    cy.get('[data-cy=cityIbgeId] > input').should(
+      'be.empty'
+    );
+    cy.get('[data-cy=stateName] > select').should(
+      'be.empty'
+    );
   }
 }

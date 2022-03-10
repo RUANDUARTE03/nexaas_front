@@ -19,4 +19,16 @@ describe('Testes relacionados a fornecedores', () => {
   it('Criar novo fornecedor', () => {
     Provider.createProvider();
   });
+
+  it('CPF/CNPJ já existente', () => {
+    Provider.createWithExistentDocument();
+  });
+
+  it('CEP existente deve preencher endereço', () => {
+    Provider.existentCepShouldFillAddress();
+  });
+
+  it('CEP inexistente não deve preencher endereço', () => {
+    Provider.nonExistentCepShouldNotFillAddress();
+  });
 });
