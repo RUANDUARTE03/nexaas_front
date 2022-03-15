@@ -4,7 +4,7 @@ import {
 } from '../actions/submitProviders';
 
 const initialState: {
-  type: 'create' | 'edit' | '';
+  type: 'create' | 'edit' | 'delete' | '';
 } = {
   type: '',
 };
@@ -13,7 +13,7 @@ export default function reducer(
   state = initialState,
   action: {
     type: typeof SUBMIT_PROVIDER | typeof CLEAR_PROVIDER;
-    payload: 'create' | 'edit' | '';
+    payload: 'create' | 'edit' | 'delete' | '';
   }
 ): typeof initialState {
   switch (action.type) {

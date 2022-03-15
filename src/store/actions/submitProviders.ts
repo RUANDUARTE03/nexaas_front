@@ -4,7 +4,7 @@ export const CLEAR_PROVIDER = 'clear_provider';
 export function submitProvider({
   type,
 }: {
-  type: 'edit' | 'create';
+  type: 'edit' | 'create' | 'delete';
 }) {
   return {
     type: SUBMIT_PROVIDER,

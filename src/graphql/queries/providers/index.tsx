@@ -92,9 +92,7 @@ const UPDATE_PROVIDER = gql`
 const DELETE_PROVIDER = gql`
   mutation deleteProvider($input: DeleteProviderInput!) {
     deleteProvider(input: $input) {
-      provider {
-        id
-      }
+      success
       errors
     }
   }

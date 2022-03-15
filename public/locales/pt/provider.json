@@ -13,6 +13,7 @@
   "providerTypeLabel": "Tipo de Fonecedores",
   "actionsLabel": "Ações",
   "removeLabel": "Excluir",
+  "deleteLabel": "deletado",
   "provider": {
     "manufacturer": "Fabricante",
     "importer": "Importadora",

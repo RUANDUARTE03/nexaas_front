@@ -15,7 +15,10 @@ import {
   ALL_PROVIDERS,
   DELETE_PROVIDER,
 } from '../../graphql/queries/providers';
-import { clearSubmit } from '../../store/actions/submitProviders';
+import {
+  clearSubmit,
+  submitProvider,
+} from '../../store/actions/submitProviders';
 import DeleteModal from '../../components/delete-modal';
 import HeaderMenu from '../header-menu';
 import Content from '../../components/content';
@@ -40,10 +43,11 @@ export default function ProviderScreen() {
 
   const [deleteProvider] = useMutation(DELETE_PROVIDER, {
     onCompleted: (response) => {
-      const { errors } = response.deleteProvider;
+      const { errors, success } = response.deleteProvider;
 
-      if (!errors.length) {
+      if (errors === null && success) {
         setModalDeleteOpen(false);
+        dispatch(submitProvider({ type: 'delete' }));
         setTimeout(() => {
           refetch();
         }, 1000);
@@ -117,7 +121,9 @@ export default function ProviderScreen() {
               {`Fornecedor ${
                 type === 'create'
                   ? t('createdLabel')
-                  : t('editedLabel')
+                  : type === 'edit'
+                  ? t('editedLabel')
+                  : t('deleteLabel')
               } com sucesso`}
             </Alert>
           )}
