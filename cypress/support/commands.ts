@@ -26,6 +26,7 @@
 declare namespace Cypress {
   interface Chainable<Subject> {
     disableSameSiteCookieRestrictions(): void;
+    enableSameSiteCookieRestrictions(): void;
   }
 }
 

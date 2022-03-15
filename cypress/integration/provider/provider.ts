@@ -13,7 +13,7 @@ const provider = {
   country: 'Brazil',
   detail: 'teste',
   document: '29979036000140',
-  externalId: '1',
+  externalId: '1234',
   name: 'teste 123',
   neighborhood: 'Largo da Batalha',
   number: '21',
@@ -24,6 +24,12 @@ const provider = {
   street: 'Rua Miguel Pereira Sarmento',
   tradingName: 'teste 123',
   zipcode: '24310425',
+};
+
+const onlyRequiredProvider = {
+  name: 'teste 12345',
+  document: '34028316000294',
+  providerType: 'Fabricante',
 };
 
 export class Provider {
@@ -95,16 +101,6 @@ export class Provider {
     cy.get('[data-cy=addressDetail]')
       .click()
       .type(provider.detail);
-    /*     
-      cy.get('[data-cy=district]')
-        .click()
-        .type(provider.neighborhood);
-      cy.get('[data-cy=city]').click().type(provider.city);
-      cy.get('[data-cy=cityIbgeId]')
-        .click()
-        .type(provider.cityCode);
-      
-    */
 
     cy.get('[data-cy=stateName] > select').select(
       provider.state
@@ -155,10 +151,13 @@ export class Provider {
       'have.value',
       'SP'
     );
+    cy.get(
+      '[data-testid=btn-createOrEditProvider-cancel]'
+    ).click();
   }
 
   public static nonExistentCepShouldNotFillAddress() {
-    cy.visit(CREATE_URL);
+    cy.get('[data-testid=btn-create-provider]').click();
 
     cy.get('[data-cy=formattedZipCode]')
       .click()
@@ -170,8 +169,90 @@ export class Provider {
     cy.get('[data-cy=cityIbgeId] > input').should(
       'be.empty'
     );
-    cy.get('[data-cy=stateName] > select').should(
-      'be.empty'
+    cy.get(
+      '[data-testid=btn-createOrEditProvider-cancel]'
+    ).click();
+  }
+
+  public static createWithRequiredFields() {
+    cy.get('[data-testid=btn-create-provider]').click();
+    cy.get('[data-cy=identifier]')
+      .click()
+      .type(onlyRequiredProvider.document);
+    cy.get('[data-cy=companyName]')
+      .click()
+      .type(onlyRequiredProvider.name);
+
+    cy.get('[data-cy=typeProvider] > select').select(
+      onlyRequiredProvider.providerType
     );
+
+    cy.get(
+      '[data-testid=btn-createOrEditProvider]'
+    ).click();
+
+    cy.url().should('equal', HOME_URL);
+  }
+
+  public static editOnlyRequiredField() {
+    cy.get('[data-testid=btn-edit-provider-1]').click();
+
+    cy.get('[data-cy=companyName]')
+      .click()
+      .type('nome modificado');
+
+    cy.get('[data-cy=typeProvider] > select').select(
+      onlyRequiredProvider.providerType
+    );
+
+    cy.get(
+      '[data-testid=btn-createOrEditProvider]'
+    ).click();
+
+    cy.url().should('equal', HOME_URL);
+  }
+
+  public static editFields() {
+    cy.get('[data-testid=btn-edit-provider-1]').click();
+
+    cy.get('[data-cy=companyName]')
+      .clear()
+      .click()
+      .type('nome modificado 2');
+    cy.get('[data-cy=fantasyName]')
+      .clear()
+      .click()
+      .type('nome modificado 2');
+    cy.get('[data-cy=typeProvider] > select').select(
+      'Distribuidora'
+    );
+    cy.get('[data-cy=indicatorSign] > select').select('2');
+    cy.get('[data-cy=identifierExternal]')
+      .clear()
+      .click()
+      .type('2');
+    cy.get('[data-cy=stateInscription]')
+      .clear()
+      .click()
+      .type('12344321');
+    cy.get('[data-cy=formattedZipCode]')
+      .clear()
+      .click()
+      .type('07400265');
+    cy.get('[data-cy=addressNumber]')
+      .clear()
+      .click()
+      .type('13');
+    cy.get('[data-cy=addressDetail]')
+      .clear()
+      .click()
+      .type('detalhe');
+
+    cy.get('[data-cy=stateName] > select').select('SP');
+    cy.get(
+      '[data-testid=btn-createOrEditProvider]'
+    ).click();
+
+    cy.url().should('equal', HOME_URL);
   }
 }

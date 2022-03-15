@@ -158,6 +158,8 @@ export default function ProviderScreen() {
                           outline
                           icon={false}
                           onClick={() => {}}
+                          dataTestId="btn-edit-provider"
+                          data-cy={`btn-edit-provider-${provider.id}`}
                         />
                       </Link>
                       <ButtonChameleon
