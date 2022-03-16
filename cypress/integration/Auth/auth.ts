@@ -3,29 +3,39 @@
 
 export class Auth {
   public static adminAuth() {
-    cy.visit(Cypress.env('newSession'));
+    cy.visit(Cypress.env('newSession')).then(() => {
+      cy.get('.ch-button')
+        .click()
+        .then(() => {
+          cy.get('#session_email').type(
+            Cypress.env('adminEmail')
+          );
 
-    cy.get('.ch-button').click();
+          cy.get('#session_password')
+            .click()
+            .type(Cypress.env('adminPassword'));
 
-    cy.get('#session_email').type(
-      Cypress.env('adminEmail')
-    );
+          cy.get('.primary')
+            .click()
+            .then(() => {
+              cy.visit(
+                Cypress.env('accountSelectionURL')
+              ).then(() => {
+                cy.get('.ch-button').click();
 
-    cy.get('#session_password')
-      .click()
-      .type(Cypress.env('adminPassword'));
-
-    cy.get('.primary').click();
-
-    cy.visit(Cypress.env('accountSelectionURL'));
-
-    cy.get('.ch-button').click();
-
-    cy.get('a[href="/account_selection/1"]').click();
-
-    cy.url().should('equal', Cypress.env('home'));
-
-    cy.screenshot('admin-auth');
+                cy.get('a[href="/account_selection/1"]')
+                  .click()
+                  .then(() => {
+                    cy.url().should(
+                      'equal',
+                      Cypress.env('home')
+                    );
+                    cy.screenshot('admin-auth');
+                  });
+              });
+            });
+        });
+    });
   }
 
   public static authWithoutNexaasId() {

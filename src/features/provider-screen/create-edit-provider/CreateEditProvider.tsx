@@ -68,8 +68,8 @@ export default function CreateOrEditProvider() {
     onCompleted: (response) => {
       const { errors: errorsCreate } =
         response.createProvider;
-
-      if (!errorsCreate.length) {
+        
+      if (!errorsCreate?.length) {
         dispatch(submitProvider({ type: 'create' }));
         router.push(routes.providers.index);
       } else {

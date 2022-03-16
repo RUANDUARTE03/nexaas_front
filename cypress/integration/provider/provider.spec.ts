@@ -3,6 +3,7 @@ import { Provider } from './provider';
 
 describe('Testes relacionados a fornecedores', () => {
   beforeEach('', () => {
+    Cypress.Cookies.debug(true);
     Cypress.Cookies.defaults({
       preserve: [
         '_estoka_session',
