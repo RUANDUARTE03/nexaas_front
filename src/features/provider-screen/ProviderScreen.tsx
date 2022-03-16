@@ -170,6 +170,7 @@ export default function ProviderScreen() {
                       </Link>
                       <ButtonChameleon
                         dataTestId="btn-delete-provider"
+                        data-cy={`btn-delete-provider-${provider.document}`}
                         label={t('removeLabel')}
                         negative
                         outline

@@ -66,10 +66,10 @@ export default function CreateOrEditProvider() {
   // Init Logic For Create Provider
   const [createProvider] = useMutation(CREATE_PROVIDER, {
     onCompleted: (response) => {
-      const { errors: errorsCreate } =
+      const { errors: errorsCreate, success } =
         response.createProvider;
-        
-      if (!errorsCreate?.length) {
+
+      if (errorsCreate === null && success) {
         dispatch(submitProvider({ type: 'create' }));
         router.push(routes.providers.index);
       } else {
@@ -194,10 +194,10 @@ export default function CreateOrEditProvider() {
 
   const [updateProvider] = useMutation(UPDATE_PROVIDER, {
     onCompleted: (response) => {
-      const { errors: errorsEdit } =
+      const { errors: errorsEdit, success } =
         response.updateProvider;
 
-      if (!errorsEdit.length) {
+      if (errorsEdit === null && success) {
         dispatch(submitProvider({ type: 'edit' }));
         router.push(routes.providers.index);
       } else {

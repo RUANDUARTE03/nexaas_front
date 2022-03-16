@@ -57,6 +57,7 @@ const CREATE_PROVIDER = gql`
         country
         stateInscription
       }
+      success
       errors
     }
   }
@@ -85,6 +86,7 @@ const UPDATE_PROVIDER = gql`
         stateInscription
       }
       errors
+      success
     }
   }
 `;

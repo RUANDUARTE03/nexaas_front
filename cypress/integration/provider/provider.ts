@@ -48,10 +48,10 @@ export class Provider {
   public static verifyProviderList() {
     const provider2 = {
       id: '2',
-      document: '52.723.924/0001-10',
-      name: 'Correios LTDA.',
-      fantasyName: 'Correios',
-      type: 'Distribuidora',
+      document: '29.979.036/0001-40',
+      name: 'teste 123',
+      fantasyName: 'teste 123',
+      type: 'Fabricante',
     };
 
     cy.get('tr').eq(1).should('contain.text', provider2.id);
@@ -267,6 +267,36 @@ export class Provider {
         ).click();
 
         cy.url().should('equal', HOME_URL);
+      });
+  }
+
+  public static deleteProviderWithSuccess() {
+    cy.get(
+      '[data-testid=btn-delete-provider-29979036000140]'
+    )
+      .click()
+      .then(() => {
+        cy.contains('Remover fornecedor');
+
+        cy.get('[data-testid=btn-delete-provider-confirm]')
+          .click()
+          .then(() => {
+            cy.contains('Fornecedor removido com sucesso');
+          });
+      });
+  }
+
+  public static cancelDeleteProvider() {
+    cy.get(
+      '[data-testid=btn-delete-provider-29979036000140]'
+    )
+      .click()
+      .then(() => {
+        cy.contains('Remover fornecedor');
+
+        cy.get(
+          '[data-testid=btn-delete-provider-close]'
+        ).click();
       });
   }
 }

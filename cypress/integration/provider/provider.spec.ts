@@ -51,4 +51,12 @@ describe('Testes relacionados a fornecedores', () => {
   it('Editar todos os campos', () => {
     Provider.editFields();
   });
+
+  it('Cancelar modal ao tentar remover fornecedor', () => {
+    Provider.cancelDeleteProvider();
+  });
+
+  it('Remover fornecedor com sucesso', () => {
+    Provider.deleteProviderWithSuccess();
+  });
 });
