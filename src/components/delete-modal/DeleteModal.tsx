@@ -46,7 +46,7 @@ export default function DeleteModal({
             outline
             onClick={onClose}
             dataTestId="btn-action-close-modal"
-            data-cy="btn-delete-provider-close"
+            dataCy="btn-delete-close"
           />
           <ButtonChameleon
             label={t('remove')}
@@ -54,7 +54,7 @@ export default function DeleteModal({
             negative
             onClick={onSubmit}
             dataTestId="btn-action-submit-modal"
-            data-cy="btn-delete-provider-confirm"
+            dataCy="btn-delete-confirm"
           />
         </div>
       </div>

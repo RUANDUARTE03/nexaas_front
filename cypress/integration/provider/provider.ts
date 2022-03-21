@@ -46,27 +46,19 @@ export class Provider {
   }
 
   public static verifyProviderList() {
-    const provider2 = {
-      id: '2',
-      document: '29.979.036/0001-40',
-      name: 'teste 123',
-      fantasyName: 'teste 123',
-      type: 'Fabricante',
-    };
-
-    cy.get('tr').eq(1).should('contain.text', provider2.id);
-    cy.get('td')
+    const documentSelector = `[data-cy=${provider.document}] td`;
+    cy.get(documentSelector)
       .eq(0)
-      .should('contain.text', provider2.document);
-    cy.get('td')
+      .should('contain.text', '29.979.036/0001-40');
+    cy.get(documentSelector)
       .eq(1)
-      .should('contain.text', provider2.name);
-    cy.get('td')
+      .should('contain.text', provider.name);
+    cy.get(documentSelector)
       .eq(2)
-      .should('contain.text', provider2.fantasyName);
-    cy.get('td')
+      .should('contain.text', provider.tradingName);
+    cy.get(documentSelector)
       .eq(3)
-      .should('contain.text', provider2.type);
+      .should('contain.text', provider.providerType);
   }
 
   public static showCreateProvider() {
@@ -112,11 +104,11 @@ export class Provider {
     cy.get('[data-cy=stateName] > select').select(
       provider.state
     );
-    cy.get(
-      '[data-testid=btn-createOrEditProvider]'
-    ).click();
-
-    cy.url().should('equal', HOME_URL);
+    cy.get('[data-testid=btn-createOrEditProvider]')
+      .click()
+      .then(() => {
+        cy.url().should('equal', HOME_URL);
+      });
   }
 
   public static createWithExistentDocument() {
@@ -131,9 +123,14 @@ export class Provider {
     ).click();
     cy.contains('já está em uso');
     cy.url().should('equal', CREATE_URL);
+    cy.get(
+      '[data-testid=btn-createOrEditProvider-cancel]'
+    ).click();
   }
 
   public static existentCepShouldFillAddress() {
+    Provider.menuClick();
+    cy.get('[data-testid=btn-create-provider]').click();
     cy.get('[data-cy=formattedZipCode]')
       .click()
       .type('07400295');
@@ -202,9 +199,10 @@ export class Provider {
   }
 
   public static editOnlyRequiredField() {
+    Provider.menuClick();
     cy.get(
-      `[data-testid=btn-edit-provider-${provider.document}]`
-    );
+      `[data-cy=btn-edit-provider-${provider.document}]`
+    ).click();
     cy.get('[data-cy=companyName]')
       .click()
       .type('nome modificado');
@@ -221,16 +219,14 @@ export class Provider {
   }
 
   public static editFields() {
-    cy.get(
-      `[data-testid=btn-edit-provider-${provider.document}]`
-    )
+    cy.get('[data-cy=btn-edit-provider-29979036000140]')
       .click()
       .then(() => {
-        cy.get('[data-cy=companyName]')
+        cy.get('[data-cy=companyName] input')
           .clear()
           .click()
           .type('nome modificado 2');
-        cy.get('[data-cy=fantasyName]')
+        cy.get('[data-cy=fantasyName] input')
           .clear()
           .click()
           .type('nome modificado 2');
@@ -240,23 +236,23 @@ export class Provider {
         cy.get('[data-cy=indicatorSign] > select').select(
           '2'
         );
-        cy.get('[data-cy=identifierExternal]')
+        cy.get('[data-cy=identifierExternal] input')
           .clear()
           .click()
           .type('2');
-        cy.get('[data-cy=stateInscription]')
+        cy.get('[data-cy=stateInscription] input')
           .clear()
           .click()
           .type('12344321');
-        cy.get('[data-cy=formattedZipCode]')
+        cy.get('[data-cy=formattedZipCode] input')
           .clear()
           .click()
           .type('07400265');
-        cy.get('[data-cy=addressNumber]')
+        cy.get('[data-cy=addressNumber] input')
           .clear()
           .click()
           .type('13');
-        cy.get('[data-cy=addressDetail]')
+        cy.get('[data-cy=addressDetail] input')
           .clear()
           .click()
           .type('detalhe');
@@ -271,32 +267,27 @@ export class Provider {
   }
 
   public static deleteProviderWithSuccess() {
-    cy.get(
-      '[data-testid=btn-delete-provider-29979036000140]'
-    )
+    Provider.menuClick();
+    cy.get('[data-cy=btn-delete-provider-29979036000140]')
       .click()
       .then(() => {
         cy.contains('Remover fornecedor');
 
-        cy.get('[data-testid=btn-delete-provider-confirm]')
+        cy.get('[data-cy=btn-delete-confirm]')
           .click()
           .then(() => {
-            cy.contains('Fornecedor removido com sucesso');
+            cy.contains('Fornecedor deletado com sucesso');
           });
       });
   }
 
   public static cancelDeleteProvider() {
-    cy.get(
-      '[data-testid=btn-delete-provider-29979036000140]'
-    )
+    cy.get('[data-cy=btn-delete-provider-29979036000140]')
       .click()
       .then(() => {
         cy.contains('Remover fornecedor');
 
-        cy.get(
-          '[data-testid=btn-delete-provider-close]'
-        ).click();
+        cy.get('[data-cy=btn-delete-close]').click();
       });
   }
 }

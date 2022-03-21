@@ -2,7 +2,7 @@ import { Auth } from '../Auth/auth';
 import { Provider } from './provider';
 
 describe('Testes relacionados a fornecedores', () => {
-  beforeEach('', () => {
+  before('', () => {
     Cypress.Cookies.debug(true);
     Cypress.Cookies.defaults({
       preserve: [
@@ -20,16 +20,16 @@ describe('Testes relacionados a fornecedores', () => {
     Provider.menuClick();
   });
 
-  it('Listagem de fornecedores com dados básicos', () => {
-    Provider.verifyProviderList();
-  });
-
   it('Clique botão novo fornecedor deve entrar no cadastro', () => {
     Provider.showCreateProvider();
   });
 
   it('Criar novo fornecedor', () => {
     Provider.createProvider();
+  });
+
+  it('Listagem de fornecedores com dados básicos', () => {
+    Provider.verifyProviderList();
   });
 
   it('CPF/CNPJ já existente', () => {

@@ -139,7 +139,11 @@ export default function ProviderScreen() {
             </thead>
             <tbody>
               {data?.providers?.map((provider) => (
-                <tr id={provider.id} key={provider.id}>
+                <tr
+                  id={provider.id}
+                  key={provider.id}
+                  data-cy={provider.document}
+                >
                   <td>
                     {provider.document.length === 11
                       ? cpf.format(provider.document)
@@ -165,12 +169,12 @@ export default function ProviderScreen() {
                           icon={false}
                           onClick={() => {}}
                           dataTestId="btn-edit-provider"
-                          data-cy={`btn-edit-provider-${provider.id}`}
+                          dataCy={`btn-edit-provider-${provider.document}`}
                         />
                       </Link>
                       <ButtonChameleon
                         dataTestId="btn-delete-provider"
-                        data-cy={`btn-delete-provider-${provider.document}`}
+                        dataCy={`btn-delete-provider-${provider.document}`}
                         label={t('removeLabel')}
                         negative
                         outline

@@ -274,23 +274,25 @@ export default function CreateOrEditProvider() {
 
   const zipCodeKeyUp = () => {
     if (zipCode?.length === 8) {
-      getAddressByCep(zipCode).then((response) => {
-        const {
-          bairro,
-          complemento,
-          ibge,
-          localidade,
-          logradouro,
-          uf,
-        } = response.data;
+      getAddressByCep(zipCode)
+        .then((response) => {
+          const {
+            bairro,
+            complemento,
+            ibge,
+            localidade,
+            logradouro,
+            uf,
+          } = response.data;
 
-        setStreet(logradouro);
-        setAddressDetail(complemento);
-        setCity(localidade);
-        setCityIbgeId(ibge);
-        setDistrict(bairro);
-        setStateName(uf);
-      });
+          setStreet(logradouro);
+          setAddressDetail(complemento);
+          setCity(localidade);
+          setCityIbgeId(ibge);
+          setDistrict(bairro);
+          setStateName(uf);
+        })
+        .catch((error) => setErrors(error));
     }
   };
 
