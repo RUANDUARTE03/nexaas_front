@@ -1,0 +1,35 @@
+{
+  "cookies": [
+    {
+      "sameSite": "Strict",
+      "name": "_nexaas_id_remember_me",
+      "value": "%2BBAFbZt6FupeVxyFZF5smThKJkIx7KJTxPQqPXk1PTVrMJqmZybvaANzorK9sMY9Fmlo8pAd%2F2LDlQGhKNBKoU53bKfjvKA%3D--qVZR3hv5wcZa6GT%2B--1yakj3WTrwAAYb8J1kAYgw%3D%3D",
+      "domain": "sandbox.id.nexaas.com",
+      "path": "/",
+      "expires": 2279293717.935747,
+      "httpOnly": false,
+      "secure": true
+    },
+    {
+      "sameSite": "Strict",
+      "name": "_nexaas_id_session",
+      "value": "16c2698754cefc6a58580aceb72a726c",
+      "domain": "sandbox.id.nexaas.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true
+    },
+    {
+      "sameSite": "Lax",
+      "name": "_estoka_session",
+      "value": "MUY1Z0tmVE5LSWJ0SVFDVlE4ZU5xRjJPbUlwUHFQTHM0Mm1nTjRjbGphZHJMaEdKSzVNVDlpM01ZaDNzWGpZY2VNUUpJRHpXQmpydFMrTTJIVXJiU3hOcG5HdnRoVnZEaFQzbWFiU3M4UXR1YktvNmJzVk0xdTR5RFNwRW1YcktNRjI1VmJlbkExdUFnV1oxdnJxRzhDN0x0cE9Kdk5TczhZeUlOWW5COU8rOUVIdlBmSGVJN0pyRitmMHhiSWlnZ3lXQitMMXZGTXRtWFM5RUFBV29FZnJOY0dEL0NOTnR6cGJUcWFDSmJVTWVBUWRBRXo3UW0zMFB1YlFDcTRIZXQ2NW04KzlCNVdOU1N0Q1lxeUZ3ck5DZU1NS3phemQ4WFQzY2dwd2Q3Zm1ZNE9SdWVjU3pDeGRiZ2dEckF6QkRmdEY2U2x5Q2Y1ZDBBMjVEaFpRcUpmLzRVZXBjcU80S3RhWXJWSkRqcUJuRGx2L1J0WDNadTc1eWJ1NGRCbzEwZlBwMy9ueC9rWm9ZWkhJcjRyY0N3cGNXcll0ckxJeGRLT0I3QnpXdjN0aWIrWDZYWU9VRjFvUTZGOTMzTEE0MkYvczhUTVREVlRPcVIyUWh6QTJ5RGdrc1lWUWZxKzgyaUE5MFlWY3dacGNoK2llU3FDK3N1ZWh2eDNERHNKZk5nN2JlK0RtbndUL0xadlRrS240ZlBBPT0tLVEvT0srRkNNMnNEeDRQTVVCNzZwZGc9PQ%3D%3D--b1ce6e6c6fdaf814641ddb230dff3c6e28ea5eae",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false
+    }
+  ],
+  "origins": []
+}
