@@ -28,8 +28,24 @@ describe('Testes relacionados a fornecedores', () => {
     Provider.createProvider();
   });
 
+  it('Criar novo fornecedor com dados obrigatórios', () => {
+    Provider.createProviderWithRequiredFields();
+  });
+
+  it('Listagem de fornecedores com dados completos', () => {
+    Provider.verifyProviderList();
+  });
+
+  it('Listagem de fornecedores com dados obrigatórios', () => {
+    Provider.verifyProviderListWithRequiredFields();
+  });
+
   it('Listagem de fornecedores com dados básicos', () => {
     Provider.verifyProviderList();
+  });
+
+  it('Botões de edição e exclusão devem ser renderizados', () => {
+    Provider.verifyActionButtons();
   });
 
   it('CPF/CNPJ já existente', () => {
@@ -50,6 +66,14 @@ describe('Testes relacionados a fornecedores', () => {
 
   it('Editar todos os campos', () => {
     Provider.editFields();
+  });
+
+  it('Editar somente campos obrigatórios deve editar', () => {
+    Provider.editOnlyRequiredField();
+  });
+
+  it('Editar somente campos não obrigatórios deve falhar e apresentar erro', () => {
+    Provider.editOnlyNotRequiredFields();
   });
 
   it('Cancelar modal ao tentar remover fornecedor', () => {
