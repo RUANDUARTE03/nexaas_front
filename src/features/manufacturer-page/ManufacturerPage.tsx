@@ -24,7 +24,7 @@ export default function ManufacturerPage() {
     ALL_MANUFACTURERS
   );
   const [selectedManufacturer, setSelectedManufacturer] =
-    useState();
+    useState<any>();
   const [deleteModalOpen, setDeleteModalOpen] =
     useState(false);
   const tableData = useMemo(
@@ -115,7 +115,13 @@ export default function ManufacturerPage() {
 
   const confirmDeleteManufacturer = () => {
     deleteManufacturer({
-      variables: { input: { id: selectedManufacturer.id } },
+      variables: {
+        input: {
+          id: selectedManufacturer
+            ? selectedManufacturer.id
+            : null,
+        },
+      },
     });
   };
 
