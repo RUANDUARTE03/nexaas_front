@@ -18,7 +18,7 @@ const requestLink = createHttpLink({
 
 const errorLink = onError(
   ({ graphQLErrors, networkError }) => {
-    if (graphQLErrors) console.log('GraphQL Error');
+    // if (graphQLErrors) console.log('GraphQL Error');
     if (networkError)
       Router.push(process.env.NEXT_PUBLIC_API_URL);
   }

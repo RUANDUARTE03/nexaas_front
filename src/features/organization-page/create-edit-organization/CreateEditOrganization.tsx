@@ -202,7 +202,6 @@ export default function CreateEditOrganization() {
           getLatLngByZipCode(zipCode).then((data) => {
             const { lat, lng } =
               data.data.results[0]?.geometry.location;
-            console.log(lat, lng);
             setLatitude(lat);
             setLongitude(lng);
           });

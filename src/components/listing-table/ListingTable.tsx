@@ -61,8 +61,15 @@ export default function ListingTable({
           {page.map((row, i) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
+              <tr
+                {...row.getRowProps()}
+                dataCy={
+                  row.original.name
+                    ? row.original.name.replace(' ', '-')
+                    : ''
+                }
+              >
+                {row.cells.map((cell, index) => {
                   return (
                     <td
                       {...cell.getCellProps({

@@ -54,7 +54,7 @@ export default function BrandPage() {
         accessor: 'actions',
         Cell: ({ row }) => {
           const brand = row.original;
-          const { id } = brand || null;
+          const { id, name } = brand || null;
 
           return (
             <div className={Styles.actionButton}>
@@ -70,6 +70,10 @@ export default function BrandPage() {
                     outline
                     icon={false}
                     onClick={() => {}}
+                    dataCy={`btn-edit-brand-${name.replace(
+                      ' ',
+                      '-'
+                    )}`}
                   />
                 </Link>
               </div>
@@ -83,6 +87,10 @@ export default function BrandPage() {
                   setDeleteModalOpen(true);
                   setSelectedBrand(brand);
                 }}
+                dataCy={`btn-edit-brand-${name.replace(
+                  ' ',
+                  '-'
+                )}`}
               />
             </div>
           );
@@ -98,9 +106,10 @@ export default function BrandPage() {
 
   const [deleteBrand] = useMutation(DELETE_BRAND, {
     onCompleted: (response) => {
-      const { errors } = response.deleteProductBrand;
+      const { errors, success } =
+        response.deleteProductBrand;
 
-      if (!errors.length) {
+      if (errors === null && success) {
         setDeleteModalOpen(false);
 
         setTimeout(() => {

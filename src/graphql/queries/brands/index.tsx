@@ -16,10 +16,8 @@ const ALL_BRANDS = gql`
 const DELETE_BRAND = gql`
   mutation deleteBrands($input: DeleteProductBrandInput!) {
     deleteProductBrand(input: $input) {
-      productBrand {
-        id
-        name
-      }
+      success
+      error
     }
   }
 `;
@@ -47,6 +45,7 @@ const CREATE_BRAND = gql`
         manufacturerId
       }
       errors
+      success
     }
   }
 `;
@@ -62,6 +61,7 @@ const UPDATE_BRAND = gql`
         manufacturerId
       }
       errors
+      success
     }
   }
 `;

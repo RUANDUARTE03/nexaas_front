@@ -20,7 +20,7 @@ export const routes = {
       index: '',
     }),
   }),
-  brands: include('/brands/', {
+  brands: include('/product_brands/', {
     index: '',
     create: include('create/', {
       index: '',

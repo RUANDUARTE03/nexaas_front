@@ -39,6 +39,7 @@ test.describe.serial('New Todo', () => {
   test.afterAll(async () => {
     await page.close();
   });
+
   test('Menu click should redirect', async () => {
     await page.goto(HOME_URL);
 

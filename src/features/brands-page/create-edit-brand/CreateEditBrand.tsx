@@ -37,14 +37,14 @@ export default function CreateEditBrand() {
   const [manufacturerId, setManufacturerId] =
     useState<number>();
 
-  const manufacturersData = useQuery(ALL_MANUFACTURERS);
+  const { data, loading } = useQuery(ALL_MANUFACTURERS);
 
   const [createBrand] = useMutation(CREATE_BRAND, {
     onCompleted: (response) => {
-      const { errors: errorsCreate } =
+      const { errors: errorsCreate, success } =
         response.createProductBrand;
 
-      if (!errorsCreate.length) {
+      if (errorsCreate === null && success) {
         dispatch(submitBrand({ type: 'create' }));
         router.push(routes.brands.index);
       } else {
@@ -87,10 +87,10 @@ export default function CreateEditBrand() {
 
   const [updateBrand] = useMutation(UPDATE_BRAND, {
     onCompleted: (response) => {
-      const { errors: errorsEdit } =
+      const { errors: errorsEdit, success } =
         response.updateProductBrand;
 
-      if (!errorsEdit.length) {
+      if (errorsEdit === null && success) {
         dispatch(submitBrand({ type: 'edit' }));
         router.push(routes.brands.index);
       } else {
@@ -179,30 +179,34 @@ export default function CreateEditBrand() {
                       onChange={(e) =>
                         setName(e.target.value)
                       }
+                      dataCy="name-brand"
                     />
                   </div>
 
-                  <div className={Styles.field}>
-                    <InputChameleon
-                      label={t('providerLabel')}
-                      required
-                      value={manufacturerId}
-                      onChange={(e) => {
-                        setManufacturerId(
-                          Number(e.target.value)
-                        );
-                      }}
-                      mode="select"
-                      options={manufacturersData.data.manufacturers.map(
-                        (providerData) => {
-                          return {
-                            value: providerData.id,
-                            label: providerData.name,
-                          };
-                        }
-                      )}
-                    />
-                  </div>
+                  {!loading && data && (
+                    <div className={Styles.field}>
+                      <InputChameleon
+                        label={t('providerLabel')}
+                        required
+                        value={manufacturerId}
+                        onChange={(e) => {
+                          setManufacturerId(
+                            Number(e.target.value)
+                          );
+                        }}
+                        mode="select"
+                        options={data?.manufacturers?.map(
+                          (item) => {
+                            return {
+                              value: item.id,
+                              label: item.name,
+                            };
+                          }
+                        )}
+                        dataCy="manufacturer-brand"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
