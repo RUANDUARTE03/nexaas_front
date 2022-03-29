@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 
 const REACT_URL = process.env.REACT_URL ?? '';
 const PROVIDER_HOME = `${REACT_URL}/providers`;
@@ -31,7 +31,7 @@ const onlyRequiredProvider = {
 };
 
 test.describe.serial('New Todo', () => {
-  let page;
+  let page: Page;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
   });
@@ -151,47 +151,348 @@ test.describe.serial('New Todo', () => {
 
     await expect(page).toHaveURL(PROVIDER_HOME);
   });
+
+  test('Listagem de fornecedores com dados completos', async () => {
+    const documentSelector =
+      '[data-cy="29979036000140"] > td';
+
+    await expect(
+      page.locator(documentSelector).nth(0)
+    ).toContainText('29.979.036/0001-40');
+
+    await expect(
+      page.locator(documentSelector).nth(1)
+    ).toContainText(completeProvider.name);
+
+    await expect(
+      page.locator(documentSelector).nth(2)
+    ).toContainText(completeProvider.tradingName);
+
+    await expect(
+      page.locator(documentSelector).nth(3)
+    ).toContainText(completeProvider.providerType);
+  });
+
+  test('Listagem de fornecedores com dados obrigatórios', async () => {
+    const documentSelector =
+      '[data-cy="34028316000294"] > td';
+
+    await expect(
+      page.locator(documentSelector).nth(0)
+    ).toContainText('34.028.316/0002-94');
+
+    await expect(
+      page.locator(documentSelector).nth(1)
+    ).toContainText(onlyRequiredProvider.name);
+
+    await expect(
+      page.locator(documentSelector).nth(2)
+    ).toBeEmpty();
+
+    await expect(
+      page.locator(documentSelector).nth(3)
+    ).toContainText(onlyRequiredProvider.providerType);
+  });
+
+  test('Botões de edição e exclusão devem ser renderizados', async () => {
+    const editSelector = `[data-cy="btn-edit-provider-${completeProvider.document}"]`;
+    const deleteSelector = `[data-cy="btn-delete-provider-${completeProvider.document}"]`;
+
+    await expect(page.locator(editSelector)).toBeVisible();
+    await expect(
+      page.locator(deleteSelector)
+    ).toBeVisible();
+  });
+
+  test('CPF/CNPJ já existente', async () => {
+    await Promise.all([
+      page.waitForNavigation({
+        url: PROVIDER_CREATE,
+      }),
+      page
+        .locator('[data-testid="btn-create-provider"]')
+        .click(),
+    ]);
+
+    await page
+      .locator('[data-cy=identifier] > input')
+      .fill(onlyRequiredProvider.document);
+
+    page
+      .locator('[data-testid="btn-createOrEditProvider"]')
+      .click();
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('já está em uso');
+
+    await expect(page).toHaveURL(PROVIDER_CREATE);
+
+    await page
+      .locator(
+        '[data-testid="btn-createOrEditProvider-cancel"]'
+      )
+      .click();
+  });
+
+  test('CEP existente deve preencher endereço', async () => {
+    await Promise.all([
+      page.waitForNavigation({
+        url: PROVIDER_CREATE,
+      }),
+      page
+        .locator('[data-testid="btn-create-provider"]')
+        .click(),
+    ]);
+
+    await Promise.all([
+      page.waitForRequest(
+        'https://viacep.com.br/ws/07400295/json'
+      ),
+      await page
+        .locator('[data-cy=formattedZipCode] > input')
+        .type('07400295'),
+    ]);
+    await expect(
+      page.locator('[data-cy=street] > input')
+    ).toHaveValue('Rua Perfeita Liberdade');
+
+    await expect(
+      page.locator('[data-cy=district] > input')
+    ).toHaveValue('Jardim Ângelo');
+
+    await expect(
+      page.locator('[data-cy=city] > input')
+    ).toHaveValue('Arujá');
+
+    await expect(
+      page.locator('[data-cy=cityIbgeId] > input')
+    ).toHaveValue('3503901');
+
+    await expect(
+      page.locator('[data-cy=stateName] > select')
+    ).toHaveValue('SP');
+
+    await page
+      .locator(
+        '[data-testid="btn-createOrEditProvider-cancel"]'
+      )
+      .click();
+  });
+
+  test('CEP inexistente não deve preencher endereço', async () => {
+    await Promise.all([
+      page.waitForNavigation({
+        url: PROVIDER_CREATE,
+      }),
+      page
+        .locator('[data-testid="btn-create-provider"]')
+        .click(),
+    ]);
+
+    await Promise.all([
+      page.waitForRequest(
+        'https://viacep.com.br/ws/12345678/json'
+      ),
+      await page
+        .locator('[data-cy=formattedZipCode] > input')
+        .type('12345678'),
+    ]);
+    await expect(
+      page.locator('[data-cy=street] > input')
+    ).toBeEmpty();
+
+    await expect(
+      page.locator('[data-cy=district] > input')
+    ).toBeEmpty();
+
+    await expect(
+      page.locator('[data-cy=city] > input')
+    ).toBeEmpty();
+
+    await expect(
+      page.locator('[data-cy=cityIbgeId] > input')
+    ).toBeEmpty();
+
+    await page
+      .locator(
+        '[data-testid="btn-createOrEditProvider-cancel"]'
+      )
+      .click();
+  });
+
+  test('Editar somente campos obrigatórios', async () => {
+    await page
+      .locator(
+        `[data-cy=btn-edit-provider-${completeProvider.document}]`
+      )
+      .click();
+
+    await page
+      .locator('[data-cy=companyName] > input')
+      .fill('nome modificado');
+
+    await page
+      .locator('[data-cy=typeProvider] > select')
+      .selectOption(onlyRequiredProvider.providerType);
+
+    await Promise.all([
+      page.waitForNavigation({
+        url: PROVIDER_HOME,
+      }),
+      page
+        .locator('[data-testid="btn-createOrEditProvider"]')
+        .click(),
+    ]);
+
+    await expect(page).toHaveURL(PROVIDER_HOME);
+  });
+
+  test('Editar todos os campos', async () => {
+    await page
+      .locator(
+        `[data-cy=btn-edit-provider-${completeProvider.document}]`
+      )
+      .click();
+
+    await page
+      .locator('[data-cy=companyName] > input')
+      .fill('nome modificado 2');
+
+    await page
+      .locator('[data-cy=fantasyName] > input')
+      .fill('nome modificado 2');
+
+    await page
+      .locator('[data-cy=typeProvider] > select')
+      .selectOption('Distribuidora');
+
+    await page
+      .locator('[data-cy=indicatorSign] > select')
+      .selectOption('2');
+
+    await page
+      .locator('[data-cy=identifierExternal] > input')
+      .fill('6');
+
+    await page
+      .locator('[data-cy=stateInscription] > input')
+      .fill('12344321');
+
+    await page
+      .locator('[data-cy=formattedZipCode] > input')
+      .type('07400295');
+
+    await page
+      .locator('[data-cy=stateName] > select')
+      .selectOption('SP');
+
+    await Promise.all([
+      page.waitForNavigation({
+        url: PROVIDER_HOME,
+      }),
+      page
+        .locator('[data-testid="btn-createOrEditProvider"]')
+        .click(),
+    ]);
+
+    await expect(page).toHaveURL(PROVIDER_HOME);
+  });
+
+  test('Editar somente campos não obrigatórios deve falhar e apresentar erro', async () => {
+    await page
+      .locator(
+        `[data-cy=btn-edit-provider-${completeProvider.document}]`
+      )
+      .click();
+
+    await page
+      .locator('[data-cy=identifier] > input')
+      .fill('');
+
+    await page
+      .locator('[data-cy=companyName] > input')
+      .fill('');
+
+    await page
+      .locator('[data-cy=fantasyName] > input')
+      .fill('nome modificado 2');
+
+    await page
+      .locator('[data-cy=indicatorSign] > select')
+      .selectOption('2');
+
+    await page
+      .locator('[data-cy=identifierExternal] > input')
+      .fill('6');
+
+    await page
+      .locator('[data-cy=stateInscription] > input')
+      .fill('12344321');
+
+    await page
+      .locator('[data-cy=formattedZipCode] > input')
+      .type('07400295');
+
+    await page
+      .locator('[data-cy=stateName] > select')
+      .selectOption('SP');
+
+    page
+      .locator('[data-testid="btn-createOrEditProvider"]')
+      .click();
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('Erro ao Editar fornecedor.');
+
+    await page
+      .locator(
+        '[data-testid="btn-createOrEditProvider-cancel"]'
+      )
+      .click();
+  });
+
+  test('Cancelar modal ao tentar remover fornecedor', async () => {
+    await page
+      .locator(
+        `[data-cy="btn-delete-provider-${completeProvider.document}"]`
+      )
+      .click();
+
+    await expect(
+      page.locator('[data-testid="container-delete-modal"]')
+    ).toContainText('Remover fornecedor');
+
+    await page
+      .locator('[data-cy="btn-delete-close"]')
+      .click();
+  });
+
+  test('Remover fornecedor com sucesso', async () => {
+    await page
+      .locator(
+        `[data-cy="btn-delete-provider-${completeProvider.document}"]`
+      )
+      .click();
+
+    await expect(
+      page.locator('[data-testid="container-delete-modal"]')
+    ).toContainText('Remover fornecedor');
+
+    await page
+      .locator('[data-cy="btn-delete-confirm"]')
+      .click();
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('Fornecedor deletado com sucesso');
+  });
 });
 
 /* 
 
 
-
-it('Listagem de fornecedores com dados completos', () => {
-});
-
-it('Listagem de fornecedores com dados obrigatórios', () => {
-});
-
-it('Listagem de fornecedores com dados básicos', () => {
-});
-
-it('Botões de edição e exclusão devem ser renderizados', () => {
-});
-
-it('CPF/CNPJ já existente', () => {
-});
-
-it('CEP existente deve preencher endereço', () => {
-});
-
-it('CEP inexistente não deve preencher endereço', () => {
-});
-
-it('Editar somente campos obrigatórios', () => {
-});
-
-it('Editar todos os campos', () => {
-});
-
-it('Editar somente campos obrigatórios deve editar', () => {
-});
-
-it('Editar somente campos não obrigatórios deve falhar e apresentar erro', () => {
-});
-
-it('Cancelar modal ao tentar remover fornecedor', () => {
-});
 
 it('Remover fornecedor com sucesso', () => {
 }); */
