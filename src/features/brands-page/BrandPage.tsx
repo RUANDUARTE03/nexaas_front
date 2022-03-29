@@ -1,34 +1,41 @@
-/* eslint-disable react/jsx-wrap-multilines */
 import React, { useEffect, useMemo, useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { reverse } from 'named-urls';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import router from 'next/router';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
-import DeleteModal from 'src/components/delete-modal';
 import { routes } from '../../utils/routes';
 import ButtonChameleon from '../../components/Chameleon/button-chameleon';
-import Styles from './ManufacturerPage.module.scss';
+import Styles from './BrandPage.module.scss';
 import HeaderMenu from '../header-menu';
 import Content from '../../components/content';
-import {
-  ALL_MANUFACTURERS,
-  DELETE_MANUFACTURER,
-} from '../../graphql/queries/manufacturers';
 import ListingTable from '../../components/listing-table/ListingTable';
+import {
+  ALL_BRANDS,
+  DELETE_BRAND,
+} from '../../graphql/queries/brands';
+import DeleteModal from '../../components/delete-modal';
 
-export default function ManufacturerPage() {
-  const { t } = useTranslation('manufacturer');
-  const { data, loading, refetch } = useQuery(
-    ALL_MANUFACTURERS
-  );
-  const [selectedManufacturer, setSelectedManufacturer] =
-    useState<any>();
+type BrandType = {
+  id: number;
+  name: string;
+  manufacturer: {
+    id: number;
+    name: string;
+  };
+};
+
+export default function BrandPage() {
+  const { t } = useTranslation('brand');
+  const { data, loading, refetch } = useQuery(ALL_BRANDS);
   const [deleteModalOpen, setDeleteModalOpen] =
-    useState(false);
+    useState<boolean>(false);
+  const [selectedBrand, setSelectedBrand] =
+    useState<BrandType>();
+
   const tableData = useMemo(
-    () => (data ? data.manufacturers : []),
+    () => (data ? data.productBrands : []),
     [data]
   );
 
@@ -37,30 +44,25 @@ export default function ManufacturerPage() {
       {
         Header: t('table.nameColumn'),
         accessor: 'name',
-        Cell: (s) => (
-          <span style={{ width: '80%' }}>{s.value}</span>
-        ),
+      },
+      {
+        Header: t('table.manufacturerColumn'),
+        accessor: 'manufacturer.name',
       },
       {
         Header: t('table.actionsColumn'),
         accessor: 'actions',
-        style: {
-          width: '400px',
-        },
         Cell: ({ row }) => {
-          const manufacturer = row.original;
-          const { id } = manufacturer || null;
+          const brand = row.original;
+          const { id } = brand || null;
 
           return (
             <div className={Styles.actionButton}>
               <div className={Styles.editButton}>
                 <Link
-                  href={reverse(
-                    `${routes.manufacturers.edit}`,
-                    {
-                      id,
-                    }
-                  )}
+                  href={reverse(`${routes.brands.edit}`, {
+                    id,
+                  })}
                 >
                   <ButtonChameleon
                     label={t('editLabel')}
@@ -71,16 +73,15 @@ export default function ManufacturerPage() {
                   />
                 </Link>
               </div>
-
               <ButtonChameleon
-                dataTestId="btn-delete-manufacturer"
+                dataTestId="btn-delete-brand"
                 label={t('deleteLabel')}
                 negative
                 outline
                 icon={false}
                 onClick={() => {
                   setDeleteModalOpen(true);
-                  setSelectedManufacturer(manufacturer);
+                  setSelectedBrand(brand);
                 }}
               />
             </div>
@@ -88,55 +89,39 @@ export default function ManufacturerPage() {
         },
       },
     ],
-    []
+    [t]
   );
 
-  function onCloseModalDelete(): void {
-    setDeleteModalOpen(false);
-    setSelectedManufacturer(null);
-  }
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
-  const [deleteManufacturer] = useMutation(
-    DELETE_MANUFACTURER,
-    {
-      onCompleted: (response) => {
-        const { errors } = response.deleteManufacturer;
+  const [deleteBrand] = useMutation(DELETE_BRAND, {
+    onCompleted: (response) => {
+      const { errors } = response.deleteProductBrand;
 
-        if (!errors.length) {
-          setDeleteModalOpen(false);
+      if (!errors.length) {
+        setDeleteModalOpen(false);
 
-          setTimeout(() => {
-            refetch();
-          }, 1000);
-        }
-      },
-    }
-  );
-
-  const confirmDeleteManufacturer = () => {
-    deleteManufacturer({
-      variables: {
-        input: {
-          id: selectedManufacturer
-            ? selectedManufacturer.id
-            : null,
-        },
-      },
-    });
-  };
+        setTimeout(() => {
+          refetch();
+        }, 1000);
+      }
+    },
+  });
 
   const modalView = () => (
     <DeleteModal
       open={deleteModalOpen}
       onClose={onCloseModalDelete}
-      onSubmit={confirmDeleteManufacturer}
-      title={t('removeOrgLabel')}
+      onSubmit={confirmDeleteBrand}
+      title={t('removeBrandLabel')}
     >
       <div>
         <span>
-          {t('confirmRemoveOrgLabel')}
+          {t('confirmRemoveBrandLabel')}
           &nbsp;
-          <b>{selectedManufacturer?.name}</b>
+          <b>{selectedBrand?.name}</b>
           &nbsp;
           {`${'?'}`}
         </span>
@@ -144,9 +129,16 @@ export default function ManufacturerPage() {
     </DeleteModal>
   );
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
+  const confirmDeleteBrand = () => {
+    deleteBrand({
+      variables: { input: { id: selectedBrand.id } },
+    });
+  };
+
+  const onCloseModalDelete = () => {
+    setDeleteModalOpen(false);
+    setSelectedBrand(null);
+  };
 
   if (loading)
     return (
@@ -159,17 +151,15 @@ export default function ManufacturerPage() {
     <>
       <HeaderMenu breadcumb={[{ text: t('breadcumb') }]} />
       <Content>
-        <div className={Styles.manufacturerPage}>
+        <div className={Styles.brandPage}>
           <div className={Styles.header}>
             <ButtonChameleon
-              dataTestId="btn-create-manufacturer"
-              label={t('newManufacturerBtn')}
+              dataTestId="btn-create-brand"
+              label={t('newBrandBtn')}
               primary
               icon
               onClick={() => {
-                router.push(
-                  routes.manufacturers.create.index
-                );
+                router.push(routes.brands.create.index);
               }}
             />
           </div>
@@ -178,12 +168,11 @@ export default function ManufacturerPage() {
               data={tableData}
               columns={columns}
               hidePagination
-              borderedTable
             />
+            {modalView()}
           </div>
         </div>
       </Content>
-      {modalView()}
     </>
   );
 }

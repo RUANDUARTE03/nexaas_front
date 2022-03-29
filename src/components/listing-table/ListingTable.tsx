@@ -51,7 +51,7 @@ export default function ListingTable({
                     style: column.style,
                   })}
                 >
-                  {column.render('Header')}
+                  <b>{column.render('Header')}</b>
                 </th>
               ))}
             </tr>
