@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { mockStore } from '../../utils/tests';
 import { MockedProvider } from '@apollo/client/testing';
 import userEvent from '@testing-library/user-event';
 import Router from 'next/router';
+import { mockStore } from '../../utils/tests';
 import BrandPage from '.';
 import { ALL_BRANDS } from '../../graphql/queries/brands';
 
@@ -135,7 +135,7 @@ describe('Test Brand feature', () => {
     );
 
     expect(Router.push).toHaveBeenCalledWith(
-      '/brands/create/'
+      '/product_brands/create/'
     );
   });
 });

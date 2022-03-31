@@ -1,14 +1,17 @@
 /* eslint-disable react/jsx-curly-newline */
+/* eslint-disable import/no-unresolved */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/jsx-wrap-multilines */
+/* eslint-disable prefer-destructuring */
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import Alert from '@material-ui/lab/Alert';
-import AlertTitle from '@material-ui/lab/AlertTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useTranslation } from 'next-i18next';
+import AlertCustom from '../../../components/alert';
+import { IErrorsGraphql } from '../dtos';
 import InputChameleon from '../../../components/Chameleon/input-chameleon';
-
 import Styles from './CreateEditBrand.module.scss';
 import { routes } from '../../../utils/routes';
 import HeaderMenu from '../../header-menu';
@@ -22,27 +25,23 @@ import { submitBrand } from '../../../store/actions/submitBrands';
 import ButtonChameleon from '../../../components/Chameleon/button-chameleon/ButtonChameleon';
 import { ALL_MANUFACTURERS } from '../../../graphql/queries/manufacturers';
 
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable react/jsx-wrap-multilines */
-
 export default function CreateEditBrand() {
   const router = useRouter();
-
-  const dispatch = useDispatch();
-  const [errors, setErrors] = useState([]);
   const { id } = router.query;
   const { t } = useTranslation('create-edit-brand');
-
-  const [name, setName] = useState<string>();
+  const dispatch = useDispatch();
+  const [errors, setErrors] = useState<IErrorsGraphql[]>();
+  const [name, setName] = useState<string>('');
   const [manufacturerId, setManufacturerId] =
-    useState<number>();
+    useState<number>(0);
 
   const { data, loading } = useQuery(ALL_MANUFACTURERS);
 
   const [createBrand] = useMutation(CREATE_BRAND, {
     onCompleted: (response) => {
-      const { errors: errorsCreate, success } =
-        response.createProductBrand;
+      const res = response.createProductBrand;
+      const errorsCreate: IErrorsGraphql[] = res.errors;
+      const success: boolean = res.success;
 
       if (errorsCreate === null && success) {
         dispatch(submitBrand({ type: 'create' }));
@@ -87,8 +86,9 @@ export default function CreateEditBrand() {
 
   const [updateBrand] = useMutation(UPDATE_BRAND, {
     onCompleted: (response) => {
-      const { errors: errorsEdit, success } =
-        response.updateProductBrand;
+      const res = response.updateProductBrand;
+      const errorsEdit: IErrorsGraphql[] = res.errors;
+      const success: boolean = res.success;
 
       if (errorsEdit === null && success) {
         dispatch(submitBrand({ type: 'edit' }));
@@ -149,21 +149,8 @@ export default function CreateEditBrand() {
             {id ? t('editBrandLabel') : t('newBrandLabel')}
           </h1>
 
-          {errors.length > 0 && (
-            <Alert severity="error">
-              <AlertTitle>
-                {`Erro ao ${
-                  id ? 'editar' : 'criar'
-                } marca.`}
-              </AlertTitle>
-              {errors.map((x) => {
-                return (
-                  <ul>
-                    <li>{x}</li>
-                  </ul>
-                );
-              })}
-            </Alert>
+          {errors && (
+            <AlertCustom type="error" errors={errors} />
           )}
 
           <div>
@@ -180,6 +167,8 @@ export default function CreateEditBrand() {
                         setName(e.target.value)
                       }
                       dataCy="name-brand"
+                      labelV2="name"
+                      errors={errors}
                     />
                   </div>
 
@@ -204,6 +193,8 @@ export default function CreateEditBrand() {
                           }
                         )}
                         dataCy="manufacturer-brand"
+                        labelV2="manufacturerId"
+                        errors={errors}
                       />
                     </div>
                   )}

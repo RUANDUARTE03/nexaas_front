@@ -8,3 +8,7 @@ declare namespace ApplicationWindow {
 type STORE_DEFINITION = ReturnType<
   typeof import('store').default['getState']
 >;
+
+declare namespace ErrorsFieldsDefinitions {
+  type AvailableFields = 'name' | 'manufacturerId';
+}

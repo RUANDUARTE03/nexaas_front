@@ -160,7 +160,8 @@ export const dataMenuRegisters: dataMenuProps = {
     },
     {
       href: '/product_brands',
-      newVersion: false,
+      newVersion: true,
+      directNewVersion: routes.brands.index,
       label: 'Marcas',
     },
     {

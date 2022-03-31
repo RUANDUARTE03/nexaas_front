@@ -8,6 +8,8 @@ module.exports = {
     '<rootDir>/node_modules/',
     '<rootDir>/coverage',
     '<rootDir>/dist',
+    '<rootDir>/cypress',
+    '<rootDir>/playwright',
   ],
   moduleDirectories: [
     '<rootDir>/node_modules',
