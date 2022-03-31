@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-wrap-multilines */
+/* eslint-disable react/destructuring-assignment */
 import React, { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { reverse } from 'named-urls';
@@ -6,7 +7,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import router from 'next/router';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
-import DeleteModal from 'src/components/delete-modal';
+import DeleteModal from '../../components/delete-modal';
 import { routes } from '../../utils/routes';
 import ButtonChameleon from '../../components/Chameleon/button-chameleon';
 import Styles from './ManufacturerPage.module.scss';

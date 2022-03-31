@@ -28,7 +28,10 @@
     "prettier"
   ],
   "rules": {
+    "array-callback-return": "off",
+    "no-plusplus": "off",
     "no-use-before-define": "off",
+    "global-require": "off",
     "no-undef": "off",
     "no-unused-expressions": "off",
     "react/prop-types": "off",

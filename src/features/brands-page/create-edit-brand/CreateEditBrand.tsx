@@ -64,7 +64,7 @@ export default function CreateEditBrand() {
 
       setName(productBrand.name);
       setManufacturerId(
-        Number(productBrand.manufacturer.id)
+        Number(productBrand?.manufacturer?.id)
       );
     }
   }, [dataGet]);
