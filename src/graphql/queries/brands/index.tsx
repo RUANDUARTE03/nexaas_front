@@ -17,7 +17,11 @@ const DELETE_BRAND = gql`
   mutation deleteBrands($input: DeleteProductBrandInput!) {
     deleteProductBrand(input: $input) {
       success
-      errors
+      errors {
+        code
+        message
+        path
+      }
     }
   }
 `;

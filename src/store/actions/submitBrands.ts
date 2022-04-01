@@ -4,7 +4,7 @@ export const CLEAR_BRAND = 'clear_brand';
 export function submitBrand({
   type,
 }: {
-  type: 'edit' | 'create';
+  type: 'edit' | 'create' | 'delete';
 }) {
   return {
     type: SUBMIT_BRAND,
