@@ -1,5 +1,6 @@
 /* eslint-disable import/no-unresolved */
-import React from 'react';
+/* eslint-disable consistent-return */
+import React, { useMemo } from 'react';
 import { IErrorsGraphql } from 'src/features/brands-page/dtos';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
@@ -7,9 +8,9 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 interface IProps {
   errors: IErrorsGraphql[];
   type: 'error' | 'success';
-  typeReducer: 'create' | 'edit' | 'delete';
   onClose: () => void;
-  messageType?: 'brand';
+  typeReducer: ApplicationDefinitions.TypeActions;
+  messageType?: ApplicationDefinitions.ActionsMenu;
 }
 
 export default function AlertCustom({
@@ -19,6 +20,34 @@ export default function AlertCustom({
   messageType,
   typeReducer,
 }: IProps) {
+  const messageTypeSpecified: ApplicationDefinitions.ActionsMenu =
+    useMemo(() => {
+      if (messageType && typeReducer) {
+        switch (messageType) {
+          case 'brand':
+            return 'marca';
+          default:
+            return '';
+        }
+      }
+    }, [messageType, typeReducer]);
+
+  const messageTypeSpecifiedComplement: ApplicationDefinitions.TypeActionsMessages =
+    useMemo(() => {
+      if (messageType && typeReducer) {
+        switch (typeReducer) {
+          case 'create':
+            return 'criado(a) com sucesso';
+          case 'edit':
+            return 'editado(a) com sucesso';
+          case 'delete':
+            return 'excluído(a) com sucesso';
+          default:
+            return '';
+        }
+      }
+    }, [messageType, typeReducer]);
+
   return (
     <Alert
       severity={type}
@@ -39,26 +68,8 @@ export default function AlertCustom({
         })}
       {messageType && !errors && (
         <ul>
-          <li>
-            {`${
-              messageType === 'brand' &&
-              typeReducer === 'delete' &&
-              'Marca excluída com sucesso!'
-            }`}
-          </li>
-          <li>
-            {`${
-              messageType === 'brand' &&
-              typeReducer === 'edit' &&
-              'Marca editada com sucesso!'
-            }`}
-          </li>
-          <li>
-            {`${
-              messageType === 'brand' &&
-              typeReducer === 'create' &&
-              'Marca criada com sucesso!'
-            }`}
+          <li style={{ textTransform: 'capitalize' }}>
+            {`${messageTypeSpecified} ${messageTypeSpecifiedComplement}`}
           </li>
         </ul>
       )}

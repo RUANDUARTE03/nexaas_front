@@ -10,5 +10,11 @@ type STORE_DEFINITION = ReturnType<
 >;
 
 declare namespace ErrorsFieldsDefinitions {
-  type AvailableFields = 'name' | 'manufacturerId';
+  export type AvailableFields = 'name' | 'manufacturerId';
+}
+
+declare namespace ApplicationDefinitions {
+  export type TypeActions = 'create' | 'edit' | 'delete' | ''
+  export type TypeActionsMessages = 'criado(a) com sucesso' | 'editado(a) com sucesso' | 'excluído(a) com sucesso' | ''
+  export type ActionsMenu = 'brand' | 'marca' | ''
 }

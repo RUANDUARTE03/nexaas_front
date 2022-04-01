@@ -4,7 +4,7 @@ import {
 } from '../actions/submitBrands';
 
 const initialState: {
-  type: 'create' | 'edit' | 'delete' | '';
+  type: ApplicationDefinitions.TypeActions;
 } = {
   type: '',
 };
