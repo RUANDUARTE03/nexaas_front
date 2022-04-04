@@ -101,7 +101,7 @@ export default function BrandPage() {
                   setDeleteModalOpen(true);
                   setSelectedBrand(brand);
                 }}
-                dataCy={`btn-edit-brand-${name.replace(
+                dataCy={`btn-delete-brand-${name.replace(
                   ' ',
                   '-'
                 )}`}

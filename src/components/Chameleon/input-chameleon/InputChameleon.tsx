@@ -117,7 +117,10 @@ export default function InputChameleon({
         </NativeSelect>
       )}
       {nameFieldError === labelV2 && (
-        <p className={Styles.messageErrorInput}>
+        <p
+          data-cy={`${dataCy}-error`}
+          className={Styles.messageErrorInput}
+        >
           {errorExacted?.message}
         </p>
       )}
