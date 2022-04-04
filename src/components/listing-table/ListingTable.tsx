@@ -63,7 +63,7 @@ export default function ListingTable({
             return (
               <tr
                 {...row.getRowProps()}
-                dataCy={
+                data-cy={
                   row.original.name
                     ? row.original.name.replace(' ', '-')
                     : ''

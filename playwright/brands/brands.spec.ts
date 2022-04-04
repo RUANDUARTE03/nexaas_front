@@ -82,7 +82,7 @@ test.describe.serial('Brand tests', () => {
     ]);
 
     await page
-      .locator('[data-testid="btn-createOrEditProvider"]')
+      .locator('[data-testid="btn-createOrEditBrand"]')
       .click();
 
     await expect(page).toHaveURL(BRAND_CREATE);
@@ -96,11 +96,114 @@ test.describe.serial('Brand tests', () => {
     ).toContainText('Manufacturer não é válido');
 
     await expect(
-      page.locator('[data-cy=name] > input')
+      page.locator('[data-cy=name-error]')
     ).toContainText('Nome não pode ficar em branco');
 
     await expect(
-      page.locator('[data-cy=manufacturer] > input')
+      page.locator('[data-cy=manufacturer-error]')
     ).toContainText('Manufacturer não é válido');
+
+    await page
+      .locator(
+        '[data-testid="btn-createOrEditBrand-cancel"]'
+      )
+      .click();
+  });
+
+  test('Edição: Validação de dados obrigatórios', async () => {
+    await page
+      .locator(`[data-cy="btn-edit-brand-Marca-teste"]`)
+      .click();
+
+    await page.locator('[data-cy=name] > input').fill('');
+
+    await page
+      .locator('[data-testid="btn-createOrEditBrand"]')
+      .click();
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('Nome não pode ficar em branco');
+
+    await expect(
+      page.locator('[data-cy=name-error]')
+    ).toContainText('Nome não pode ficar em branco');
+
+    await page
+      .locator(
+        '[data-testid="btn-createOrEditBrand-cancel"]'
+      )
+      .click();
+  });
+
+  test('Edição: Atualização cadastral com sucesso', async () => {
+    await page
+      .locator(`[data-cy="btn-edit-brand-Marca-teste"]`)
+      .click();
+
+    await page
+      .locator('[data-cy=name] > input')
+      .fill('editado');
+
+    await page
+      .locator('[data-cy=manufacturer] > select')
+      .selectOption(brand.manufacturer);
+
+    await page
+      .locator('[data-testid="btn-createOrEditBrand"]')
+      .click();
+
+    await Promise.all([
+      page.waitForNavigation({
+        url: BRAND_HOME,
+      }),
+      page
+        .locator('[data-testid="btn-createOrEditBrand"]')
+        .click(),
+    ]);
+  });
+
+  test('Listagem de Marcas: Marcas com dados básicos', async () => {
+    const selector = '[data-cy="editado"] > td';
+
+    await expect(
+      page.locator(selector).nth(0)
+    ).toContainText('editado');
+
+    await expect(
+      page.locator(selector).nth(1)
+    ).toContainText('Dell Corporation');
+  });
+
+  test('Cancelar modal ao tentar remover marca', async () => {
+    await page
+      .locator(`[data-cy="btn-delete-brand-editado"]`)
+      .click();
+
+    await expect(
+      page.locator('[data-testid="container-delete-modal"]')
+    ).toContainText('Remover Marca');
+
+    await page
+      .locator('[data-cy="btn-delete-close"]')
+      .click();
+  });
+
+  test('Remover marca com sucesso', async () => {
+    await page
+      .locator(`[data-cy="btn-delete-brand-editado"]`)
+      .click();
+
+    await expect(
+      page.locator('[data-testid="container-delete-modal"]')
+    ).toContainText('Remover Marca');
+
+    await page
+      .locator('[data-cy="btn-delete-confirm"]')
+      .click();
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('marca excluído(a) com sucesso');
   });
 });
