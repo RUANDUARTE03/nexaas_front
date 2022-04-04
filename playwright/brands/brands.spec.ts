@@ -5,13 +5,12 @@ const BRAND_HOME = `${REACT_URL}/product_brands`;
 const BRAND_CREATE = `${BRAND_HOME}/create`;
 const HOME_URL = process.env.HOME_URL ?? '';
 
-const createBrand = {
-  nameBrand: 'New Brand PlayWright',
-  manufacturerBrand: '1',
-  manufacturerBrandValue: 'Dell Corporation',
+const brand = {
+  name: 'Marca teste',
+  manufacturer: '1',
 };
 
-test.describe.serial('New Brand', () => {
+test.describe.serial('Brand tests', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -21,7 +20,7 @@ test.describe.serial('New Brand', () => {
     await page.close();
   });
 
-  test('Menu click should redirect', async () => {
+  test('Clique no menu deve redirecionar', async () => {
     await page.goto(HOME_URL);
 
     await page
@@ -53,12 +52,12 @@ test.describe.serial('New Brand', () => {
 
   test('Criar nova marca', async () => {
     await page
-      .locator('[data-cy=name-brand] > input')
-      .fill(createBrand.nameBrand);
+      .locator('[data-cy=name] > input')
+      .fill(brand.name);
 
     await page
-      .locator('[data-cy=manufacturer-brand] > select')
-      .selectOption(createBrand.manufacturerBrand);
+      .locator('[data-cy=manufacturer] > select')
+      .selectOption(brand.manufacturer);
 
     await Promise.all([
       page.waitForNavigation({
@@ -72,32 +71,36 @@ test.describe.serial('New Brand', () => {
     await expect(page).toHaveURL(BRAND_HOME);
   });
 
-  test('Listagem de marcas com dados completos', async () => {
-    const brandSelector =
-      '[data-cy="New-Brand-PlayWright"] > td';
+  test('Validação de dados obrigatórios', async () => {
+    await Promise.all([
+      page.waitForNavigation({
+        url: BRAND_CREATE,
+      }),
+      page
+        .locator('[data-testid="btn-create-brand"]')
+        .click(),
+    ]);
+
+    await page
+      .locator('[data-testid="btn-createOrEditProvider"]')
+      .click();
+
+    await expect(page).toHaveURL(BRAND_CREATE);
 
     await expect(
-      page.locator(brandSelector).nth(0)
-    ).toContainText(createBrand.nameBrand);
+      page.locator('.MuiAlert-message')
+    ).toContainText('Nome não pode ficar em branco');
 
     await expect(
-      page.locator(brandSelector).nth(1)
-    ).toContainText(createBrand.manufacturerBrandValue);
-  });
+      page.locator('.MuiAlert-message')
+    ).toContainText('Manufacturer não é válido');
 
-  test('Botões de edição e exclusão devem ser renderizados', async () => {
-    const editSelector = `[data-cy="btn-edit-brand-${createBrand.nameBrand.replace(
-      ' ',
-      '-'
-    )}"]`;
-    const deleteSelector = `[data-cy="btn-delete-brand-${createBrand.nameBrand.replace(
-      ' ',
-      '-'
-    )}"]`;
-
-    await expect(page.locator(editSelector)).toBeVisible();
     await expect(
-      page.locator(deleteSelector)
-    ).toBeVisible();
+      page.locator('[data-cy=name] > input')
+    ).toContainText('Nome não pode ficar em branco');
+
+    await expect(
+      page.locator('[data-cy=manufacturer] > input')
+    ).toContainText('Manufacturer não é válido');
   });
 });

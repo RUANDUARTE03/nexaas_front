@@ -166,7 +166,7 @@ export default function CreateEditBrand() {
                       onChange={(e) =>
                         setName(e.target.value)
                       }
-                      dataCy="name-brand"
+                      dataCy="name"
                       labelV2="name"
                       errors={errors}
                     />
@@ -192,7 +192,7 @@ export default function CreateEditBrand() {
                             };
                           }
                         )}
-                        dataCy="manufacturer-brand"
+                        dataCy="manufacturer"
                         labelV2="manufacturerId"
                         errors={errors}
                       />
