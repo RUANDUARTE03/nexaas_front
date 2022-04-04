@@ -58,7 +58,11 @@ const CREATE_PROVIDER = gql`
         stateInscription
       }
       success
-      errors
+      errors {
+        code
+        message
+        path
+      }
     }
   }
 `;
@@ -85,7 +89,11 @@ const UPDATE_PROVIDER = gql`
         country
         stateInscription
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
       success
     }
   }
@@ -95,7 +103,11 @@ const DELETE_PROVIDER = gql`
   mutation deleteProvider($input: DeleteProviderInput!) {
     deleteProvider(input: $input) {
       success
-      errors
+      errors {
+        code
+        message
+        path
+      }
     }
   }
 `;

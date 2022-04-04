@@ -1,13 +1,15 @@
 /* eslint-disable react/jsx-curly-newline */
+/* eslint-disable prefer-destructuring */
+
 import React, { useState, useEffect } from 'react';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery } from '@apollo/client';
-import { useDispatch } from 'react-redux';
-import Alert from '@material-ui/lab/Alert';
-import AlertTitle from '@material-ui/lab/AlertTitle';
+import { useDispatch, useSelector } from 'react-redux';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useTranslation } from 'next-i18next';
+import AlertCustom from '../../../components/alert';
+import { IErrorsGraphql } from '../../brands-page/dtos';
 import { routes } from '../../../utils/routes';
 import Styles from './CreateEditProvider.module.scss';
 import {
@@ -25,7 +27,6 @@ import {
 } from '../../../utils/formatters/zipcode';
 import { getAddressByCep } from '../../../services/providerService';
 import HeaderMenu from '../../header-menu';
-
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 export default function CreateOrEditProvider() {
@@ -34,7 +35,12 @@ export default function CreateOrEditProvider() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { id } = router.query;
-  const [errors, setErrors] = useState([]);
+  const { type } = useSelector(
+    (state) => state.SubmitProvider
+  );
+  const [showModalErrors, setShowModalErros] =
+    useState<boolean>(false);
+  const [errors, setErrors] = useState<IErrorsGraphql[]>();
   const [identifier, setIdentifier] = useState<string>('');
   const [companyName, setCompanyName] =
     useState<string>('');
@@ -66,13 +72,16 @@ export default function CreateOrEditProvider() {
   // Init Logic For Create Provider
   const [createProvider] = useMutation(CREATE_PROVIDER, {
     onCompleted: (response) => {
-      const { errors: errorsCreate, success } =
-        response.createProvider;
+      const res = response.createProvider;
+      const errorsCreate: IErrorsGraphql[] = res.errors;
+      const success: boolean = res.sucess;
 
-      if (errorsCreate === null && success) {
+      if (success) {
         dispatch(submitProvider({ type: 'create' }));
         router.push(routes.providers.index);
+        setShowModalErros(false);
       } else {
+        setShowModalErros(true);
         setErrors(errorsCreate);
       }
     },
@@ -194,13 +203,16 @@ export default function CreateOrEditProvider() {
 
   const [updateProvider] = useMutation(UPDATE_PROVIDER, {
     onCompleted: (response) => {
-      const { errors: errorsEdit, success } =
-        response.updateProvider;
+      const res = response.updateProductProvider;
+      const errorsEdit: IErrorsGraphql[] = res.errors;
+      const success: boolean = res.success;
 
-      if (errorsEdit === null && success) {
+      if (success) {
         dispatch(submitProvider({ type: 'edit' }));
         router.push(routes.providers.index);
+        setShowModalErros(false);
       } else {
+        setShowModalErros(true);
         setErrors(errorsEdit);
       }
     },
@@ -337,22 +349,18 @@ export default function CreateOrEditProvider() {
         <h1 className="ch-spaceStack">
           {id ? t('editProvider') : t('createProvider')}
         </h1>
-        {errors.length > 0 && (
-          <Alert severity="error">
-            <AlertTitle>
-              {`Erro ao ${
-                id ? t('editLabel') : t('createLabel')
-              } fornecedor.`}
-            </AlertTitle>
-            {errors.map((x) => {
-              return (
-                <ul>
-                  <li>{x}</li>
-                </ul>
-              );
-            })}
-          </Alert>
+
+        {errors && showModalErrors && (
+          <AlertCustom
+            type="error"
+            typeReducer={type}
+            errors={errors}
+            onClose={() => {
+              setShowModalErros(false);
+            }}
+          />
         )}
+
         <div
           className={`${Styles.wrapperIpt} ${Styles.wrapperIptFirst}`}
         >
@@ -493,49 +501,53 @@ export default function CreateOrEditProvider() {
         >
           <InputChameleon
             label={t('formattedZipCode')}
-            required={false}
+            required
             value={formattedZipCode}
             onChange={onZipCodeChange}
             onKeyUp={zipCodeKeyUp}
             mode="text"
             dataCy="formattedZipCode"
+            errors={errors}
           />
         </div>
         <div className={Styles.wrapperIptRow}>
           <div className={Styles.wrapperIpt}>
             <InputChameleon
               label={t('street')}
-              required={false}
+              required
               value={street}
               onChange={(e) => {
                 setStreet(e.target.value);
               }}
               mode="text"
               dataCy="street"
+              errors={errors}
             />
           </div>
           <div className={Styles.wrapperIptSM}>
             <InputChameleon
               label={t('addressNumber')}
-              required={false}
+              required
               value={addressNumber}
               onChange={(e) => {
                 setAddressNumber(e.target.value);
               }}
               mode="text"
               dataCy="addressNumber"
+              errors={errors}
             />
           </div>
           <div className={Styles.wrapperIptSM}>
             <InputChameleon
               label={t('addressDetail')}
-              required={false}
+              required
               value={addressDetail}
               onChange={(e) => {
                 setAddressDetail(e.target.value);
               }}
               mode="text"
               dataCy="addressDetail"
+              errors={errors}
             />
           </div>
         </div>
@@ -543,26 +555,28 @@ export default function CreateOrEditProvider() {
           <div className={Styles.wrapperIptSM}>
             <InputChameleon
               label={t('district')}
-              required={false}
+              required
               value={district}
               onChange={(e) => {
                 setDistrict(e.target.value);
               }}
               mode="text"
               dataCy="district"
+              errors={errors}
             />
           </div>
 
           <div className={Styles.wrapperIptSM}>
             <InputChameleon
               label={t('city')}
-              required={false}
+              required
               value={city}
               onChange={(e) => {
                 setCity(e.target.value);
               }}
               mode="text"
               dataCy="city"
+              errors={errors}
             />
           </div>
 
@@ -572,20 +586,21 @@ export default function CreateOrEditProvider() {
           >
             <InputChameleon
               label={t('cityIbgeId')}
-              required={false}
+              required
               value={cityIbgeId}
               onChange={(e) => {
                 setCityIbgeId(e.target.value);
               }}
               mode="text"
               dataCy="cityIbgeId"
+              errors={errors}
             />
           </div>
 
           <div className={Styles.wrapperIptSM}>
             <InputChameleon
               label={t('stateName')}
-              required={false}
+              required
               value={stateName}
               onChange={(e) => setStateName(e.target.value)}
               mode="select"
@@ -594,6 +609,7 @@ export default function CreateOrEditProvider() {
                 value: state.code,
               }))}
               dataCy="stateName"
+              errors={errors}
             />
           </div>
         </div>

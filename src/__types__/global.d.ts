@@ -16,5 +16,5 @@ declare namespace ErrorsFieldsDefinitions {
 declare namespace ApplicationDefinitions {
   export type TypeActions = 'create' | 'edit' | 'delete' | ''
   export type TypeActionsMessages = 'criado(a) com sucesso' | 'editado(a) com sucesso' | 'excluído(a) com sucesso' | ''
-  export type ActionsMenu = 'brand' | 'marca' | ''
+  export type ActionsMenu = 'brand' | 'marca' | 'provider' | 'fornecedores' | ''
 }

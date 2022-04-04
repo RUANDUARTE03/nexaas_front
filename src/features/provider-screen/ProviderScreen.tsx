@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+
 import React, { useState, useEffect } from 'react';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { useQuery, useMutation } from '@apollo/client';
@@ -6,8 +8,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import router from 'next/router';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
-import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from 'next-i18next';
+import AlertCustom from '../../components/alert';
 import { routes } from '../../utils/routes';
 import ButtonChameleon from '../../components/Chameleon/button-chameleon';
 import Styles from './ProviderScreen.module.scss';
@@ -22,12 +24,14 @@ import {
 import DeleteModal from '../../components/delete-modal';
 import HeaderMenu from '../header-menu';
 import Content from '../../components/content';
+import { IErrorsGraphql } from '../brands-page/dtos';
 
 export default function ProviderScreen() {
   const dispatch = useDispatch();
   const { type } = useSelector(
     (state) => state.SubmitProvider
   );
+  const [errors, setErrors] = useState<IErrorsGraphql[]>();
   const [modalDeleteOpen, setModalDeleteOpen] =
     useState<boolean>(false);
   const [providerSelected, setProviderSelected] =
@@ -43,15 +47,20 @@ export default function ProviderScreen() {
 
   const [deleteProvider] = useMutation(DELETE_PROVIDER, {
     onCompleted: (response) => {
-      const { errors, success } = response.deleteProvider;
+      const res = response.deleteProvider;
+      const errorsDelete: IErrorsGraphql[] | [] =
+        res.errors;
+      const success: boolean = res.success;
 
-      if (errors === null && success) {
-        setModalDeleteOpen(false);
+      if (success) {
         dispatch(submitProvider({ type: 'delete' }));
         setTimeout(() => {
           refetch();
         }, 1000);
+      } else {
+        setErrors(errorsDelete);
       }
+      setModalDeleteOpen(false);
     },
   });
 
@@ -110,23 +119,19 @@ export default function ProviderScreen() {
             />
           </div>
 
-          {type !== '' && (
-            <Alert
-              className={Styles.alert}
-              severity="success"
-              onClose={() => {
-                dispatch(clearSubmit());
-              }}
-            >
-              {`Fornecedor ${
-                type === 'create'
-                  ? t('createdLabel')
-                  : type === 'edit'
-                  ? t('editedLabel')
-                  : t('deleteLabel')
-              } com sucesso`}
-            </Alert>
-          )}
+          {errors ||
+            (type !== '' && (
+              <AlertCustom
+                type={type !== '' ? 'success' : 'error'}
+                errors={errors}
+                messageType="provider"
+                onClose={() => {
+                  dispatch(clearSubmit());
+                }}
+                typeReducer={type}
+              />
+            ))}
+
           <table className={`ch-table ${Styles.chTable}`}>
             <thead>
               <tr>

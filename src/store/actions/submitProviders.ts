@@ -4,7 +4,7 @@ export const CLEAR_PROVIDER = 'clear_provider';
 export function submitProvider({
   type,
 }: {
-  type: 'edit' | 'create' | 'delete';
+  type: ApplicationDefinitions.TypeActions;
 }) {
   return {
     type: SUBMIT_PROVIDER,

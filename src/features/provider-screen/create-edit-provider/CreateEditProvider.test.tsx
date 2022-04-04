@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { mockStore } from '../../../utils/tests';
 import { MockedProvider } from '@apollo/client/testing';
 import userEvent from '@testing-library/user-event';
+import { mockStore } from '../../../utils/tests';
 import CreateOrEditProvider from '.';
 import {
   GET_PROVIDER,
@@ -84,7 +84,7 @@ const mockError = [
   },
 ];
 
-type providerProps = {
+type IProps = {
   mockStoreProvider: ReturnType<typeof mockStore>;
   mocksByAction: any;
 };
@@ -92,7 +92,7 @@ type providerProps = {
 function renderProviderCreateOrEdit({
   mockStoreProvider,
   mocksByAction,
-}: providerProps) {
+}: IProps) {
   return render(
     <Provider store={mockStoreProvider}>
       <MockedProvider
@@ -107,11 +107,11 @@ function renderProviderCreateOrEdit({
 
 describe('Test feature Provider', () => {
   it.each([
-    [1, 'Editar', false],
-    [null, 'Criar', true],
+    [1, 'Editar'],
+    [null, 'Criar'],
   ])(
     'Should render correctly mode %s',
-    async (query, mode, create) => {
+    async (query, mode) => {
       jest
         .spyOn(require('next/router'), 'useRouter')
         .mockImplementation(() => ({
@@ -124,7 +124,8 @@ describe('Test feature Provider', () => {
 
       const wrapper = renderProviderCreateOrEdit({
         mockStoreProvider: mockStore(),
-        mocksByAction: create ? mockCreate : mocks,
+        mocksByAction:
+          mode === 'create' ? mockCreate : mocks,
       });
 
       await act(async () => {

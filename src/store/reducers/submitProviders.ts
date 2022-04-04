@@ -4,7 +4,7 @@ import {
 } from '../actions/submitProviders';
 
 const initialState: {
-  type: 'create' | 'edit' | 'delete' | '';
+  type: ApplicationDefinitions.TypeActions;
 } = {
   type: '',
 };
