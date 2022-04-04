@@ -1,10 +1,14 @@
+/* eslint-disable prefer-destructuring */
+
 import React, { useEffect, useMemo, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { reverse } from 'named-urls';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import router from 'next/router';
+import AlertCustom from 'src/components/alert';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { routes } from '../../utils/routes';
 import ButtonChameleon from '../../components/Chameleon/button-chameleon';
 import Styles from './BrandPage.module.scss';
@@ -16,6 +20,11 @@ import {
   DELETE_BRAND,
 } from '../../graphql/queries/brands';
 import DeleteModal from '../../components/delete-modal';
+import {
+  clearSubmit,
+  submitBrand,
+} from '../../store/actions/submitBrands';
+import { IErrorsGraphql } from './dtos';
 
 type BrandType = {
   id: number;
@@ -27,8 +36,13 @@ type BrandType = {
 };
 
 export default function BrandPage() {
+  const dispatch = useDispatch();
+  const { type } = useSelector(
+    (state) => state.SubmitBrands
+  );
   const { t } = useTranslation('brand');
   const { data, loading, refetch } = useQuery(ALL_BRANDS);
+  const [errors, setErrors] = useState<IErrorsGraphql[]>();
   const [deleteModalOpen, setDeleteModalOpen] =
     useState<boolean>(false);
   const [selectedBrand, setSelectedBrand] =
@@ -106,16 +120,20 @@ export default function BrandPage() {
 
   const [deleteBrand] = useMutation(DELETE_BRAND, {
     onCompleted: (response) => {
-      const { errors, success } =
-        response.deleteProductBrand;
+      const res = response.deleteProductBrand;
+      const errorsDelete: IErrorsGraphql[] | [] =
+        res.errors;
+      const success: boolean = res.success;
 
-      if (errors === null && success) {
-        setDeleteModalOpen(false);
-
+      if (success) {
+        dispatch(submitBrand({ type: 'delete' }));
         setTimeout(() => {
           refetch();
         }, 1000);
+      } else {
+        setErrors(errorsDelete);
       }
+      setDeleteModalOpen(false);
     },
   });
 
@@ -172,6 +190,18 @@ export default function BrandPage() {
               }}
             />
           </div>
+          {errors ||
+            (type !== '' && (
+              <AlertCustom
+                type={type !== '' ? 'success' : 'error'}
+                errors={errors}
+                messageType="brand"
+                onClose={() => {
+                  dispatch(clearSubmit());
+                }}
+                typeReducer={type}
+              />
+            ))}
           <div>
             <ListingTable
               data={tableData}

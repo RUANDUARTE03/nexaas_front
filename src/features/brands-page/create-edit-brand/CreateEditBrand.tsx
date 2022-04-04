@@ -6,7 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useTranslation } from 'next-i18next';
 import AlertCustom from '../../../components/alert';
@@ -30,6 +30,11 @@ export default function CreateEditBrand() {
   const { id } = router.query;
   const { t } = useTranslation('create-edit-brand');
   const dispatch = useDispatch();
+  const { type } = useSelector(
+    (state) => state.SubmitBrands
+  );
+  const [showModalErrors, setShowModalErros] =
+    useState<boolean>(false);
   const [errors, setErrors] = useState<IErrorsGraphql[]>();
   const [name, setName] = useState<string>('');
   const [manufacturerId, setManufacturerId] =
@@ -43,10 +48,12 @@ export default function CreateEditBrand() {
       const errorsCreate: IErrorsGraphql[] = res.errors;
       const success: boolean = res.success;
 
-      if (errorsCreate === null && success) {
+      if (success) {
         dispatch(submitBrand({ type: 'create' }));
         router.push(routes.brands.index);
+        setShowModalErros(false);
       } else {
+        setShowModalErros(true);
         setErrors(errorsCreate);
       }
     },
@@ -90,10 +97,12 @@ export default function CreateEditBrand() {
       const errorsEdit: IErrorsGraphql[] = res.errors;
       const success: boolean = res.success;
 
-      if (errorsEdit === null && success) {
+      if (success) {
         dispatch(submitBrand({ type: 'edit' }));
         router.push(routes.brands.index);
+        setShowModalErros(false);
       } else {
+        setShowModalErros(true);
         setErrors(errorsEdit);
       }
     },
@@ -149,8 +158,15 @@ export default function CreateEditBrand() {
             {id ? t('editBrandLabel') : t('newBrandLabel')}
           </h1>
 
-          {errors && (
-            <AlertCustom type="error" errors={errors} />
+          {errors && showModalErrors && (
+            <AlertCustom
+              type="error"
+              typeReducer={type}
+              errors={errors}
+              onClose={() => {
+                setShowModalErros(false);
+              }}
+            />
           )}
 
           <div>
