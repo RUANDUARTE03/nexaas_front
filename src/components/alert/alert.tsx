@@ -26,6 +26,8 @@ export default function AlertCustom({
         switch (messageType) {
           case 'brand':
             return 'marca';
+          case 'provider':
+            return 'fornecedor';
           default:
             return '';
         }

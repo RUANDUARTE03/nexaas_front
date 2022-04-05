@@ -41,3 +41,14 @@ export function CheckErrors({ errors, field }: IProps) {
   );
   return errorExacted;
 }
+
+export function RemoveErrorField({
+  errors,
+  field,
+}: IProps) {
+  const removeErrorSpecified = errors.filter((item) => {
+    return !item.path.includes(field);
+  });
+
+  return removeErrorSpecified;
+}

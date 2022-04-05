@@ -10,11 +10,34 @@ type STORE_DEFINITION = ReturnType<
 >;
 
 declare namespace ErrorsFieldsDefinitions {
-  export type AvailableFields = 'name' | 'manufacturerId';
+  export type AvailableFields =
+    | 'name'
+    | 'manufacturerId'
+    | 'tradingName'
+    | 'providerType'
+    | 'stateInscriptionType'
+    | 'stateInscription'
+    | 'externalId'
+    | 'document'
+    | 'CEP'
+    | 'addressNumber';
 }
 
 declare namespace ApplicationDefinitions {
-  export type TypeActions = 'create' | 'edit' | 'delete' | ''
-  export type TypeActionsMessages = 'criado(a) com sucesso' | 'editado(a) com sucesso' | 'excluído(a) com sucesso' | ''
-  export type ActionsMenu = 'brand' | 'marca' | 'provider' | 'fornecedores' | ''
+  export type TypeActions =
+    | 'create'
+    | 'edit'
+    | 'delete'
+    | '';
+  export type TypeActionsMessages =
+    | 'criado(a) com sucesso'
+    | 'editado(a) com sucesso'
+    | 'excluído(a) com sucesso'
+    | '';
+  export type ActionsMenu =
+    | 'brand'
+    | 'marca'
+    | 'provider'
+    | 'fornecedor'
+    | '';
 }

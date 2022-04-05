@@ -22,15 +22,18 @@ const completeProvider = {
   street: 'Rua Miguel Pereira Sarmento',
   tradingName: 'teste 123',
   zipcode: '24310425',
+  addressNumber: '123',
 };
 
 const onlyRequiredProvider = {
   name: 'required provider',
   document: '34028316000294',
   providerType: 'Fabricante',
+  zipcode: '24310425',
+  addressNumber: '123',
 };
 
-test.describe.serial('New Todo', () => {
+test.describe.serial('Provider tests', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -99,9 +102,18 @@ test.describe.serial('New Todo', () => {
       .locator('[data-cy=stateInscription] > input')
       .fill(completeProvider.stateInscription);
 
+    await Promise.all([
+      page.waitForRequest(
+        'https://viacep.com.br/ws/24310425/json'
+      ),
+      await page
+        .locator('[data-cy=formattedZipCode] > input')
+        .type('24310425'),
+    ]);
+
     await page
-      .locator('[data-cy=formattedZipCode] > input')
-      .fill(completeProvider.zipcode);
+      .locator('[data-cy=addressNumber] > input')
+      .fill(completeProvider.addressNumber);
 
     await page
       .locator('[data-cy=stateName] > select')
@@ -140,6 +152,14 @@ test.describe.serial('New Todo', () => {
     await page
       .locator('[data-cy=typeProvider] > select')
       .selectOption(onlyRequiredProvider.providerType);
+
+    await page
+      .locator('[data-cy=formattedZipCode] > input')
+      .fill(onlyRequiredProvider.zipcode);
+
+    await page
+      .locator('[data-cy=addressNumber] > input')
+      .fill(onlyRequiredProvider.addressNumber);
 
     await Promise.all([
       page.waitForNavigation({
@@ -219,13 +239,26 @@ test.describe.serial('New Todo', () => {
       .locator('[data-cy=identifier] > input')
       .fill(onlyRequiredProvider.document);
 
+    await Promise.all([
+      page.waitForRequest(
+        'https://viacep.com.br/ws/07400295/json'
+      ),
+      await page
+        .locator('[data-cy=formattedZipCode] > input')
+        .type('07400295'),
+    ]);
+
+    await page
+      .locator('[data-cy=addressNumber] > input')
+      .fill(onlyRequiredProvider.addressNumber);
+
     page
       .locator('[data-testid="btn-createOrEditProvider"]')
       .click();
 
     await expect(
       page.locator('.MuiAlert-message')
-    ).toContainText('já está em uso');
+    ).toContainText('CNPJ/CPF já está em uso');
 
     await expect(page).toHaveURL(PROVIDER_CREATE);
 
@@ -281,6 +314,91 @@ test.describe.serial('New Todo', () => {
       .click();
   });
 
+  test('Validação de dados obrigatórios', async () => {
+    await Promise.all([
+      page.waitForNavigation({
+        url: PROVIDER_CREATE,
+      }),
+      page
+        .locator('[data-testid="btn-create-provider"]')
+        .click(),
+    ]);
+
+    page
+      .locator('[data-testid="btn-createOrEditProvider"]')
+      .click();
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('CEP não pode ficar em branco');
+    await expect(
+      page.locator('[data-cy=formattedZipCode-error]')
+    ).toContainText('CEP não pode ficar em branco');
+
+    await Promise.all([
+      page.waitForRequest(
+        'https://viacep.com.br/ws/07400295/json'
+      ),
+      await page
+        .locator('[data-cy=formattedZipCode] > input')
+        .type('07400295'),
+    ]);
+
+    page
+      .locator('[data-testid="btn-createOrEditProvider"]')
+      .click();
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('Número não pode ficar em branco');
+    await expect(
+      page.locator('[data-cy=addressNumber-error]')
+    ).toContainText('Número não pode ficar em branco');
+
+    await page
+      .locator('[data-cy=addressNumber] > input')
+      .fill(onlyRequiredProvider.addressNumber);
+
+    page
+      .locator('[data-testid="btn-createOrEditProvider"]')
+      .click();
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('CNPJ/CPF não pode ficar em branco');
+    await expect(
+      page.locator('[data-cy=identifier-error]')
+    ).toContainText('CNPJ/CPF não pode ficar em branco');
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText(
+      'Tipo de Fornecedor não pode ficar em branco'
+    );
+    await expect(
+      page.locator('[data-cy=typeProvider-error]')
+    ).toContainText(
+      'Tipo de Fornecedor não pode ficar em branco'
+    );
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText(
+      'Razão Social/Nome não pode ficar em branco'
+    );
+    await expect(
+      page.locator('[data-cy=companyName-error]')
+    ).toContainText(
+      'Razão Social/Nome não pode ficar em branco'
+    );
+
+    await page
+      .locator(
+        '[data-testid="btn-createOrEditProvider-cancel"]'
+      )
+      .click();
+  });
+
   test('CEP inexistente não deve preencher endereço', async () => {
     await Promise.all([
       page.waitForNavigation({
@@ -314,6 +432,13 @@ test.describe.serial('New Todo', () => {
     await expect(
       page.locator('[data-cy=cityIbgeId] > input')
     ).toBeEmpty();
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('CEP não é válido');
+    await expect(
+      page.locator('[data-cy=formattedZipCode-error]')
+    ).toContainText('CEP não é válido');
 
     await page
       .locator(
@@ -445,7 +570,13 @@ test.describe.serial('New Todo', () => {
 
     await expect(
       page.locator('.MuiAlert-message')
-    ).toContainText('Erro ao Editar fornecedor.');
+    ).toContainText(
+      'Razão Social/Nome não pode ficar em branco'
+    );
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('CNPJ/CPF não pode ficar em branco');
 
     await page
       .locator(
@@ -487,13 +618,20 @@ test.describe.serial('New Todo', () => {
 
     await expect(
       page.locator('.MuiAlert-message')
-    ).toContainText('Fornecedor deletado com sucesso');
+    ).toContainText('fornecedor excluído(a) com sucesso');
+
+    await page
+      .locator(
+        `[data-cy="btn-delete-provider-${onlyRequiredProvider.document}"]`
+      )
+      .click();
+
+    await page
+      .locator('[data-cy="btn-delete-confirm"]')
+      .click();
+
+    await expect(
+      page.locator('.MuiAlert-message')
+    ).toContainText('fornecedor excluído(a) com sucesso');
   });
 });
-
-/* 
-
-
-
-it('Remover fornecedor com sucesso', () => {
-}); */

@@ -10,6 +10,7 @@ import { IErrorsGraphql } from 'src/features/brands-page/dtos';
 import {
   CheckErrors,
   CheckField,
+  RemoveErrorField,
 } from '../../../utils/formatters/checkErrors';
 import Styles from './inputChameleon.module.scss';
 
@@ -34,6 +35,7 @@ type InputChameleonProps = {
   // Optional until migration is complete
   labelV2?: ErrorsFieldsDefinitions.AvailableFields;
   errors?: IErrorsGraphql[];
+  setErrors?: (errors: IErrorsGraphql[]) => void;
 };
 
 export default function InputChameleon({
@@ -49,6 +51,7 @@ export default function InputChameleon({
   dataCy,
   labelV2,
   errors,
+  setErrors,
 }: InputChameleonProps) {
   const [nameFieldError, setNameFieldErrors] =
     useState<ErrorsFieldsDefinitions.AvailableFields>();
@@ -78,6 +81,16 @@ export default function InputChameleon({
     }
   }, [nameFieldError, labelV2, errors]);
 
+  const removeErrors = () => {
+    if (errors && labelV2 && setErrors) {
+      const removeErrorSpecified = RemoveErrorField({
+        errors,
+        field: labelV2,
+      });
+      setErrors(removeErrorSpecified);
+    }
+  };
+
   return (
     <FormControl className={Styles.containerIptChameleon}>
       <InputLabel shrink>
@@ -96,6 +109,7 @@ export default function InputChameleon({
           onKeyUp={(e: any) =>
             onKeyUp ? onKeyUp(e) : null
           }
+          onKeyDown={() => removeErrors()}
           data-cy={dataCy}
         />
       ) : (

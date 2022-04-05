@@ -45,6 +45,14 @@ export default function ProviderScreen() {
     refetch();
   }, [refetch]);
 
+  useEffect(() => {
+    const timeClear = setTimeout(() => {
+      dispatch(clearSubmit());
+    }, 2000);
+
+    return () => clearInterval(timeClear);
+  }, [type, dispatch]);
+
   const [deleteProvider] = useMutation(DELETE_PROVIDER, {
     onCompleted: (response) => {
       const res = response.deleteProvider;

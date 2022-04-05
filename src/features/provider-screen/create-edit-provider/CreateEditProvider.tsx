@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-curly-newline */
 /* eslint-disable prefer-destructuring */
-
-import React, { useState, useEffect } from 'react';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useState, useEffect, useMemo } from 'react';
 import { cpf, cnpj } from 'cpf-cnpj-validator';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery } from '@apollo/client';
@@ -27,11 +27,9 @@ import {
 } from '../../../utils/formatters/zipcode';
 import { getAddressByCep } from '../../../services/providerService';
 import HeaderMenu from '../../header-menu';
-/* eslint-disable jsx-a11y/label-has-associated-control */
 
 export default function CreateOrEditProvider() {
   const { t } = useTranslation('create-edit-provider');
-
   const router = useRouter();
   const dispatch = useDispatch();
   const { id } = router.query;
@@ -74,7 +72,7 @@ export default function CreateOrEditProvider() {
     onCompleted: (response) => {
       const res = response.createProvider;
       const errorsCreate: IErrorsGraphql[] = res.errors;
-      const success: boolean = res.sucess;
+      const success: boolean = res.success;
 
       if (success) {
         dispatch(submitProvider({ type: 'create' }));
@@ -88,30 +86,50 @@ export default function CreateOrEditProvider() {
   });
 
   const handleSubmitCreateProvider = () => {
-    createProvider({
-      variables: {
-        input: {
-          document: identifier.replace(/[^\d]+/g, ''),
-          name: companyName,
-          tradingName: fantasyName,
-          stateInscriptionType: indicatorSign || null,
-          providerType:
-            indentifyProviderTypeValue(typeProvider),
-          externalId: identifierExternal || null,
-
-          street,
-          number: addressNumber,
-          detail: addressDetail,
-          zipcode: zipCode,
-          neighborhood: district,
-          cityCode: cityIbgeId,
-          city,
-          state: stateName || null,
-          country: 'Brazil',
-          stateInscription: stateInscription || null,
+    if (!addressNumber || !zipCode) {
+      if (!zipCode) {
+        setErrors([
+          {
+            code: 'blank',
+            message: 'CEP não pode ficar em branco',
+            path: ['attributes', 'CEP'],
+          },
+        ]);
+      } else {
+        setErrors([
+          {
+            code: 'blank',
+            message: 'Número não pode ficar em branco',
+            path: ['attributes', 'addressNumber'],
+          },
+        ]);
+      }
+      setShowModalErros(true);
+    } else {
+      createProvider({
+        variables: {
+          input: {
+            document: identifier.replace(/[^\d]+/g, ''),
+            name: companyName,
+            tradingName: fantasyName,
+            stateInscriptionType: indicatorSign || null,
+            providerType:
+              indentifyProviderTypeValue(typeProvider),
+            externalId: identifierExternal || null,
+            street,
+            number: addressNumber,
+            detail: addressDetail,
+            zipcode: zipCode,
+            neighborhood: district,
+            cityCode: cityIbgeId,
+            city,
+            state: stateName || null,
+            country: 'Brazil',
+            stateInscription: stateInscription || null,
+          },
         },
-      },
-    });
+      });
+    }
   };
   // Finish Logic For Create Provider
 
@@ -203,7 +221,7 @@ export default function CreateOrEditProvider() {
 
   const [updateProvider] = useMutation(UPDATE_PROVIDER, {
     onCompleted: (response) => {
-      const res = response.updateProductProvider;
+      const res = response.updateProvider;
       const errorsEdit: IErrorsGraphql[] = res.errors;
       const success: boolean = res.success;
 
@@ -219,30 +237,51 @@ export default function CreateOrEditProvider() {
   });
 
   const handleSubmitEditProvider = () => {
-    updateProvider({
-      variables: {
-        input: {
-          id,
-          document: identifier.replace(/[^\d]+/g, ''),
-          name: companyName,
-          tradingName: fantasyName,
-          stateInscriptionType: indicatorSign || null,
-          providerType:
-            indentifyProviderTypeValue(typeProvider),
-          externalId: identifierExternal || null,
-          street,
-          number: addressNumber,
-          detail: addressDetail,
-          zipcode: zipCode,
-          neighborhood: district,
-          cityCode: cityIbgeId,
-          city,
-          state: stateName || null,
-          country: 'Brazil',
-          stateInscription: stateInscription || null,
+    if (!addressNumber || !zipCode) {
+      if (!zipCode) {
+        setErrors([
+          {
+            code: 'blank',
+            message: 'CEP não pode ficar em branco',
+            path: ['attributes', 'CEP'],
+          },
+        ]);
+      } else {
+        setErrors([
+          {
+            code: 'blank',
+            message: 'Número não pode ficar em branco',
+            path: ['attributes', 'addressNumber'],
+          },
+        ]);
+      }
+      setShowModalErros(true);
+    } else {
+      updateProvider({
+        variables: {
+          input: {
+            id,
+            document: identifier.replace(/[^\d]+/g, ''),
+            name: companyName,
+            tradingName: fantasyName,
+            stateInscriptionType: indicatorSign || null,
+            providerType:
+              indentifyProviderTypeValue(typeProvider),
+            externalId: identifierExternal || null,
+            street,
+            number: addressNumber,
+            detail: addressDetail,
+            zipcode: zipCode,
+            neighborhood: district,
+            cityCode: cityIbgeId,
+            city,
+            state: stateName || null,
+            country: 'Brazil',
+            stateInscription: stateInscription || null,
+          },
         },
-      },
-    });
+      });
+    }
   };
 
   // Finish Logic For Edit Provider
@@ -286,27 +325,54 @@ export default function CreateOrEditProvider() {
 
   const zipCodeKeyUp = () => {
     if (zipCode?.length === 8) {
-      getAddressByCep(zipCode)
-        .then((response) => {
-          const {
-            bairro,
-            complemento,
-            ibge,
-            localidade,
-            logradouro,
-            uf,
-          } = response.data;
+      getAddressByCep(zipCode).then((response) => {
+        const {
+          bairro,
+          complemento,
+          ibge,
+          localidade,
+          logradouro,
+          uf,
+          erro,
+        } = response.data;
 
+        if (!erro) {
           setStreet(logradouro);
           setAddressDetail(complemento);
           setCity(localidade);
           setCityIbgeId(ibge);
           setDistrict(bairro);
           setStateName(uf);
-        })
-        .catch((error) => setErrors(error));
+          setShowModalErros(true);
+        } else {
+          setErrors([
+            {
+              code: 'invalid',
+              message: 'CEP não é válido',
+              path: ['attributes', 'CEP'],
+            },
+          ]);
+          setStreet('');
+          setAddressDetail('');
+          setCity('');
+          setCityIbgeId('');
+          setDistrict('');
+          setStateName(undefined);
+          setShowModalErros(true);
+        }
+      });
     }
   };
+
+  const showModalErrorsV2 = useMemo(() => {
+    if (errors) {
+      if (errors.length > 0) {
+        return true;
+      }
+    }
+
+    return false;
+  }, [errors]);
 
   if (errorsGetProvider && id) {
     return (
@@ -350,7 +416,7 @@ export default function CreateOrEditProvider() {
           {id ? t('editProvider') : t('createProvider')}
         </h1>
 
-        {errors && showModalErrors && (
+        {errors && showModalErrors && showModalErrorsV2 && (
           <AlertCustom
             type="error"
             typeReducer={type}
@@ -371,6 +437,11 @@ export default function CreateOrEditProvider() {
             onChange={(e) => onChangeIdentifier(e)}
             mode="text"
             dataCy="identifier"
+            labelV2="document"
+            errors={errors}
+            setErrors={(errorsFilter: IErrorsGraphql[]) =>
+              setErrors(errorsFilter)
+            }
           />
         </div>
         <div className={Styles.wrapperIptRow}>
@@ -384,6 +455,11 @@ export default function CreateOrEditProvider() {
               }
               mode="text"
               dataCy="companyName"
+              labelV2="name"
+              errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
           <div className={Styles.wrapperIpt}>
@@ -396,6 +472,11 @@ export default function CreateOrEditProvider() {
               }
               mode="text"
               dataCy="fantasyName"
+              labelV2="tradingName"
+              errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
         </div>
@@ -428,6 +509,11 @@ export default function CreateOrEditProvider() {
                 },
               ]}
               dataCy="typeProvider"
+              labelV2="providerType"
+              errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
           <div className={Styles.wrapperIpt}>
@@ -454,6 +540,11 @@ export default function CreateOrEditProvider() {
                 },
               ]}
               dataCy="indicatorSign"
+              labelV2="stateInscriptionType"
+              errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
         </div>
@@ -468,6 +559,11 @@ export default function CreateOrEditProvider() {
               }}
               mode="text"
               dataCy="identifierExternal"
+              labelV2="externalId"
+              errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
 
@@ -484,6 +580,11 @@ export default function CreateOrEditProvider() {
               }}
               mode="text"
               dataCy="stateInscription"
+              labelV2="stateInscription"
+              errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
         </div>
@@ -507,7 +608,11 @@ export default function CreateOrEditProvider() {
             onKeyUp={zipCodeKeyUp}
             mode="text"
             dataCy="formattedZipCode"
+            labelV2="CEP"
             errors={errors}
+            setErrors={(errorsFilter: IErrorsGraphql[]) =>
+              setErrors(errorsFilter)
+            }
           />
         </div>
         <div className={Styles.wrapperIptRow}>
@@ -522,6 +627,9 @@ export default function CreateOrEditProvider() {
               mode="text"
               dataCy="street"
               errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
           <div className={Styles.wrapperIptSM}>
@@ -534,7 +642,11 @@ export default function CreateOrEditProvider() {
               }}
               mode="text"
               dataCy="addressNumber"
+              labelV2="addressNumber"
               errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
           <div className={Styles.wrapperIptSM}>
@@ -548,6 +660,9 @@ export default function CreateOrEditProvider() {
               mode="text"
               dataCy="addressDetail"
               errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
         </div>
@@ -563,6 +678,9 @@ export default function CreateOrEditProvider() {
               mode="text"
               dataCy="district"
               errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
 
@@ -577,6 +695,9 @@ export default function CreateOrEditProvider() {
               mode="text"
               dataCy="city"
               errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
 
@@ -594,6 +715,9 @@ export default function CreateOrEditProvider() {
               mode="text"
               dataCy="cityIbgeId"
               errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
 
@@ -610,6 +734,9 @@ export default function CreateOrEditProvider() {
               }))}
               dataCy="stateName"
               errors={errors}
+              setErrors={(errorsFilter: IErrorsGraphql[]) =>
+                setErrors(errorsFilter)
+              }
             />
           </div>
         </div>
