@@ -4,7 +4,7 @@ export const CLEAR_MANUFACTURER = 'clear_manufacturer';
 export function submitManufacturers({
   type,
 }: {
-  type: 'edit' | 'create';
+  type: ApplicationDefinitions.TypeActions;
 }) {
   return {
     type: SUBMIT_MANUFACTURER,

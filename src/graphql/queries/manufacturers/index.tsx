@@ -17,7 +17,12 @@ const CREATE_MANUFACTURER = gql`
       manufacturer {
         name
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
+      success
     }
   }
 `;
@@ -30,7 +35,12 @@ const UPDATE_MANUFACTURER = gql`
       manufacturer {
         id
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
+      success
     }
   }
 `;
@@ -43,7 +53,12 @@ const DELETE_MANUFACTURER = gql`
       manufacturer {
         id
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
+      success
     }
   }
 `;

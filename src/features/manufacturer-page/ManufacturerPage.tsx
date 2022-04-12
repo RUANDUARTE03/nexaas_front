@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable react/destructuring-assignment */
+/* eslint-disable prefer-destructuring */
 import React, { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { reverse } from 'named-urls';
@@ -7,27 +8,45 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import router from 'next/router';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
-import DeleteModal from '../../components/delete-modal';
+import { useDispatch, useSelector } from 'react-redux';
 import { routes } from '../../utils/routes';
+import AlertCustom from '../../components/alert';
+import DeleteModal from '../../components/delete-modal';
+import HeaderMenu from '../header-menu';
 import ButtonChameleon from '../../components/Chameleon/button-chameleon';
 import Styles from './ManufacturerPage.module.scss';
-import HeaderMenu from '../header-menu';
+import { IErrorsGraphql } from '../brands-page/dtos';
 import Content from '../../components/content';
+import ListingTable from '../../components/listing-table/ListingTable';
 import {
   ALL_MANUFACTURERS,
   DELETE_MANUFACTURER,
 } from '../../graphql/queries/manufacturers';
-import ListingTable from '../../components/listing-table/ListingTable';
+import {
+  submitManufacturers,
+  clearSubmit,
+} from '../../store/actions/submitManufacturers';
+
+type ManufacturerType = {
+  id: number;
+  name: string;
+};
 
 export default function ManufacturerPage() {
-  const { t } = useTranslation('manufacturer');
+  const dispatch = useDispatch();
+  const { t } = useTranslation('Manufacturer');
+  const { type } = useSelector(
+    (state) => state.SubmitManufacturer
+  );
   const { data, loading, refetch } = useQuery(
     ALL_MANUFACTURERS
   );
-  const [selectedManufacturer, setSelectedManufacturer] =
-    useState<any>();
+  const [errors, setErrors] = useState<IErrorsGraphql[]>();
   const [deleteModalOpen, setDeleteModalOpen] =
-    useState(false);
+    useState<boolean>(false);
+  const [selectedManufacturer, setSelectedManufacturer] =
+    useState<ManufacturerType>();
+
   const tableData = useMemo(
     () => (data ? data.manufacturers : []),
     [data]
@@ -50,7 +69,7 @@ export default function ManufacturerPage() {
         },
         Cell: ({ row }) => {
           const manufacturer = row.original;
-          const { id } = manufacturer || null;
+          const { id, name } = manufacturer || null;
 
           return (
             <div className={Styles.actionButton}>
@@ -69,6 +88,10 @@ export default function ManufacturerPage() {
                     outline
                     icon={false}
                     onClick={() => {}}
+                    dataCy={`btn-edit-manufacturer-${name.replace(
+                      ' ',
+                      '-'
+                    )}`}
                   />
                 </Link>
               </div>
@@ -83,6 +106,10 @@ export default function ManufacturerPage() {
                   setDeleteModalOpen(true);
                   setSelectedManufacturer(manufacturer);
                 }}
+                dataCy={`btn-delete-manufacturer-${name.replace(
+                  ' ',
+                  '-'
+                )}`}
               />
             </div>
           );
@@ -101,15 +128,20 @@ export default function ManufacturerPage() {
     DELETE_MANUFACTURER,
     {
       onCompleted: (response) => {
-        const { errors } = response.deleteManufacturer;
+        const res = response.deleteProductManufacturer;
+        const errorsDelete: IErrorsGraphql[] | [] =
+          res.errors;
+        const success: boolean = res.success;
 
-        if (!errors.length) {
-          setDeleteModalOpen(false);
-
+        if (success) {
+          dispatch(submitManufacturers({ type: 'delete' }));
           setTimeout(() => {
             refetch();
           }, 1000);
+        } else {
+          setErrors(errorsDelete);
         }
+        setDeleteModalOpen(false);
       },
     }
   );
@@ -174,6 +206,18 @@ export default function ManufacturerPage() {
               }}
             />
           </div>
+          {errors ||
+            (type !== '' && (
+              <AlertCustom
+                type={type !== '' ? 'success' : 'error'}
+                errors={errors}
+                messageType="manufacturer"
+                onClose={() => {
+                  dispatch(clearSubmit());
+                }}
+                typeReducer={type}
+              />
+            ))}
           <div>
             <ListingTable
               data={tableData}

@@ -28,6 +28,12 @@ export default function AlertCustom({
             return 'marca';
           case 'provider':
             return 'fornecedor';
+          case 'manufacturer':
+            return 'fabricante';
+          case 'user':
+            return 'usuário';
+          case 'organization':
+            return 'organizações';
           default:
             return '';
         }

@@ -1,32 +1,39 @@
+/* eslint-disable prefer-destructuring */
 import React, { useState, useEffect } from 'react';
-import AlertTitle from '@material-ui/lab/AlertTitle';
-import Alert from '@material-ui/lab/Alert';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQuery } from '@apollo/client';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import ButtonChameleon from '../../../components/Chameleon/button-chameleon';
+import { submitManufacturers } from 'src/store/actions/submitManufacturers';
+import AlertCustom from '../../../components/alert';
+import { IErrorsGraphql } from '../../brands-page/dtos';
 import Styles from './createEditManufacturer.module.scss';
+import HeaderMenu from '../../header-menu';
+import InputChameleon from '../../../components/Chameleon/input-chameleon';
+import { routes } from '../../../utils/routes';
 import {
   CREATE_MANUFACTURER,
   GET_MANUFACTURER,
   UPDATE_MANUFACTURER,
 } from '../../../graphql/queries/manufacturers';
-import { submitManufacturer } from '../../../store/actions/submitManufacturer';
-import HeaderMenu from '../../header-menu';
-import { routes } from '../../../utils/routes';
-import InputChameleon from '../../../components/Chameleon/input-chameleon';
+import ButtonChameleon from '../../../components/Chameleon/button-chameleon';
 
 export default function CreateEditManufacturer() {
   const { t } = useTranslation('create-edit-manufacturer');
   const router = useRouter();
-  const dispatch = useDispatch();
   const { id } = router.query;
-  const [errors, setErrors] = useState([]);
-
+  const dispatch = useDispatch();
+  const { type } = useSelector(
+    (state) => state.SubmitManufacturer
+  );
+  const [showModalErrors, setShowModalErros] =
+    useState<boolean>(false);
+  const [errors, setErrors] = useState<IErrorsGraphql[]>();
   const [nameManufacturers, setNameManufacturers] =
     useState<string>('');
+  const [manufacturerId, setManufacturerId] =
+    useState<number>(0);
 
   const resetForm = () => {
     setNameManufacturers('');
@@ -38,13 +45,16 @@ export default function CreateEditManufacturer() {
     CREATE_MANUFACTURER,
     {
       onCompleted: (response) => {
-        const { errors: errorsCreate } =
-          response.createManufacturer;
+        const res = response.createManufacturer;
+        const errorsCreate: IErrorsGraphql[] = res.errors;
+        const success: boolean = res.success;
 
-        if (!errorsCreate.length) {
-          dispatch(submitManufacturer({ type: 'create' }));
+        if (success) {
+          dispatch(submitManufacturers({ type: 'create' }));
           router.push(routes.manufacturers.index);
+          setShowModalErros(false);
         } else {
+          setShowModalErros(true);
           setErrors(errorsCreate);
         }
       },
@@ -79,13 +89,16 @@ export default function CreateEditManufacturer() {
     UPDATE_MANUFACTURER,
     {
       onCompleted: (response) => {
-        const { errors: errorsEdit } =
-          response.updateManufacturer;
+        const res = response.updateManufacturer;
+        const errorsEdit: IErrorsGraphql[] = res.errors;
+        const success: boolean = res.success;
 
-        if (!errorsEdit.length) {
-          dispatch(submitManufacturer({ type: 'edit' }));
+        if (success) {
+          dispatch(submitManufacturers({ type: 'edit' }));
           router.push(routes.manufacturers.index);
+          setShowModalErros(false);
         } else {
+          setShowModalErros(true);
           setErrors(errorsEdit);
         }
       },
@@ -147,32 +160,29 @@ export default function CreateEditManufacturer() {
             ? t('editManufacturer')
             : t('newManufacturer')}
         </h1>
-        {errors.length > 0 && (
-          <Alert severity="error">
-            <AlertTitle>
-              {`Erro ao ${
-                id ? t('editLabel') : t('createLabel')
-              } fabricante.`}
-            </AlertTitle>
-            {errors.map((x) => {
-              return (
-                <ul>
-                  <li>{x}</li>
-                </ul>
-              );
-            })}
-          </Alert>
+        {errors && showModalErrors && (
+          <AlertCustom
+            type="error"
+            typeReducer={type}
+            errors={errors}
+            onClose={() => {
+              setShowModalErros(false);
+            }}
+          />
         )}
 
         <div className={Styles.card}>
           <InputChameleon
             label={t('name')}
             required
-            value={nameManufacturers}
+            value={manufacturerId}
             onChange={(e) => {
               setNameManufacturers(e.target.value);
             }}
             mode="text"
+            dataCy="manufacturer"
+            labelV2="manufacturerId"
+            errors={errors}
           />
         </div>
         <div

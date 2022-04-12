@@ -20,7 +20,28 @@ declare namespace ErrorsFieldsDefinitions {
     | 'externalId'
     | 'document'
     | 'CEP'
-    | 'addressNumber';
+    | 'addressNumber'
+    | 'email'
+    | 'role'
+    | 'cnpj'
+    | 'companyName'
+    | 'kind'
+    | 'zipCode'
+    | 'street'
+    | 'averageWithdrawalTerm'
+    | 'deliveryRadiusMax'
+    | 'taxRegime'
+    | 'serieNfe'
+    | 'emitesId'
+    | 'longitude'
+    | 'latitude'
+    | 'state'
+    | 'cityCode'
+    | 'city'
+    | 'neighborhood'
+    | 'complement'
+    | 'number'
+    | 'stateRegistration';
 }
 
 declare namespace ApplicationDefinitions {
@@ -39,5 +60,10 @@ declare namespace ApplicationDefinitions {
     | 'marca'
     | 'provider'
     | 'fornecedor'
-    | '';
+    | 'manufacturer'
+    | 'fabricante'
+    | 'user'
+    | 'usuário'
+    | 'organization'
+    | 'organizações';
 }
