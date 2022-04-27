@@ -128,7 +128,7 @@ export default function ManufacturerPage() {
     DELETE_MANUFACTURER,
     {
       onCompleted: (response) => {
-        const res = response.deleteProductManufacturer;
+        const res = response.deleteManufacturer;
         const errorsDelete: IErrorsGraphql[] | [] =
           res.errors;
         const success: boolean = res.success;

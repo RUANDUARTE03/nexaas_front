@@ -18,7 +18,12 @@ const CREATE_ORGANIZATION = gql`
       organization {
         name
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
+      success
     }
   }
 `;
@@ -31,7 +36,12 @@ const UPDATE_ORGANIZATION = gql`
       organization {
         id
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
+      success
     }
   }
 `;
@@ -44,7 +54,12 @@ const CHANGE_CURRENT_ORGANIZATION = gql`
       organization {
         id
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
+      success
     }
   }
 `;
@@ -57,7 +72,12 @@ const DELETE_ORGANIZATION = gql`
       organization {
         id
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
+      success
     }
   }
 `;

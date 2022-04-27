@@ -8,7 +8,7 @@ import {
   CREATE_ORGANIZATION,
   GET_ORGANIZATION,
 } from '../../../graphql/queries/organizations';
-import CreateEditOrganization from '.';
+import CreateOrEditOrganization from '.';
 
 jest.mock(
   '../../../components/Chameleon/input-chameleon/InputChameleon',
@@ -80,7 +80,7 @@ const mockCreate = [
     },
     result: {
       data: {
-        provider: {
+        Organization: {
           document,
         },
       },
@@ -98,7 +98,7 @@ const mockError = [
   },
 ];
 
-type providerProps = {
+type IProps = {
   mockStoreProvider: ReturnType<typeof mockStore>;
   mocksByAction: any;
 };
@@ -106,14 +106,14 @@ type providerProps = {
 function renderOrganizationCreateOrEdit({
   mockStoreProvider,
   mocksByAction,
-}: providerProps) {
+}: IProps) {
   return render(
     <Provider store={mockStoreProvider}>
       <MockedProvider
         mocks={mocksByAction}
         addTypename={false}
       >
-        <CreateEditOrganization />
+        <CreateOrEditOrganization />
       </MockedProvider>
     </Provider>
   );
@@ -121,11 +121,11 @@ function renderOrganizationCreateOrEdit({
 
 describe('Test feature Organization', () => {
   it.each([
-    [1, 'edit', false],
-    [null, 'new', true],
+    [1, 'edit'],
+    [null, 'new'],
   ])(
     'Should render correctly mode %s',
-    async (query, mode, create) => {
+    async (query, mode) => {
       jest
         .spyOn(require('next/router'), 'useRouter')
         .mockImplementation(() => ({
@@ -138,7 +138,8 @@ describe('Test feature Organization', () => {
 
       const wrapper = renderOrganizationCreateOrEdit({
         mockStoreProvider: mockStore(),
-        mocksByAction: create ? mockCreate : mocks,
+        mocksByAction:
+          mode === 'create' ? mockCreate : mocks,
       });
 
       await act(async () => {

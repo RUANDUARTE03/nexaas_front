@@ -4,7 +4,7 @@ import {
 } from '../actions/submitUsers';
 
 const initialState: {
-  type: 'create' | 'edit' | '';
+  type: ApplicationDefinitions.TypeActions;
 } = {
   type: '',
 };
@@ -13,7 +13,7 @@ export default function reducer(
   state = initialState,
   action: {
     type: typeof SUBMIT_USER | typeof CLEAR_USER;
-    payload: 'create' | 'edit' | '';
+    payload: 'create' | 'edit' | 'delete';
   }
 ): typeof initialState {
   switch (action.type) {

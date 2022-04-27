@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-curly-newline */
 /* eslint-disable react/jsx-wrap-multilines */
+/* eslint-disable prefer-destructuring */
 import { useMutation, useQuery } from '@apollo/client';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
@@ -8,24 +9,44 @@ import React, { useMemo, useState } from 'react';
 import router from 'next/router';
 import { CircularProgress } from '@material-ui/core';
 import { useTranslation } from 'next-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import AlertCustom from '../../components/alert';
 import ButtonChameleon from '../../components/Chameleon/button-chameleon';
 import ListingTable from '../../components/listing-table/ListingTable';
 import {
-  ALL_USERS,
-  DELETE_USER,
+  ALL_ORGANIZATION,
+  DELETE_ORGANIZATION,
 } from '../../graphql/queries/users';
 import { routes } from '../../utils/routes';
 import Styles from './UserPage.module.scss';
 import HeaderMenu from '../header-menu';
 import DeleteModal from '../../components/delete-modal';
 import Content from '../../components/content';
+import {
+  clearSubmit,
+  submitUsers,
+} from '../../store/actions/submitUsers';
+import { IErrorsGraphql } from '../brands-page/dtos';
+
+type UserType = {
+  id: number;
+  name: string;
+};
 
 export default function UserPage() {
+  const dispatch = useDispatch();
+  const { type } = useSelector(
+    (state) => state.SubmitUsers
+  );
   const { t } = useTranslation('user');
+  const [errors, setErrors] = useState<IErrorsGraphql[]>();
   const [deleteModalOpen, setDeleteModalOpen] =
-    useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const { data, loading, refetch } = useQuery(ALL_USERS);
+    useState<boolean>(false);
+  const [selectedUser, setSelectedUser] =
+    useState<UserType>();
+  const { data, loading, refetch } = useQuery(
+    ALL_ORGANIZATION
+  );
 
   const tableData = useMemo(
     () => (data ? data.users : []),
@@ -75,7 +96,11 @@ export default function UserPage() {
                     primary
                     outline
                     icon={false}
-                    onClick={() => {}}
+                    onClick={() => {
+                      router.push(
+                        routes.users.create.index
+                      );
+                    }}
                   />
                 </Link>
               </div>
@@ -87,8 +112,7 @@ export default function UserPage() {
                 outline
                 icon={false}
                 onClick={() => {
-                  setSelectedUser(user);
-                  setDeleteModalOpen(true);
+                  router.push(routes.users.create.index);
                 }}
               />
             </div>
@@ -96,19 +120,24 @@ export default function UserPage() {
         },
       },
     ];
-  }, [data]);
+  }, [t]);
 
-  const [deleteUser] = useMutation(DELETE_USER, {
+  const [deleteUser] = useMutation(DELETE_ORGANIZATION, {
     onCompleted: (response) => {
-      const { errors } = response.deleteUser;
+      const res = response.deleteUser;
+      const errorsDelete: IErrorsGraphql[] | [] =
+        res.errors;
+      const success: boolean = res.success;
 
-      if (!errors.length) {
-        setDeleteModalOpen(false);
-
+      if (success) {
+        dispatch(submitUsers({ type: 'delete' }));
         setTimeout(() => {
           refetch();
         }, 1000);
+      } else {
+        setErrors(errorsDelete);
       }
+      setDeleteModalOpen(false);
     },
   });
 
@@ -168,6 +197,18 @@ export default function UserPage() {
               }}
             />
           </div>
+          {errors ||
+            (type !== '' && (
+              <AlertCustom
+                type={type !== '' ? 'success' : 'error'}
+                errors={errors}
+                messageType="user"
+                onClose={() => {
+                  dispatch(clearSubmit());
+                }}
+                typeReducer={type}
+              />
+            ))}
           <div>
             <ListingTable
               data={tableData}

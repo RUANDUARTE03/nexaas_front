@@ -1,15 +1,14 @@
+import {
+  GET_USER,
+  CREATE_ORGANIZATION,
+} from '../../../graphql/queries/users';
 import React from 'react';
-import { render, act } from '@testing-library/react';
-import { Provider } from 'react-redux';
 import { mockStore } from '../../../utils/tests';
+import { Provider } from 'react-redux';
+import { render, act } from '@testing-library/react';
+import CreateEditUser from '.';
 import { MockedProvider } from '@apollo/client/testing';
 import userEvent from '@testing-library/user-event';
-import {
-  CREATE_USER,
-  GET_USER,
-  UPDATE_ORGANIZATION,
-} from '../../../graphql/queries/users';
-import CreateEditUser from '.';
 
 jest.mock(
   '../../../components/Chameleon/input-chameleon/InputChameleon',
@@ -60,7 +59,7 @@ const mockError = [
 const mockCreate = [
   {
     request: {
-      query: CREATE_USER,
+      query: CREATE_ORGANIZATION,
     },
     result: {
       data: {
@@ -72,7 +71,7 @@ const mockCreate = [
   },
 ];
 
-type userProps = {
+type IProps = {
   mockStoreProvider: ReturnType<typeof mockStore>;
   mocksByAction: any;
 };
@@ -80,7 +79,7 @@ type userProps = {
 function renderUserCreateOrEdit({
   mockStoreProvider,
   mocksByAction,
-}: userProps) {
+}: IProps) {
   return render(
     <Provider store={mockStoreProvider}>
       <MockedProvider

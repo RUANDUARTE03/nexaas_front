@@ -87,28 +87,28 @@ describe('Test Manufacturer feature', () => {
     wrapper.getByText('Loja 123');
   });
 
-  // it('Should show modal when click in btn delete', async () => {
-  //   const wrapper = renderManufacturer({
-  //     mockStoreProvider: mockStore(),
-  //     mocksByAction: mocks,
-  //   });
+  it('Should show modal when click in btn delete', async () => {
+    const wrapper = renderManufacturer({
+      mockStoreProvider: mockStore(),
+      mocksByAction: mocks,
+    });
 
-  //   await act(async () => {
-  //     await new Promise((resolve) =>
-  //       setTimeout(resolve, 1000)
-  //     );
-  //   });
+    await act(async () => {
+      await new Promise((resolve) =>
+        setTimeout(resolve, 1000)
+      );
+    });
 
-  //   userEvent.click(
-  //     wrapper.getAllByTestId('btn-delete-manufacturer')[0]
-  //   );
+    userEvent.click(
+      wrapper.getAllByTestId('btn-delete-manufacturer')[0]
+    );
 
-  //   await wrapper.findAllByTestId('container-delete-modal');
+    await wrapper.findAllByTestId('container-delete-modal');
 
-  //   userEvent.click(
-  //     wrapper.getByTestId('btn-action-close-modal')
-  //   );
-  // });
+    userEvent.click(
+      wrapper.getByTestId('btn-action-close-modal')
+    );
+  });
 
   it('Should redirect for screen create organization', async () => {
     const wrapper = renderManufacturer({

@@ -1,10 +1,10 @@
 import {
-  SUBMIT_ORGANIZATION,
-  CLEAR_ORGANIZATION,
+  SUBMIT_ORGANIZATIONS,
+  CLEAR_ORGANIZATIONS,
 } from '../actions/submitOrganizations';
 
 const initialState: {
-  type: 'create' | 'edit' | '';
+  type: ApplicationDefinitions.TypeActions;
 } = {
   type: '',
 };
@@ -13,18 +13,18 @@ export default function reducer(
   state = initialState,
   action: {
     type:
-      | typeof SUBMIT_ORGANIZATION
-      | typeof CLEAR_ORGANIZATION;
-    payload: 'create' | 'edit' | '';
+      | typeof SUBMIT_ORGANIZATIONS
+      | typeof CLEAR_ORGANIZATIONS;
+    payload: 'create' | 'edit' | 'delete' | '';
   }
 ): typeof initialState {
   switch (action.type) {
-    case SUBMIT_ORGANIZATION:
+    case SUBMIT_ORGANIZATIONS:
       return {
         ...state,
         type: action.payload,
       };
-    case CLEAR_ORGANIZATION:
+    case CLEAR_ORGANIZATIONS:
       return {
         ...state,
         type: '',

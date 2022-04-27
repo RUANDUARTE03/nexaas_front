@@ -1,15 +1,18 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-curly-newline */
-import React, { useEffect, useState } from 'react';
+/* eslint-disable prefer-destructuring */
+import React, { useEffect, useState, useMemo } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { cnpj as cnpjFormatter } from 'cpf-cnpj-validator';
-import { useDispatch } from 'react-redux';
-import Alert from '@material-ui/lab/Alert';
-import AlertTitle from '@material-ui/lab/AlertTitle';
+import { useDispatch, useSelector } from 'react-redux';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useTranslation } from 'next-i18next';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import AlertCustom from '../../../components/alert';
+import { IErrorsGraphql } from '../../brands-page/dtos';
 import InputChameleon from '../../../components/Chameleon/input-chameleon';
 import {
   CREATE_ORGANIZATION,
@@ -31,7 +34,7 @@ import {
 import { getAddressByCep } from '../../../services/providerService';
 import ButtonChameleon from '../../../components/Chameleon/button-chameleon';
 import { formatValueToReal } from '../../../utils/formatters/Currency';
-import { submitOrganization } from '../../../store/actions/submitOrganizations';
+import { SubmitOrganizations } from '../../../store/actions/submitOrganizations';
 import HeaderMenu from '../../header-menu';
 import Content from '../../../components/content';
 import { getLatLngByZipCode } from '../../../services/mapsService';
@@ -46,13 +49,16 @@ type customerAquisitionChannelsProps = {
 };
 
 export default function CreateEditOrganization() {
-  const router = useRouter();
-
-  const dispatch = useDispatch();
-  const [errors, setErrors] = useState([]);
-  const { id } = router.query;
   const { t } = useTranslation('create-edit-organization');
-
+  const router = useRouter();
+  const { id } = router.query;
+  const dispatch = useDispatch();
+  const { type } = useSelector(
+    (state) => state.SubmitOrganizations
+  );
+  const [showModalErrors, setShowModalErros] =
+    useState<boolean>(false);
+  const [errors, setErrors] = useState<IErrorsGraphql[]>();
   const [name, setName] = useState<string>();
   const [cnpj, setCnpj] = useState<string>();
   const [stateRegistration, setStateRegistration] =
@@ -99,13 +105,16 @@ export default function CreateEditOrganization() {
     CREATE_ORGANIZATION,
     {
       onCompleted: (response) => {
-        const { errors: errorsCreate } =
-          response.createOrganization;
+        const res = response.createOrganization;
+        const errorsCreate: IErrorsGraphql[] = res.errors;
+        const success: boolean = res.success;
 
-        if (!errorsCreate.length) {
-          dispatch(submitOrganization({ type: 'create' }));
+        if (success) {
+          dispatch(SubmitOrganizations({ type: 'create' }));
           router.push(routes.organizations.index);
+          setShowModalErros(false);
         } else {
+          setShowModalErros(true);
           setErrors(errorsCreate);
         }
       },
@@ -210,59 +219,137 @@ export default function CreateEditOrganization() {
     }
   };
 
-  const handleCreateOrganizationSubmit = () => {
-    createOrganization({
-      variables: {
-        input: {
-          name,
-          cnpj: cnpj.replace(/[^\d]+/g, ''),
-          stateRegistration,
-          companyName,
-          averageWithdrawalTerm: Number(
-            averageWithdrawalTerm
-          ),
-          averageWithdrawalPrice: Number(
-            averageWithdrawalPrice?.replace(',', '')
-          ),
-          deliveryRadiusMax,
-          kind,
-          cityCode,
-          city,
-          street,
-          state,
-          number,
-          neighborhood,
-          zipCode: unformatZipCode(zipCode),
-          complement,
-          latitude,
-          longitude,
-          emitesId: Number(emitesId),
-          serieNfe,
-          taxRegime,
-          useAverageCost,
+  const handleCreateOrganizationsSubmit = () => {
+    if (!number || !zipCode) {
+      if (!zipCode) {
+        setErrors([
+          {
+            code: 'blank',
+            message: 'CEP não pode ficar em branco',
+            path: ['attributes', 'CEP'],
+          },
+          {
+            code: 'blank',
+            message:
+              'Razão social não pode ficar em branco',
+            path: ['attributes', 'CompanyName'],
+          },
+          {
+            code: 'blank',
+            message:
+              'Nome Fantasia não pode ficar em branco',
+            path: ['attributes', 'TradeName'],
+          },
+          {
+            code: 'blank',
+            message: 'CNPJ não pode ficar em branco',
+            path: ['attributes', 'CNPJ'],
+          },
+          {
+            code: 'blank',
+            message:
+              'Inscrição estadual não pode ficar em branco',
+            path: ['attributes', 'StateRegistration'],
+          },
+          {
+            code: 'blank',
+            message:
+              'Tipo de Organização não pode ficar em branco',
+            path: ['attributes', 'OrganizationType'],
+          },
+          {
+            code: 'blank',
+            message:
+              'Raio máximo de entrega não pode ficar em branco',
+            path: ['attributes', 'Maximumdeliveryradius'],
+          },
+          {
+            code: 'blank',
+            message:
+              'ID no Emites não pode ficar em branco',
+            path: ['attributes', 'IDinIssues'],
+          },
+          {
+            code: 'blank',
+            message:
+              'Série da ultima nota não pode ficar em branco',
+            path: ['attributes', 'Lastnoteseries'],
+          },
+          {
+            code: 'blank',
+            message:
+              'Regime tributário não pode ficar em branco',
+            path: ['attributes', 'Taxregime'],
+          },
+        ]);
+      } else {
+        setErrors([
+          {
+            code: 'blank',
+            message: 'Número não pode ficar em branco',
+            path: ['attributes', 'addressNumber'],
+          },
+        ]);
+      }
+      setShowModalErros(true);
+    } else {
+      createOrganization({
+        variables: {
+          input: {
+            name,
+            cnpj: cnpj?.replace(/[^\d]+/g, ''),
+            stateRegistration,
+            companyName,
+            averageWithdrawalTerm: Number(
+              averageWithdrawalTerm
+            ),
+            averageWithdrawalPrice: Number(
+              averageWithdrawalPrice?.replace(',', '')
+            ),
+            deliveryRadiusMax,
+            kind,
+            cityCode,
+            city,
+            street,
+            state,
+            number,
+            neighborhood,
+            zipCode: unformatZipCode(zipCode),
+            complement,
+            latitude,
+            longitude,
+            emitesId: Number(emitesId),
+            serieNfe,
+            taxRegime,
+            useAverageCost,
+          },
         },
-      },
-    });
+      });
+    }
   };
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [updateOrganization] = useMutation(
     UPDATE_ORGANIZATION,
     {
       onCompleted: (response) => {
-        const { errors: errorsEdit } =
-          response.updateOrganization;
+        const res = response.updateOrganizations;
+        const errorsEdit: IErrorsGraphql[] = res.errors;
+        const success: boolean = res.success;
 
-        if (!errorsEdit.length) {
-          dispatch(submitOrganization({ type: 'edit' }));
+        if (success) {
+          dispatch(SubmitOrganizations({ type: 'edit' }));
           router.push(routes.organizations.index);
+          setShowModalErros(false);
         } else {
+          setShowModalErros(true);
           setErrors(errorsEdit);
         }
       },
     }
   );
 
-  const handleUpdateOrganizationSubmit = () => {
+  const handleUpdateOrganizationsSubmit = () => {
     const newChannelsIds = [];
     customerAquisitionChannels?.map((cac) =>
       newChannelsIds.push(cac.id)
@@ -273,7 +360,7 @@ export default function CreateEditOrganization() {
         input: {
           id,
           name,
-          cnpj: cnpj.replace(/[^\d]+/g, ''),
+          cnpj: cnpj?.replace(/[^\d]+/g, ''),
           stateRegistration,
           companyName,
           averageWithdrawalTerm: Number(
@@ -317,13 +404,22 @@ export default function CreateEditOrganization() {
       setCustomerAquisitionChannels(removeChannel);
     } else {
       const joined = [];
-      customerAquisitionChannels.map((chan) =>
+      customerAquisitionChannels?.map((chan) =>
         joined.push(chan)
       );
       joined.push(channel);
       setCustomerAquisitionChannels(joined);
     }
   };
+  const showModalErrorsV2 = useMemo(() => {
+    if (errors) {
+      if (errors.length > 0) {
+        return true;
+      }
+    }
+
+    return false;
+  }, [errors]);
 
   if (errorsGetOrganization && id) {
     return (
@@ -363,21 +459,15 @@ export default function CreateEditOrganization() {
             {id ? t('editOrgLabel') : t('newOrgLabel')}
           </h1>
 
-          {errors.length > 0 && (
-            <Alert severity="error">
-              <AlertTitle>
-                {`Erro ao ${
-                  id ? 'editar' : 'criar'
-                } organização.`}
-              </AlertTitle>
-              {errors.map((x) => {
-                return (
-                  <ul>
-                    <li>{x}</li>
-                  </ul>
-                );
-              })}
-            </Alert>
+          {errors && showModalErrors && showModalErrorsV2 && (
+            <AlertCustom
+              type="error"
+              typeReducer={type}
+              errors={errors}
+              onClose={() => {
+                setShowModalErros(false);
+              }}
+            />
           )}
 
           <div className="ch-grid">
@@ -398,6 +488,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setCompanyName(e.target.value)
                         }
+                        dataCy="CompanyName"
+                        labelV2="CompanyName"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -410,6 +506,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setName(e.target.value)
                         }
+                        dataCy="Name"
+                        labelV2="Name"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -422,6 +524,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setCnpj(e.target.value)
                         }
+                        dataCy="CNPJ"
+                        labelV2="CNPJ"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -436,6 +544,12 @@ export default function CreateEditOrganization() {
                             e.target.value
                           )
                         }
+                        dataCy="StateRegistration"
+                        labelV2="StateRegistration"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -470,6 +584,12 @@ export default function CreateEditOrganization() {
                             label: t('otherOption'),
                           },
                         ]}
+                        dataCy="Kind"
+                        labelV2="Kind"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                   </div>
@@ -493,6 +613,12 @@ export default function CreateEditOrganization() {
                             e.target.value
                           )
                         }
+                        dataCy="AverageWithdrawalTerm"
+                        labelV2="AverageWithdrawalTerm"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -505,6 +631,12 @@ export default function CreateEditOrganization() {
                         value={averageWithdrawalPrice}
                         mode="text"
                         onChange={onWithdrawPriceChange}
+                        dataCy="AverageWithdrawalPrice"
+                        labelV2="AverageWithdrawalPrice"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                   </div>
@@ -547,6 +679,12 @@ export default function CreateEditOrganization() {
                             label: t('ahundredOption'),
                           },
                         ]}
+                        dataCy="deliveryRadiusMax"
+                        labelV2="deliveryRadiusMax"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                   </div>
@@ -565,7 +703,13 @@ export default function CreateEditOrganization() {
                         value={zipCode}
                         mode="text"
                         onChange={onZipCodeChange}
+                        dataCy="CEP"
+                        labelV2="CEP"
+                        errors={errors}
                         onKeyUp={zipCodeKeyUp}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -578,6 +722,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setStreet(e.target.value)
                         }
+                        dataCy="Street"
+                        labelV2="Street"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -590,6 +740,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setNumber(e.target.value)
                         }
+                        dataCy="Number"
+                        labelV2="Number"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <div className="ch-field">
@@ -601,6 +757,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setComplement(e.target.value)
                         }
+                        dataCy="Complement"
+                        labelV2="Complement"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <div className="ch-field">
@@ -612,6 +774,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setNeighborhood(e.target.value)
                         }
+                        dataCy="Neighborhood"
+                        labelV2="Neighborhood"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <div className="ch-field">
@@ -623,6 +791,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setCity(e.target.value)
                         }
+                        dataCy="City"
+                        labelV2="City"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <div className="ch-field">
@@ -634,6 +808,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setCityCode(e.target.value)
                         }
+                        dataCy="CityCode"
+                        labelV2="CityCode"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <InputChameleon
@@ -644,12 +824,18 @@ export default function CreateEditOrganization() {
                         setState(e.target.value)
                       }
                       mode="select"
-                      options={states.map(
+                      options={states?.map(
                         (actualState) => ({
                           label: actualState.code,
                           value: actualState.code,
                         })
                       )}
+                      dataCy="State"
+                      labelV2="State"
+                      errors={errors}
+                      setErrors={(
+                        errorsFilter: IErrorsGraphql[]
+                      ) => setErrors(errorsFilter)}
                     />
                     <div className="ch-field ch-field--2Tablet">
                       <InputChameleon
@@ -661,6 +847,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setLatitude(e.target.value)
                         }
+                        dataCy="Latitude"
+                        labelV2="Latitude"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <div className="ch-field ch-field--2Tablet">
@@ -673,6 +865,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setLongitude(e.target.value)
                         }
+                        dataCy="Longitude"
+                        labelV2="Longitude"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                   </div>
@@ -698,6 +896,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) => {
                           setEmitesId(e.target.value);
                         }}
+                        dataCy="EmitesId"
+                        labelV2="EmitesId"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -710,6 +914,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setSerieNfe(e.target.value)
                         }
+                        dataCy="SerieNfe"
+                        labelV2="Serienfe"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -734,6 +944,12 @@ export default function CreateEditOrganization() {
                             label: t('normalOption'),
                           },
                         ]}
+                        dataCy="Taxegime"
+                        labelV2="Taxregime"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                   </div>
@@ -752,7 +968,13 @@ export default function CreateEditOrganization() {
                         value={zipCode}
                         mode="text"
                         onChange={onZipCodeChange}
+                        dataCy="ZipCode"
+                        labelV2="ZipCode"
+                        errors={errors}
                         onKeyUp={zipCodeKeyUp}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -765,6 +987,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setStreet(e.target.value)
                         }
+                        dataCy="Street"
+                        labelV2="Street"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -777,6 +1005,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setNumber(e.target.value)
                         }
+                        dataCy="Number"
+                        labelV2="Number"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <div className="ch-field">
@@ -788,6 +1022,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setComplement(e.target.value)
                         }
+                        dataCy="Complement"
+                        labelV2="Complement"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <div className="ch-field">
@@ -799,6 +1039,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setNeighborhood(e.target.value)
                         }
+                        dataCy="Neighborhood"
+                        labelV2="Neighborhood"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <div className="ch-field">
@@ -810,6 +1056,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setCity(e.target.value)
                         }
+                        dataCy="City"
+                        labelV2="City"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <div className="ch-field">
@@ -821,6 +1073,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setCityCode(e.target.value)
                         }
+                        dataCy="CityCode"
+                        labelV2="CityCode"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <InputChameleon
@@ -831,12 +1089,18 @@ export default function CreateEditOrganization() {
                         setState(e.target.value)
                       }
                       mode="select"
-                      options={states.map(
+                      options={states?.map(
                         (actualState) => ({
                           label: actualState.code,
                           value: actualState.code,
                         })
                       )}
+                      dataCy="State"
+                      labelV2="State"
+                      errors={errors}
+                      setErrors={(
+                        errorsFilter: IErrorsGraphql[]
+                      ) => setErrors(errorsFilter)}
                     />
                     <div className="ch-field">
                       <InputChameleon
@@ -847,6 +1111,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setLatitude(e.target.value)
                         }
+                        dataCy="Latitude"
+                        labelV2="Latitude"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                     <div className="ch-field">
@@ -858,6 +1128,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setLongitude(e.target.value)
                         }
+                        dataCy="Longitude"
+                        labelV2="Longitude"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                   </div>
@@ -879,6 +1155,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) => {
                           setEmitesId(e.target.value);
                         }}
+                        dataCy="EmitesId"
+                        labelV2="EmitesId"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -891,6 +1173,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setSerieNfe(e.target.value)
                         }
+                        dataCy="Serienfe"
+                        labelV2="Serienfe"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
 
@@ -903,6 +1191,12 @@ export default function CreateEditOrganization() {
                         onChange={(e) =>
                           setTaxRegime(e.target.value)
                         }
+                        dataCy="Taxregime"
+                        labelV2="Taxregime"
+                        errors={errors}
+                        setErrors={(
+                          errorsFilter: IErrorsGraphql[]
+                        ) => setErrors(errorsFilter)}
                       />
                     </div>
                   </div>
@@ -936,28 +1230,32 @@ export default function CreateEditOrganization() {
                       {t('aquisitionChannelLabel')}
                     </h2>
                     <div className="cch-grid-column--4 ch-grid-column--8Desktop">
-                      {aquisitionChannels.map((channel) => {
-                        const isChecked =
-                          customerAquisitionChannels.find(
-                            (customer) =>
-                              channel.id === customer.id
-                          );
+                      {aquisitionChannels?.map(
+                        (channel) => {
+                          const isChecked =
+                            customerAquisitionChannels.find(
+                              (customer) =>
+                                channel.id === customer.id
+                            );
 
-                        return (
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={!!isChecked}
-                                onChange={() => {
-                                  onChangeChannel(channel);
-                                }}
-                                color="primary"
-                              />
-                            }
-                            label={channel.name}
-                          />
-                        );
-                      })}
+                          return (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={!!isChecked}
+                                  onChange={() => {
+                                    onChangeChannel(
+                                      channel
+                                    );
+                                  }}
+                                  color="primary"
+                                />
+                              }
+                              label={channel.name}
+                            />
+                          );
+                        }
+                      )}
                     </div>
                   </div>
                 )}
@@ -977,8 +1275,8 @@ export default function CreateEditOrganization() {
                     icon={false}
                     onClick={
                       id
-                        ? handleUpdateOrganizationSubmit
-                        : handleCreateOrganizationSubmit
+                        ? handleUpdateOrganizationsSubmit
+                        : handleCreateOrganizationsSubmit
                     }
                   />
                   <ButtonChameleon

@@ -35,7 +35,6 @@ export default function AlertCustom({
           case 'organization':
             return 'organizações';
           default:
-            return '';
         }
       }
     }, [messageType, typeReducer]);

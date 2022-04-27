@@ -1,5 +1,7 @@
+/* eslint-disable react/jsx-curly-newline */
+/* eslint-disable prettier/prettier */
 /* eslint-disable prefer-destructuring */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation, useQuery } from '@apollo/client';
 import { useTranslation } from 'next-i18next';
@@ -117,6 +119,16 @@ export default function CreateEditManufacturer() {
   };
   // Finish Logic For Edit Manufacturer
 
+  const showModalErrorsV2 = useMemo(() => {
+    if (errors) {
+      if (errors.length > 0) {
+        return true;
+      }
+    }
+
+    return false;
+  }, [errors]);
+
   // only get Manufacturer
   if (errorsGetManufacturer && id) {
     return (
@@ -160,7 +172,7 @@ export default function CreateEditManufacturer() {
             ? t('editManufacturer')
             : t('newManufacturer')}
         </h1>
-        {errors && showModalErrors && (
+        {errors && showModalErrors && showModalErrorsV2 && (
           <AlertCustom
             type="error"
             typeReducer={type}
@@ -183,6 +195,9 @@ export default function CreateEditManufacturer() {
             dataCy="manufacturer"
             labelV2="manufacturerId"
             errors={errors}
+            setErrors={(errorsFilter: IErrorsGraphql[]) =>
+              setErrors(errorsFilter)
+            }
           />
         </div>
         <div

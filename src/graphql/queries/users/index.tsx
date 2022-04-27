@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const ALL_USERS = gql`
+const ALL_ORGANIZATION = gql`
   {
     users {
       id
@@ -22,7 +22,7 @@ const GET_USER = gql`
   }
 `;
 
-const CREATE_USER = gql`
+const CREATE_ORGANIZATION = gql`
   mutation createUser($input: CreateUserInput!) {
     createUser(input: $input) {
       user {
@@ -30,7 +30,12 @@ const CREATE_USER = gql`
         role
         organizationIds
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
+      success
     }
   }
 `;
@@ -44,26 +49,36 @@ const UPDATE_ORGANIZATION = gql`
         role
         organizationIds
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
+      success
     }
   }
 `;
 
-const DELETE_USER = gql`
+const DELETE_ORGANIZATION = gql`
   mutation deleteUser($input: DeleteUserInput!) {
     deleteUser(input: $input) {
       user {
         id
       }
-      errors
+      errors {
+        code
+        message
+        path
+      }
+      success
     }
   }
 `;
 
 export {
-  ALL_USERS,
+  ALL_ORGANIZATION,
   GET_USER,
-  CREATE_USER,
+  CREATE_ORGANIZATION,
   UPDATE_ORGANIZATION,
-  DELETE_USER,
+  DELETE_ORGANIZATION,
 };

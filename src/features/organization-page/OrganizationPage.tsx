@@ -1,13 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-wrap-multilines */
+/* eslint-disable prefer-destructuring */
 import { useMutation, useQuery } from '@apollo/client';
 import { reverse } from 'named-urls';
 import Link from 'next/link';
 import { cnpj as cnpjFormatter } from 'cpf-cnpj-validator';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import router from 'next/router';
 import { CircularProgress } from '@material-ui/core';
 import { useTranslation } from 'next-i18next';
+import AlertCustom from '../../components/alert';
 import ButtonChameleon from '../../components/Chameleon/button-chameleon';
 import ListingTable from '../../components/listing-table/ListingTable';
 import {
@@ -17,26 +21,37 @@ import {
 import { routes } from '../../utils/routes';
 import DeleteModal from '../../components/delete-modal';
 import { Organization } from './models/Organization';
-import Styles from './OrganizationPage.module.scss';
-import { GET_CURRENT_ORGANIZATION } from '../../graphql/queries/session';
-import HeaderMenu from '../header-menu';
 import Content from '../../components/content';
+import HeaderMenu from '../header-menu';
+import Styles from './OrganizationPage.module.scss';
+import {
+  clearSubmit,
+  SubmitOrganizations,
+} from '../../store/actions/submitOrganizations';
+import { IErrorsGraphql } from '../brands-page/dtos';
 
 interface FetchOrganizationData {
   organizations: Organization[];
 }
 
-export default function OrganizationPage() {
-  const [deleteModalOpen, setDeleteModalOpen] =
-    useState(false);
-  const [selectedOrganization, setSelectedOrganization] =
-    useState<Organization>();
-  const [currentOrg, setCurrentOrg] = useState<number>();
+interface OrganizationType {
+  id: number;
+  name: string;
+}
 
-  const { data: dataGet } = useQuery(
-    GET_CURRENT_ORGANIZATION
-  );
+export default function OrganizationPage() {
+  const dispatch = useDispatch();
   const { t } = useTranslation('organization');
+  const { type } = useSelector(
+    (state) => state.SubmitOrganizations
+  );
+  const { data: dataGet } = useQuery(ALL_ORGANIZATIONS);
+  const [errors, setErrors] = useState<IErrorsGraphql[]>();
+  const [currentOrg, setCurrentOrg] = useState<number>();
+  const [deleteModalOpen, setDeleteModalOpen] =
+    useState<boolean>(false);
+  const [selectedOrganization, setSelectedOrganization] =
+    useState<OrganizationType>();
 
   useEffect(() => {
     if (dataGet && dataGet.session) {
@@ -72,7 +87,7 @@ export default function OrganizationPage() {
         accessor: 'actions',
         Cell: ({ row }) => {
           const organization = row.original;
-          const { id } = organization || null;
+          const { id, name } = organization || null;
 
           return (
             <div className={Styles.actionButton}>
@@ -91,6 +106,10 @@ export default function OrganizationPage() {
                     outline
                     icon={false}
                     onClick={() => {}}
+                    dataCy={`btn-edit-organization-${name.replace(
+                      ' ',
+                      '-'
+                    )}`}
                   />
                 </Link>
               </div>
@@ -105,6 +124,10 @@ export default function OrganizationPage() {
                     setDeleteModalOpen(true);
                     setSelectedOrganization(organization);
                   }}
+                  dataCy={`btn-edit-organization-${name.replace(
+                    ' ',
+                    '-'
+                  )}`}
                 />
               )}
             </div>
@@ -112,13 +135,46 @@ export default function OrganizationPage() {
         },
       },
     ],
-    [currentOrg]
+    [t]
   );
 
   function onCloseModalDelete(): void {
     setDeleteModalOpen(false);
     setSelectedOrganization(null);
   }
+
+  const [deleteOrganization] = useMutation(
+    DELETE_ORGANIZATION,
+    {
+      onCompleted: (response) => {
+        const res = response.deleteOrganizations;
+        const errorsDelete: IErrorsGraphql[] | [] =
+          res.errors;
+        const success: boolean = res.success;
+
+        if (success) {
+          dispatch(SubmitOrganizations({ type: 'delete' }));
+          setTimeout(() => {
+            refetch();
+          }, 1000);
+        } else {
+          setErrors(errorsDelete);
+        }
+        setDeleteModalOpen(false);
+      },
+    }
+  );
+  const confirmDeleteOrganization = () => {
+    deleteOrganization({
+      variables: {
+        input: {
+          id: selectedOrganization
+            ? selectedOrganization.id
+            : null,
+        },
+      },
+    });
+  };
 
   const modalView = () => (
     <DeleteModal
@@ -138,29 +194,6 @@ export default function OrganizationPage() {
       </div>
     </DeleteModal>
   );
-
-  const [deleteOrganization] = useMutation(
-    DELETE_ORGANIZATION,
-    {
-      onCompleted: (response) => {
-        const { errors } = response.deleteOrganization;
-
-        if (!errors.length) {
-          setDeleteModalOpen(false);
-
-          setTimeout(() => {
-            refetch();
-          }, 1000);
-        }
-      },
-    }
-  );
-
-  const confirmDeleteOrganization = () => {
-    deleteOrganization({
-      variables: { input: { id: selectedOrganization.id } },
-    });
-  };
 
   useEffect(() => {
     refetch();
@@ -194,6 +227,18 @@ export default function OrganizationPage() {
               }}
             />
           </div>
+          {errors ||
+            (type !== '' && (
+              <AlertCustom
+                type={type !== '' ? 'success' : 'error'}
+                errors={errors}
+                messageType="organization"
+                onClose={() => {
+                  dispatch(clearSubmit());
+                }}
+                typeReducer={type}
+              />
+            ))}
           <div>
             <ListingTable
               data={tableData}

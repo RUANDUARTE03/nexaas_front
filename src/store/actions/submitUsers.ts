@@ -1,19 +1,19 @@
-export const SUBMIT_USER = 'submit_user';
-export const CLEAR_USER = 'clear_user';
+export const SUBMIT_USERS = 'submit_users';
+export const CLEAR_USERS = 'clear_users';
 
-export function submitUser({
+export function submitUsers({
   type,
 }: {
-  type: 'edit' | 'create';
+  type: ApplicationDefinitions.TypeActions;
 }) {
   return {
-    type: SUBMIT_USER,
+    type: SUBMIT_USERS,
     payload: type,
   };
 }
 
 export function clearSubmit() {
   return {
-    type: CLEAR_USER,
+    type: CLEAR_USERS,
   };
 }
